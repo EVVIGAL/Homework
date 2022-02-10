@@ -1,0 +1,25 @@
+using System;
+
+namespace Homework_1
+{
+    internal class Variables
+    {
+        static void Main(string[] args)
+        {
+            int summaryQuantityOfPics = 52;
+
+            int picsInARow = 3;
+
+            int rows = summaryQuantityOfPics / picsInARow;
+
+            int remainingPics = summaryQuantityOfPics - picsInARow * rows;
+
+
+
+            Console.WriteLine("Количество полностью заполненных рядов: " + rows);
+
+            Console.WriteLine("Количество картинок сверх меры: " + remainingPics);
+
+        }
+    }
+}
