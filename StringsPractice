@@ -7,40 +7,27 @@ namespace Homework_1
         static void Main(string[] args)
         {
             string name;
-
             string surname;
-
             string age;
-
             string job;
-
             string jobPosition;
 
-
-
             Console.Write("Введите ваше имя: ");
-
             name = Console.ReadLine();
 
             Console.Write("Введите ваш фамилию: ");
-
             surname = Console.ReadLine();
 
             Console.Write("Введите ваш возраст: ");
-
             age = Console.ReadLine();
 
             Console.Write("Введите ваше место работы: ");
-
             job = Console.ReadLine();
 
             Console.Write("Введите вашу должность: ");
-
             jobPosition = Console.ReadLine();
 
-
             Console.WriteLine("Вас зовут " + name + " " + surname + ", вам " + age + " лет, вы работаете в " + job + " на должности " + jobPosition + ".");
-
         }
     }
 }
