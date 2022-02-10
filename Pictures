@@ -7,19 +7,13 @@ namespace Homework_1
         static void Main(string[] args)
         {
             int summaryQuantityOfPics = 52;
-
             int picsInARow = 3;
 
             int rows = summaryQuantityOfPics / picsInARow;
-
-            int remainingPics = summaryQuantityOfPics - picsInARow * rows;
-
-
+            int remainingPics = summaryQuantityOfPics % picsInARow;
 
             Console.WriteLine("Количество полностью заполненных рядов: " + rows);
-
             Console.WriteLine("Количество картинок сверх меры: " + remainingPics);
-
         }
     }
 }
