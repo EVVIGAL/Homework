@@ -7,26 +7,19 @@ namespace Homework_1
         static void Main(string[] args)
         {
             int gold;
-
             int costPerCrystal = 10;
-
             int wantedQuantityOfCrystals;
-
             int remainingGold;
 
-
             Console.Write("Количество имеющегося у вас золота: ");
-
             gold = Convert.ToInt32(Console.ReadLine());
 
             Console.Write("Введите количество кристаллов, которое вы хотите приобрести: ");
-
             wantedQuantityOfCrystals = Convert.ToInt32(Console.ReadLine());
 
             remainingGold = gold - wantedQuantityOfCrystals * costPerCrystal;
 
             Console.WriteLine("У вас " + wantedQuantityOfCrystals + " кристаллов и " + remainingGold + " золота.");
-
         }
     }
 }
