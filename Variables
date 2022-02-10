@@ -1,0 +1,30 @@
+using System;
+
+namespace Homework_1
+{
+    internal class Variables
+    {
+        static void Main(string[] args)
+        {
+            int money = 52;
+
+            float depth = 1537.3f;
+
+            double xPosition = 2.5;
+
+            string supervisorName = "Ignat";
+
+            char firstLetterOfHerName = 'A';
+
+            bool isPumping = false;
+
+            uint totalLength = 100500;
+
+            long creditCardBalance = -173400;
+
+            byte age = 27;
+
+            sbyte temperature = -29;
+        }
+    }
+}
