@@ -2,7 +2,7 @@ using System;
 
 namespace Homework_1
 {
-    internal class Variables
+    internal class Hospital
     {
         static void Main(string[] args)
         {
