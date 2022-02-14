@@ -11,7 +11,7 @@ namespace Homework_2
             Console.Write("How many times we need to repeat it? Please, type a number: ");
             int counter = Convert.ToInt32(Console.ReadLine());
 
-            while(counter-- > 0)
+            for (int i = counter; i > 0; i--)
             {
                 Console.WriteLine(userMessage);
             }
