@@ -1,0 +1,22 @@
+using System;
+
+namespace Homework_2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Type your message: ");
+            string userMessage = Console.ReadLine();
+            Console.Write("How many times we need to repeat it? Please, type a number: ");
+            int counter = Convert.ToInt32(Console.ReadLine());
+
+            while(counter-- > 0)
+            {
+                Console.WriteLine(userMessage);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
