@@ -1,0 +1,136 @@
+using System;
+
+namespace Homework_2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            float rubles, dollars, yen, moneyToExchange;
+            float rubToUSD = 0.05f;
+            float rubToYen = 1.2f;
+            float usdToRub = 20f;
+            float usdToYen = 24f;
+            string exit;
+            int decreasingCurrency, increasingCurrency;
+
+            Console.Write("Введите баланс рублей на счету: ");
+            rubles = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Введите баланс долларов на счету: ");
+            dollars = Convert.ToSingle(Console.ReadLine());
+            Console.Write("Введите баланс йен на счету: ");
+            yen = Convert.ToSingle(Console.ReadLine());
+
+            Console.WriteLine("Нажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+            exit = Console.ReadLine();
+
+            while (exit != "exit")
+            {
+                Console.WriteLine("Какую валюту хотите обменять?\n1-Рубли\n2-Доллары\n3-Йены");
+                decreasingCurrency = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("На какую валюту хотите обменять?\n1-Рубли\n2-Доллары\n3-Йены");
+                increasingCurrency = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Какую сумму обменять?");
+                moneyToExchange = Convert.ToSingle(Console.ReadLine());
+
+                if ((decreasingCurrency == 1 || decreasingCurrency == 2 || decreasingCurrency == 3)&&(increasingCurrency == 1 || increasingCurrency == 2 || increasingCurrency ==3))
+                switch (decreasingCurrency)
+                {
+                    case 1:
+                            if (increasingCurrency == 2 && moneyToExchange <= rubles)
+                            {
+                                rubles -= moneyToExchange;
+                                dollars += moneyToExchange * rubToUSD;
+                            }
+                            else if (increasingCurrency == 3 && moneyToExchange <= rubles)
+                            {
+                                rubles -= moneyToExchange;
+                                yen += moneyToExchange * rubToYen;
+                            }
+                            else if (increasingCurrency == 1 && moneyToExchange <= rubles)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Одинаковая валюта списания и зачисления, баланс без изменений.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                            Console.Clear();
+                            Console.WriteLine($"Ваш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+                            exit = Console.ReadLine();
+                            break;
+                    case 2:
+                        if (increasingCurrency == 1 && moneyToExchange <= dollars)
+                        {
+                            dollars -= moneyToExchange;
+                            rubles += moneyToExchange * usdToRub;
+                        }
+                        else if (increasingCurrency == 3 && moneyToExchange <= dollars)
+                        {
+                            dollars -= moneyToExchange;
+                            yen += moneyToExchange * usdToYen;
+                        }
+                            else if (increasingCurrency == 2 && moneyToExchange <= dollars)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Одинаковая валюта списания и зачисления, баланс без изменений.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                            Console.Clear();
+                            Console.WriteLine($"Ваш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+                            exit = Console.ReadLine();
+                            break;
+                    case 3:
+                        if (increasingCurrency == 1 && moneyToExchange <= yen)
+                        {
+                            yen -= moneyToExchange;
+                            rubles += moneyToExchange / rubToYen;
+                        }
+                        else if (increasingCurrency == 2 && moneyToExchange <= yen)
+                        {
+                            yen -= moneyToExchange;
+                            dollars += moneyToExchange / usdToYen;
+                        }
+                            else if (increasingCurrency == 3 && moneyToExchange <= yen)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Одинаковая валюта списания и зачисления, баланс без изменений.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить.");
+                                Console.ReadKey();
+                            }
+                        Console.Clear();
+                        Console.WriteLine($"Ваш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+                        exit = Console.ReadLine();
+                        break;
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка ввода. Нажмите Enter.");
+                    Console.ReadKey();
+                    Console.Clear();
+                    Console.WriteLine($"Ваш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.");
+                    Console.WriteLine("Нажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+                    exit = Console.ReadLine();
+                }
+            }
+            Console.Clear();
+            Console.WriteLine($"Ваш текущий баланс:\n{rubles} рублей, \n{dollars} долларов, \n{yen} йен.");
+            Console.WriteLine("Всего хорошего!");
+        }
+    }
+}
