@@ -6,23 +6,17 @@ namespace Homework_2
     {
         static void Main(string[] args)
         {
-            string userInput;
             int randomNumber;
-            Random rand = new Random();
+            Random random = new Random();
 
             Console.WriteLine("Press enter to get random two-digit number or type 'exit' to leave loop.");
-            Console.ReadLine();
 
-            while (true)
+            while (Console.ReadLine() != "exit")
             {
-                randomNumber = rand.Next(10, 100);
+                randomNumber = random.Next(10, 100);
                 Console.WriteLine(randomNumber);
-                userInput = Console.ReadLine();
-                if (userInput == "exit")
-                {
-                    break;
-                }
             }
+            
             Console.WriteLine("Thank you! Good bye!");
         }
     }
