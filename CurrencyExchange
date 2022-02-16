@@ -41,104 +41,93 @@ namespace Homework_2
                         if (moneyToExchange > rub)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             rub -= moneyToExchange;
                             usd += moneyToExchange * rubToUsd;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     case "2":
                         if (moneyToExchange > rub)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             rub -= moneyToExchange;
                             eur += moneyToExchange * rubToEur;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     case "3":
                         if (moneyToExchange > usd)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             usd -= moneyToExchange;
                             rub += moneyToExchange * usdToRub;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     case "4":
                         if (moneyToExchange > usd)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             usd -= moneyToExchange;
                             eur += moneyToExchange * usdToEur;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     case "5":
                         if (moneyToExchange > eur)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             eur -= moneyToExchange;
                             rub += moneyToExchange * eurToRub;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     case "6":
                         if (moneyToExchange > eur)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Недостаточно средств.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Недостаточно средств.");
                         }
                         else
                         {
                             eur -= moneyToExchange;
                             usd += moneyToExchange * eurToUsd;
                             Console.Clear();
-                            Console.WriteLine($"Перевод выполнен.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                            exit = Console.ReadLine();
+                            Console.WriteLine($"Перевод выполнен.");
                         }
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine($"Ошибка ввода.\nВаш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
-                        exit = Console.ReadLine();
+                        Console.WriteLine($"Ошибка ввода.");
                         break;
                 }
+                Console.WriteLine($"Ваш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.\nНажмите Enter, чтобы продолжить работу с обменником.\nВведите 'exit' и нажмите Enter, чтобы выйти.");
+                exit = Console.ReadLine();
             }
             Console.Clear();
             Console.WriteLine($"Ваш текущий баланс:\n{rub} рублей, \n{usd} долларов, \n{eur} евро.");
@@ -146,3 +135,4 @@ namespace Homework_2
         }
     }
 }
+
