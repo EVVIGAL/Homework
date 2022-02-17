@@ -1,0 +1,90 @@
+using System;
+
+namespace Homework_2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string userInput = "Start";
+            string name = "Неизвестно";
+            string password = ".";
+            string age = "Неизвестен";
+            string gender = "Неизвестен";
+            string selectedGender;
+            string inputPassword;
+
+            while (userInput != "Exit")
+            {
+                Console.Clear();
+                Console.WriteLine("Введите необходимую команду:\nSetName - Ввести имя персонажа\nSetAge - Ввести возраст персонажа\nSetGender - Ввести пол персонажа\nSetPassword - Установить пароль\nGetData - Вывести данные о персонаже\nExit - Выйти из программы");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "SetName":
+                        Console.Clear();
+                        Console.Write("Введите имя персонажа: ");
+                        name = Console.ReadLine();
+                        break;
+                    case "SetAge":
+                        Console.Clear();
+                        Console.Write("Введите возраст персонажа: ");
+                        age = Console.ReadLine();
+                        break;
+                    case "SetGender":
+                        Console.Clear();
+                        Console.WriteLine("Выберите пол персонажа и нажммите Enter:\n1-Мужской\n2-Женский");
+                        selectedGender = Console.ReadLine();
+                        if (selectedGender == "1")
+                        {
+                            gender = "Мужской";
+                        }
+                        else if (selectedGender == "2")
+                        {
+                            gender = "Женский";
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ошибка ввода.");
+                        }
+                        break;
+                    case "SetPassword":
+                        Console.Clear();
+                        Console.Write("Задайте пароль: ");
+                        password = Console.ReadLine();
+                        break;
+                    case "GetData":
+                        Console.Clear();
+                        Console.WriteLine("Введите пароль: ");
+                        inputPassword = Console.ReadLine();
+                        if (inputPassword == password)
+                        {
+                            Console.Clear();
+                            Console.WriteLine($"Имя: {name}\nПол: {gender}\nВозраст: {age}");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Неверный пароль.");
+                            Console.ReadKey();
+                        }
+                        break;
+                    case "Exit":
+                        userInput = "Exit";
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Ошибка ввода. ");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+            Console.Clear();
+            Console.WriteLine("Всего хорошего!");
+        }
+    }
+}
+
+
