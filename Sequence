@@ -1,10 +1,21 @@
-      float output;
-      float remainder;
-      
-    for (int i=1; i<100; i++)
+using System;
+
+namespace Homework_2
+{
+    internal class StringsPractice
     {
-        remainder = i%7;
-        if (remainder == 0)
+        static void Main(string[] args)
         {
-        output = i;
-        Console.Write(output + " ");
+            float output;
+            float remainder;
+            for (int i=1; i<100; i++)
+            {
+            remainder = i%7;
+            if (remainder == 0)
+            {
+            output = i;
+            Console.Write(output + " ");            
+            }
+        }
+    }
+}
