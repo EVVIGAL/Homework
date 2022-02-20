@@ -6,7 +6,8 @@ namespace Homework_2
     {
         static void Main(string[] args)
         {
-            for (int i = 7; i < 100; i+= 7)
+            int limit = 98;
+            for (int i = 7; i <= limit; i+= 7)
             {
                 Console.Write(i + " ");
             }
