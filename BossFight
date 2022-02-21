@@ -6,8 +6,9 @@
 		float fireMultiply = 1.8f;
 		int burn = 0;
 		int burnCounter = 3;
-    int fireCost = 2;
-    int heroEnergy = 0;
+    	int fireCost = 2;
+    	int heroEnergy = 0;
+		bool enemyTurn = true;
 		
 		float enemyHealth = 20000f;
 		float enemyAttack = 320f;
@@ -15,38 +16,52 @@
 		
 		while (enemyHealth > 0 && heroHealth >0)
 		{
-			Console.Clear();
-			Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + );
+			enemyTurn = true;
+			//Console.Clear();
+			Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + heroEnergy);
 			Console.WriteLine("Здоровье врага: " + enemyHealth);
 			Console.Write("Выберите скилл: ");
 			chosenSkill = Console.ReadLine();
 			
-			if (burn > 0)
+			switch (chosenSkill)
+			{
+				case "Hit":
+        		heroEnergy++;
+				enemyHealth -= heroAttack;
+				Console.WriteLine("Вы нанесли " + heroAttack + " урона.");
+				break;
+				
+				case "Fire":
+					
+					if (heroEnergy >= fireCost)
+					{
+        				heroEnergy -= fireCost;
+						enemyHealth -= heroAttack*fireMultiply;
+						burn = burnCounter;
+						Console.WriteLine("Вы нанесли " + (heroAttack*fireMultiply) + " урона и подожгли врага.");
+					}
+					else
+					{
+					enemyTurn = false;
+					Console.WriteLine("Недостаточно энергии.");
+					Console.ReadLine();
+					}
+				break;
+			}
+			
+			if (burn > 0 && enemyTurn == true)
 			{
 				enemyHealth -= enemyHealth*burnDamageMultiply;
 				burn--;
 				Console.WriteLine("Враг получил " + (enemyHealth*burnDamageMultiply) + " урона от ожога");
 			}
 			
-			switch (chosenSkill)
-			{
-				case "Hit":
-        heroEnergy++;
-				enemyHealth -= heroAttack;
-				Console.WriteLine("Вы нанесли " + heroAttack + " урона.");
-				break;
-				
-				case "Fire":
-        heroEnergy -= fireCost;
-				enemyHealth -= heroAttack*fireMultiply;
-				burn = burnCounter;
-				Console.WriteLine("Вы нанесли " + (heroAttack*fireMultiply) + " урона и подожгли врага.");
-				break; 
+			if (enemyTurn == true)
+			{				
+				Console.WriteLine("Враг атакует");
+				heroHealth -= enemyAttack;
+				Console.WriteLine("Враг нанёс " + enemyAttack + " урона");
 			}
-			
-			Console.WriteLine("Враг атакует");
-			heroHealth -= enemyAttack;
-			Console.WriteLine("Враг нанёс " + enemyAttack + " урона");
 		}
 		
 		if (enemyHealth <= 0)
