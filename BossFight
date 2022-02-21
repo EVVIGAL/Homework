@@ -1,76 +1,181 @@
-		float heroHealth = 20000f;
-		float heroAttack = 200f;
-		float heroDefense = 10f;
-		string chosenSkill;
-		float burnDamageMultiply = 0.05f;
-		float fireMultiply = 1.8f;
-		int burn = 0;
-		int burnCounter = 3;
-    	int fireCost = 2;
-    	int heroEnergy = 0;
-		bool enemyTurn = true;
-		
-		float enemyHealth = 20000f;
-		float enemyAttack = 320f;
-		float enemyDefense = 15;
-		
-		while (enemyHealth > 0 && heroHealth >0)
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
 		{
-			enemyTurn = true;
-			//Console.Clear();
-			Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + heroEnergy);
-			Console.WriteLine("Здоровье врага: " + enemyHealth);
-			Console.Write("Выберите скилл: ");
-			chosenSkill = Console.ReadLine();
-			
-			switch (chosenSkill)
+			float heroHealth = 20000f;
+			float heroMaxHealth = 20000f;
+			float heroAttack = 200f;
+			float heroDefense = 10f;
+			float heroDefensePercent = 1 - heroDefense / 100;
+			string chosenSkill;
+			float burnDamageMultiply = 0.05f;
+			float fireMultiply = 1.8f;
+			float ultMultiply = 4.7f;
+			int heal = 120;
+			int burn = 0;
+			int burnCounter = 3;
+			int fireCost = 2;
+			int debuffCost = 3;
+			int ultCost = 4;
+			int heroEnergy = 0;
+			int heroMaxEnergy = 5;
+			bool enemyTurn;
+			bool heroUltimativeSkillIsReady = false;
+
+			float enemyHealth = 20000f;
+			float enemyAttack = 320f;
+			float enemyDefenseOriginal = 15;
+			float enemyDefense = 15;
+			float enemyDefensePercent;
+			float enemyUltimativeSkillMultiply = 3.3f;
+			Random random = new Random();
+			int enemyHit;
+
+			while (enemyHealth > 0 && heroHealth > 0)
 			{
-				case "Hit":
-        		heroEnergy++;
-				enemyHealth -= heroAttack;
-				Console.WriteLine("Вы нанесли " + heroAttack + " урона.");
-				break;
-				
-				case "Fire":
-					
-					if (heroEnergy >= fireCost)
+				enemyDefensePercent = 1 - enemyDefense/100;
+				enemyTurn = true;
+				Console.Clear();
+				Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + heroEnergy);
+				Console.WriteLine("Здоровье врага: " + enemyHealth);
+				Console.Write("Выберите скилл: ");
+				chosenSkill = Console.ReadLine();
+
+				switch (chosenSkill)
+				{
+					case "Hit":
+						heroEnergy++;
+
+						if (heroEnergy > heroMaxEnergy)
+						{
+							heroEnergy = heroMaxEnergy;
+						}
+
+						enemyHealth -= heroAttack * enemyDefensePercent;
+						Console.WriteLine("Вы нанесли " + heroAttack * enemyDefensePercent + " урона.");
+						Console.ReadKey();
+						break;
+
+					case "Fire ball":
+
+						if (heroEnergy >= fireCost)
+						{
+							heroEnergy -= fireCost;
+							enemyHealth -= heroAttack * fireMultiply * enemyDefensePercent;
+							burn = burnCounter;
+							Console.WriteLine("Вы нанесли " + (heroAttack * fireMultiply) + " урона и подожгли противника.");
+						}
+						else
+						{
+							enemyTurn = false;
+							Console.WriteLine("Недостаточно энергии.");
+							Console.ReadLine();
+						}
+
+						break;
+					case "Heal":
+						heroHealth += heal;
+						if (heroHealth > heroMaxHealth)
+                        {
+							heroHealth = heroMaxHealth;
+                        }
+						Console.WriteLine("Магия света поддерживает жизнь в вашем теле.");
+						Console.ReadKey();
+						break;
+					case "Debuff":
+						if (heroEnergy >= debuffCost)
+						{
+							enemyDefense = enemyDefenseOriginal;
+							Console.WriteLine("Вы смываете защитную слизь с Ужаса глубин, ослабив его защиту.");
+							Console.ReadKey();
+						}
+                        else
+                        {
+							enemyTurn = false;
+							Console.WriteLine("Недостаточно энергии.");
+							Console.ReadKey();
+						}
+						break;
+					case "Ult":
+						if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == true)
+						{
+							enemyHealth -= heroAttack * ultMultiply * enemyDefensePercent;
+							heroUltimativeSkillIsReady = false;
+							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин наснося колосальный урон в " + (heroAttack * ultMultiply * enemyDefensePercent)+ " единиц");
+							Console.ReadKey();
+						}
+						else if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == false)
+						{
+							enemyTurn = false;
+							Console.WriteLine("Вокруг нет чего-либо, что можно запустить во врага.");
+							Console.ReadKey();
+						}
+                        else
+                        {
+							enemyTurn = false;
+							Console.WriteLine("Недостаточно энергии.");
+							Console.ReadKey();
+						}
+						break;
+				}
+
+				if (burn > 0 && enemyTurn == true)
+				{
+					enemyHealth -= enemyHealth * burnDamageMultiply;
+					burn--;
+					Console.WriteLine("Враг получил " + (enemyHealth * burnDamageMultiply) + " урона от ожога");
+				}
+
+				if (enemyTurn == true)
+				{
+					enemyHit = random.Next(0, 3);
+
+					switch (enemyHit)
 					{
-        				heroEnergy -= fireCost;
-						enemyHealth -= heroAttack*fireMultiply;
-						burn = burnCounter;
-						Console.WriteLine("Вы нанесли " + (heroAttack*fireMultiply) + " урона и подожгли врага.");
+						case 0:
+							Console.WriteLine("Ужас глубин наносит удары щупальцами");
+							heroHealth -= enemyAttack;
+							Console.WriteLine("Вы получили " + enemyAttack + " урона");
+							Console.ReadKey();
+							break;
+						case 1:
+							Console.WriteLine("Ужас глубин покрывается защитной слизью, его защита увеличивается");
+							enemyDefense++;
+							Console.ReadKey();
+							break;
+						case 2:
+							if (heroUltimativeSkillIsReady == false)
+							{
+								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.");
+								heroUltimativeSkillIsReady = true;
+								heroHealth -= enemyAttack * enemyUltimativeSkillMultiply;
+								Console.WriteLine("Вы получили " + (enemyAttack * enemyUltimativeSkillMultiply) + " урона.");
+								Console.ReadKey();
+							}
+                            else
+                            {
+								Console.WriteLine("Ужас глубин пытется схватить героя, но у герой оказывается проворней и ускользает от его щупалец.");
+								Console.ReadKey();
+							}
+							break;
 					}
-					else
-					{
-					enemyTurn = false;
-					Console.WriteLine("Недостаточно энергии.");
-					Console.ReadLine();
-					}
-				break;
+				}
 			}
-			
-			if (burn > 0 && enemyTurn == true)
+
+			if (enemyHealth <= 0)
 			{
-				enemyHealth -= enemyHealth*burnDamageMultiply;
-				burn--;
-				Console.WriteLine("Враг получил " + (enemyHealth*burnDamageMultiply) + " урона от ожога");
+				Console.Clear();
+				Console.WriteLine("Враг повержен. Победа героя!");
 			}
-			
-			if (enemyTurn == true)
-			{				
-				Console.WriteLine("Враг атакует");
-				heroHealth -= enemyAttack;
-				Console.WriteLine("Враг нанёс " + enemyAttack + " урона");
+			else if (heroHealth <= 0)
+			{
+				Console.Clear();
+				Console.WriteLine("Победа врага...");
 			}
 		}
-		
-		if (enemyHealth <= 0)
-		{
-			Console.Clear();
-			Console.WriteLine("Враг повержен. Победа героя!");
-		}
-		else if (heroHealth <= 0)
-		{
-			Console.Clear();
-			Console.WriteLine("Победа врага...");
-		}
+	}
+}
