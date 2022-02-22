@@ -6,11 +6,11 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			float heroHealth = 20000f;
-			float heroMaxHealth = 20000f;
+			float heroHealth = 3000f;
+			float heroMaxHealth = 3000f;
 			float heroAttack = 200f;
-			float heroDefense = 10f;
-			float heroDefensePercent = 1 - heroDefense / 100;
+			int heroAttackRange;
+			float heroDefensePercent = 0.9f;
 			string chosenSkill;
 			float burnDamageMultiply = 0.05f;
 			float fireMultiply = 1.8f;
@@ -18,28 +18,33 @@ namespace Homework_2
 			int heal = 120;
 			int burn = 0;
 			int burnCounter = 3;
-			int fireCost = 2;
-			int debuffCost = 3;
+			int fireCost = 3;
+			int debuffCost = 2;
 			int ultCost = 4;
 			int heroEnergy = 0;
 			int heroMaxEnergy = 5;
 			bool enemyTurn;
 			bool heroUltimativeSkillIsReady = false;
 
-			float enemyHealth = 20000f;
-			float enemyAttack = 320f;
-			float enemyDefenseOriginal = 15;
-			float enemyDefense = 15;
+			float enemyHealth = 4000f;
+			float enemyAttack = 250f;
+			int enemyAttackRange;
+			float enemyDefenseOriginal = 20;
+			float enemyDefense = 20;
 			float enemyDefensePercent;
-			float enemyUltimativeSkillMultiply = 3.3f;
+			float enemyUltimativeSkillMultiply = 2.3f;
 			Random random = new Random();
 			int enemyHit;
 
 			while (enemyHealth > 0 && heroHealth > 0)
 			{
+			    enemyAttackRange = random.Next(-50, 51);
+			    heroAttackRange = random.Next(-30, 31);
 				enemyDefensePercent = 1 - enemyDefense/100;
 				enemyTurn = true;
 				Console.Clear();
+				Console.WriteLine("Вы маг-герой. В поисках пропавших овец вы забрели в пещеру, где нашли небольшое озеро на островке которого мирно стояли овцы.\nПриблизившись к озеру вам дорогу преградило невиданное существо, наполовину скрытое под водой и лишь щупальца его тянулись к вам.\nСразите ужас из глубин используя свои способности:");
+				Console.WriteLine("Hit - удар посохом. Каждый удар накапливает 1 единицу энергии.\nFire ball - герой выпускает огненный шар, наносящий большой урон и поджигает врага. Необходимо 3 единицы энергии.\nHeal - излечивает героя на 120 единиц здоровья, даёт 1 единицу энергии.\nDebuff - снимает с ужаса глубин защитный бафф. Необходимо 2 единицы энергии.\nUlt - Герой использует телекинез и бросает во врага тяжелые объекты. Необходимо 4 единицы энергии и тяжелые объекты.");
 				Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + heroEnergy);
 				Console.WriteLine("Здоровье врага: " + enemyHealth);
 				Console.Write("Выберите скилл: ");
@@ -49,14 +54,15 @@ namespace Homework_2
 				{
 					case "Hit":
 						heroEnergy++;
-
+						
 						if (heroEnergy > heroMaxEnergy)
 						{
 							heroEnergy = heroMaxEnergy;
 						}
-
-						enemyHealth -= heroAttack * enemyDefensePercent;
-						Console.WriteLine("Вы нанесли " + heroAttack * enemyDefensePercent + " урона.");
+						
+						heroAttackRange = random.Next(-30, 31);
+						enemyHealth -= (heroAttack + heroAttackRange) * enemyDefensePercent;
+						Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * enemyDefensePercent) + " урона.");
 						Console.ReadKey();
 						break;
 
@@ -65,9 +71,9 @@ namespace Homework_2
 						if (heroEnergy >= fireCost)
 						{
 							heroEnergy -= fireCost;
-							enemyHealth -= heroAttack * fireMultiply * enemyDefensePercent;
+							enemyHealth -= (heroAttack + heroAttackRange) * fireMultiply * enemyDefensePercent;
 							burn = burnCounter;
-							Console.WriteLine("Вы нанесли " + (heroAttack * fireMultiply) + " урона и подожгли противника.");
+							Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * fireMultiply) + " урона и подожгли противника.");
 						}
 						else
 						{
@@ -78,11 +84,20 @@ namespace Homework_2
 
 						break;
 					case "Heal":
+						heroEnergy++;
+						
+						if (heroEnergy > heroMaxEnergy)
+						{
+							heroEnergy = heroMaxEnergy;
+						}
+						
 						heroHealth += heal;
+						
 						if (heroHealth > heroMaxHealth)
                         {
 							heroHealth = heroMaxHealth;
                         }
+                        
 						Console.WriteLine("Магия света поддерживает жизнь в вашем теле.");
 						Console.ReadKey();
 						break;
@@ -103,9 +118,9 @@ namespace Homework_2
 					case "Ult":
 						if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == true)
 						{
-							enemyHealth -= heroAttack * ultMultiply * enemyDefensePercent;
+							enemyHealth -= (heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent;
 							heroUltimativeSkillIsReady = false;
-							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин наснося колосальный урон в " + (heroAttack * ultMultiply * enemyDefensePercent)+ " единиц");
+							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин наснося колосальный урон в " + ((heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent)+ " единиц");
 							Console.ReadKey();
 						}
 						else if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == false)
@@ -138,8 +153,8 @@ namespace Homework_2
 					{
 						case 0:
 							Console.WriteLine("Ужас глубин наносит удары щупальцами");
-							heroHealth -= enemyAttack;
-							Console.WriteLine("Вы получили " + enemyAttack + " урона");
+							heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent;
+							Console.WriteLine("Вы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent) + " урона");
 							Console.ReadKey();
 							break;
 						case 1:
@@ -152,8 +167,8 @@ namespace Homework_2
 							{
 								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.");
 								heroUltimativeSkillIsReady = true;
-								heroHealth -= enemyAttack * enemyUltimativeSkillMultiply;
-								Console.WriteLine("Вы получили " + (enemyAttack * enemyUltimativeSkillMultiply) + " урона.");
+								heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply;
+								Console.WriteLine("Вы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply) + " урона.");
 								Console.ReadKey();
 							}
                             else
@@ -175,7 +190,6 @@ namespace Homework_2
 			{
 				Console.Clear();
 				Console.WriteLine("Победа врага...");
-			}
 		}
 	}
 }
