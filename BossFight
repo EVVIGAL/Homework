@@ -1,19 +1,11 @@
-/******************************************************************************
-
-                            Online C# Compiler.
-                Code, Compile, Run and Debug C# program online.
-Write your code in this editor and press "Run" button to execute it.
-
-*******************************************************************************/
-
 using System;
 class HelloWorld 
 {
   static void Main() 
   {
-			float heroHealth = 3000f;
-			float heroMaxHealth = 3000f;
-			float heroAttack = 200f;
+			float heroHealth = 2800f;
+			float heroMaxHealth = 2800f;
+			float heroAttack = 220f;
 			int heroAttackRange;
 			float heroDefensePercent = 0.9f;
 			string chosenSkill;
@@ -31,8 +23,8 @@ class HelloWorld
 			bool enemyTurn;
 			bool heroUltimativeSkillIsReady = false;
 
-			float enemyHealth = 4000f;
-			float enemyAttack = 250f;
+			float enemyHealth = 3200f;
+			float enemyAttack = 240f;
 			int enemyAttackRange;
 			float enemyDefenseOriginal = 20;
 			float enemyDefense = 20;
@@ -40,6 +32,7 @@ class HelloWorld
 			float enemyUltimativeSkillMultiply = 2.3f;
 			Random random = new Random();
 			int enemyHit;
+			int defenseBuff = 5;
 
 			while (enemyHealth > 0 && heroHealth > 0)
 			{
@@ -163,28 +156,27 @@ class HelloWorld
 					switch (enemyHit)
 					{
 						case 0:
-							Console.WriteLine("Ужас глубин наносит удары щупальцами");
 							heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent;
-							Console.WriteLine("Вы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent) + " урона");
+							Console.WriteLine("Ужас глубин наносит удары щупальцами.\nВы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent) + " урона");
 							Console.ReadKey();
 							break;
 						case 1:
 							Console.WriteLine("Ужас глубин покрывается защитной слизью, его защита увеличивается");
-							enemyDefense++;
+							enemyDefense += defenseBuff;
 							Console.ReadKey();
 							break;
 						case 2:
 							if (heroUltimativeSkillIsReady == false)
 							{
-								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.");
 								heroUltimativeSkillIsReady = true;
 								heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply;
-								Console.WriteLine("Вы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply) + " урона.");
+								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.\nВы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply) + " урона.");
 								Console.ReadKey();
 							}
                             else
                             {
-								Console.WriteLine("Ужас глубин пытется схватить героя, но у герой оказывается проворней и ускользает от его щупалец.");
+                                heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent;
+								Console.WriteLine("Ужас глубин пытется схватить героя, но лишь вскользь задевает его нанеся " + ((enemyAttack + enemyAttackRange) * heroDefensePercent) + " урона.");
 								Console.ReadKey();
 							}
 							break;
