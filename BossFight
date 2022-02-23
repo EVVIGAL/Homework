@@ -1,17 +1,20 @@
 using System;
-class HelloWorld 
+
+namespace Homework_2
 {
-  static void Main() 
-  {
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
 			float heroHealth = 2800f;
 			float heroMaxHealth = 2800f;
 			float heroAttack = 220f;
 			int heroAttackRange;
 			float heroDefensePercent = 0.9f;
 			string chosenSkill;
-			float burnDamageMultiply = 0.05f;
-			float fireMultiply = 1.8f;
-			float ultMultiply = 4.7f;
+			float burnDamageMultiply = 0.06f;
+			float fireMultiply = 2.5f;
+			float ultMultiply = 5.3f;
 			int heal = 120;
 			int burn = 0;
 			int burnCounter = 3;
@@ -23,28 +26,29 @@ class HelloWorld
 			bool enemyTurn;
 			bool heroUltimativeSkillIsReady = false;
 
-			float enemyHealth = 3200f;
+			float enemyHealth = 3000f;
 			float enemyAttack = 240f;
 			int enemyAttackRange;
+			int maxDefense = 100;
 			float enemyDefenseOriginal = 20;
 			float enemyDefense = 20;
 			float enemyDefensePercent;
-			float enemyUltimativeSkillMultiply = 2.3f;
-			Random random = new Random();
+			float enemyUltimativeSkillMultiply = 3.2f;
 			int enemyHit;
-			int defenseBuff = 5;
+			int defenseBuff = 10;
+			Random random = new Random();
 
 			while (enemyHealth > 0 && heroHealth > 0)
 			{
-			    enemyAttackRange = random.Next(-50, 51);
-			    heroAttackRange = random.Next(-30, 31);
-				enemyDefensePercent = 1 - enemyDefense/100;
+				enemyAttackRange = random.Next(-40, 41);
+				heroAttackRange = random.Next(-30, 31);
+				enemyDefensePercent = 1 - enemyDefense / 100;
 				enemyTurn = true;
 				Console.Clear();
 				Console.WriteLine("Вы маг-герой. В поисках пропавших овец вы забрели в пещеру, где нашли небольшое озеро на островке которого мирно стояли овцы.\nПриблизившись к озеру вам дорогу преградило невиданное существо, наполовину скрытое под водой и лишь щупальца его тянулись к вам.\nСразите ужас из глубин используя свои способности:");
 				Console.WriteLine("Hit - удар посохом. Каждый удар накапливает 1 единицу энергии.\nFire ball - герой выпускает огненный шар, наносящий большой урон и поджигает врага. Необходимо 3 единицы энергии.\nHeal - излечивает героя на 120 единиц здоровья, даёт 1 единицу энергии.\nDebuff - снимает с ужаса глубин защитный бафф. Необходимо 2 единицы энергии.\nUlt - Герой использует телекинез и бросает во врага тяжелые объекты. Необходимо 4 единицы энергии и тяжелые объекты.");
 				Console.WriteLine("Здоровье героя: " + heroHealth + ". Энергия: " + heroEnergy);
-				Console.WriteLine("Здоровье врага: " + enemyHealth);
+				Console.WriteLine("Здоровье врага: " + enemyHealth + ". Защита: " + enemyDefense);
 				Console.Write("Выберите скилл: ");
 				chosenSkill = Console.ReadLine();
 
@@ -52,12 +56,12 @@ class HelloWorld
 				{
 					case "Hit":
 						heroEnergy++;
-						
+
 						if (heroEnergy > heroMaxEnergy)
 						{
 							heroEnergy = heroMaxEnergy;
 						}
-						
+
 						heroAttackRange = random.Next(-30, 31);
 						enemyHealth -= (heroAttack + heroAttackRange) * enemyDefensePercent;
 						Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * enemyDefensePercent) + " урона.");
@@ -71,7 +75,7 @@ class HelloWorld
 							heroEnergy -= fireCost;
 							enemyHealth -= (heroAttack + heroAttackRange) * fireMultiply * enemyDefensePercent;
 							burn = burnCounter;
-							Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * fireMultiply) + " урона и подожгли противника.");
+							Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * fireMultiply * enemyDefensePercent) + " урона и подожгли противника.");
 						}
 						else
 						{
@@ -83,31 +87,33 @@ class HelloWorld
 						break;
 					case "Heal":
 						heroEnergy++;
-						
+
 						if (heroEnergy > heroMaxEnergy)
 						{
 							heroEnergy = heroMaxEnergy;
 						}
-						
+
 						heroHealth += heal;
-						
+
 						if (heroHealth > heroMaxHealth)
-                        {
+						{
 							heroHealth = heroMaxHealth;
-                        }
-                        
+						}
+
 						Console.WriteLine("Магия света поддерживает жизнь в вашем теле.");
 						Console.ReadKey();
 						break;
 					case "Debuff":
+
 						if (heroEnergy >= debuffCost)
 						{
+							heroEnergy -= debuffCost;
 							enemyDefense = enemyDefenseOriginal;
 							Console.WriteLine("Вы смываете защитную слизь с Ужаса глубин, ослабив его защиту.");
 							Console.ReadKey();
 						}
-                        else
-                        {
+						else
+						{
 							enemyTurn = false;
 							Console.WriteLine("Недостаточно энергии.");
 							Console.ReadKey();
@@ -116,10 +122,10 @@ class HelloWorld
 					case "Ult":
 						if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == true)
 						{
-						    heroEnergy -= ultCost;
+							heroEnergy -= ultCost;
 							enemyHealth -= (heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent;
 							heroUltimativeSkillIsReady = false;
-							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин нанося колосальный урон в " + ((heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent)+ " единиц");
+							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин нанося колосальный урон в " + ((heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent) + " единиц");
 							Console.ReadKey();
 						}
 						else if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == false)
@@ -128,18 +134,23 @@ class HelloWorld
 							Console.WriteLine("Вокруг нет чего-либо, что можно запустить во врага.");
 							Console.ReadKey();
 						}
-                        else
-                        {
+						else
+						{
 							enemyTurn = false;
 							Console.WriteLine("Недостаточно энергии.");
 							Console.ReadKey();
 						}
 						break;
+					default:
+						enemyTurn = false;
+						Console.WriteLine("Неверная команда.");
+						Console.ReadKey();
+						break;
 				}
-				
+
 				if (enemyHealth <= 0)
 				{
-				    break;
+					break;
 				}
 
 				if (burn > 0 && enemyTurn == true)
@@ -163,6 +174,12 @@ class HelloWorld
 						case 1:
 							Console.WriteLine("Ужас глубин покрывается защитной слизью, его защита увеличивается");
 							enemyDefense += defenseBuff;
+
+							if (enemyDefense > maxDefense)
+							{
+								enemyDefense = maxDefense;
+							}
+
 							Console.ReadKey();
 							break;
 						case 2:
@@ -173,9 +190,9 @@ class HelloWorld
 								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.\nВы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply) + " урона.");
 								Console.ReadKey();
 							}
-                            else
-                            {
-                                heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent;
+							else
+							{
+								heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent;
 								Console.WriteLine("Ужас глубин пытется схватить героя, но лишь вскользь задевает его нанеся " + ((enemyAttack + enemyAttackRange) * heroDefensePercent) + " урона.");
 								Console.ReadKey();
 							}
@@ -194,5 +211,6 @@ class HelloWorld
 				Console.Clear();
 				Console.WriteLine("Поверженное тело героя плавает на поверхности озера и лишь периодическое блеяние овец нарушает тишину...");
 			}
-  }
+		}
+	}
 }
