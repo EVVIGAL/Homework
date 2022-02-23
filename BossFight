@@ -6,34 +6,35 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
+			int oneHundredPercent = 100;
 			float heroHealth = 2800f;
 			float heroMaxHealth = 2800f;
 			float heroAttack = 220f;
 			int heroAttackRange;
 			float heroDefensePercent = 0.9f;
 			string chosenSkill;
-			float burnDamageMultiply = 0.06f;
-			float fireMultiply = 2.5f;
-			float ultMultiply = 5.3f;
+			float burnDamageMultiplier = 0.06f;
+			float fireMultiplier = 2.5f;
+			float ultimativeSkillDamageMultiplier = 5.3f;
 			int heal = 120;
 			int burn = 0;
 			int burnCounter = 3;
-			int fireCost = 3;
+			int fireBallSkillCost = 3;
 			int debuffCost = 2;
-			int ultCost = 4;
+			int ultimativeSkillCost = 4;
 			int heroEnergy = 0;
-			int heroMaxEnergy = 5;
+			int heroMaximumEnergy = 5;
 			bool enemyTurn;
 			bool heroUltimativeSkillIsReady = false;
 
 			float enemyHealth = 3000f;
 			float enemyAttack = 240f;
 			int enemyAttackRange;
-			int maxDefense = 100;
+			int maximumDefense = 100;
 			float enemyDefenseOriginal = 20;
 			float enemyDefense = 20;
 			float enemyDefensePercent;
-			float enemyUltimativeSkillMultiply = 3.2f;
+			float enemyUltimativeSkillDamageMultiplier = 3.2f;
 			int enemyHit;
 			int defenseBuff = 10;
 			Random random = new Random();
@@ -42,7 +43,7 @@ namespace Homework_2
 			{
 				enemyAttackRange = random.Next(-40, 41);
 				heroAttackRange = random.Next(-30, 31);
-				enemyDefensePercent = 1 - enemyDefense / 100;
+				enemyDefensePercent = 1 - enemyDefense / oneHundredPercent;
 				enemyTurn = true;
 				Console.Clear();
 				Console.WriteLine("Вы маг-герой. В поисках пропавших овец вы забрели в пещеру, где нашли небольшое озеро на островке которого мирно стояли овцы.\nПриблизившись к озеру вам дорогу преградило невиданное существо, наполовину скрытое под водой и лишь щупальца его тянулись к вам.\nСразите ужас из глубин используя свои способности:");
@@ -57,9 +58,9 @@ namespace Homework_2
 					case "Hit":
 						heroEnergy++;
 
-						if (heroEnergy > heroMaxEnergy)
+						if (heroEnergy > heroMaximumEnergy)
 						{
-							heroEnergy = heroMaxEnergy;
+							heroEnergy = heroMaximumEnergy;
 						}
 
 						heroAttackRange = random.Next(-30, 31);
@@ -70,12 +71,12 @@ namespace Homework_2
 
 					case "Fire ball":
 
-						if (heroEnergy >= fireCost)
+						if (heroEnergy >= fireBallSkillCost)
 						{
-							heroEnergy -= fireCost;
-							enemyHealth -= (heroAttack + heroAttackRange) * fireMultiply * enemyDefensePercent;
+							heroEnergy -= fireBallSkillCost;
+							enemyHealth -= (heroAttack + heroAttackRange) * fireMultiplier * enemyDefensePercent;
 							burn = burnCounter;
-							Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * fireMultiply * enemyDefensePercent) + " урона и подожгли противника.");
+							Console.WriteLine("Вы нанесли " + ((heroAttack + heroAttackRange) * fireMultiplier * enemyDefensePercent) + " урона и подожгли противника.");
 						}
 						else
 						{
@@ -88,9 +89,9 @@ namespace Homework_2
 					case "Heal":
 						heroEnergy++;
 
-						if (heroEnergy > heroMaxEnergy)
+						if (heroEnergy > heroMaximumEnergy)
 						{
-							heroEnergy = heroMaxEnergy;
+							heroEnergy = heroMaximumEnergy;
 						}
 
 						heroHealth += heal;
@@ -120,15 +121,15 @@ namespace Homework_2
 						}
 						break;
 					case "Ult":
-						if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == true)
+						if (heroEnergy >= ultimativeSkillCost && heroUltimativeSkillIsReady == true)
 						{
-							heroEnergy -= ultCost;
-							enemyHealth -= (heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent;
+							heroEnergy -= ultimativeSkillCost;
+							enemyHealth -= (heroAttack + heroAttackRange) * ultimativeSkillDamageMultiplier * enemyDefensePercent;
 							heroUltimativeSkillIsReady = false;
-							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин нанося колосальный урон в " + ((heroAttack + heroAttackRange) * ultMultiply * enemyDefensePercent) + " единиц");
+							Console.WriteLine("Обрушенные сталактиты взмывают в воздух и устремляются в сторону Ужаса глубин нанося колосальный урон в " + ((heroAttack + heroAttackRange) * ultimativeSkillDamageMultiplier * enemyDefensePercent) + " единиц");
 							Console.ReadKey();
 						}
-						else if (heroEnergy >= ultCost && heroUltimativeSkillIsReady == false)
+						else if (heroEnergy >= ultimativeSkillCost && heroUltimativeSkillIsReady == false)
 						{
 							enemyTurn = false;
 							Console.WriteLine("Вокруг нет чего-либо, что можно запустить во врага.");
@@ -155,9 +156,9 @@ namespace Homework_2
 
 				if (burn > 0 && enemyTurn == true)
 				{
-					enemyHealth -= enemyHealth * burnDamageMultiply;
+					enemyHealth -= enemyHealth * burnDamageMultiplier;
 					burn--;
-					Console.WriteLine("Враг получил " + (enemyHealth * burnDamageMultiply) + " урона от ожога");
+					Console.WriteLine("Враг получил " + (enemyHealth * burnDamageMultiplier) + " урона от ожога");
 				}
 
 				if (enemyTurn == true)
@@ -175,9 +176,9 @@ namespace Homework_2
 							Console.WriteLine("Ужас глубин покрывается защитной слизью, его защита увеличивается");
 							enemyDefense += defenseBuff;
 
-							if (enemyDefense > maxDefense)
+							if (enemyDefense > maximumDefense)
 							{
-								enemyDefense = maxDefense;
+								enemyDefense = maximumDefense;
 							}
 
 							Console.ReadKey();
@@ -186,8 +187,8 @@ namespace Homework_2
 							if (heroUltimativeSkillIsReady == false)
 							{
 								heroUltimativeSkillIsReady = true;
-								heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply;
-								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.\nВы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillMultiply) + " урона.");
+								heroHealth -= (enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillDamageMultiplier;
+								Console.WriteLine("Ужас глубин хватает героя и бьёт о стены. От сотрясений большие куски сталактитов валятся с потолка.\nВы получили " + ((enemyAttack + enemyAttackRange) * heroDefensePercent * enemyUltimativeSkillDamageMultiplier) + " урона.");
 								Console.ReadKey();
 							}
 							else
