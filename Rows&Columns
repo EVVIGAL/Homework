@@ -6,7 +6,7 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			int sumRows = 0;
+			int rowSummary = 0;
 			int columnMultiplication = 1;
 			int wantRow = 1;
 			int wantColumn = 0;
@@ -26,10 +26,10 @@ namespace Homework_2
 
 			for (int i = 0; i < array.GetLength(1); i++)
 			{
-				sumRows += array[wantRow, i];
+				rowSummary += array[wantRow, i];
 			}
 
-			Console.WriteLine(sumRows + "\n");
+			Console.WriteLine(rowSummary + "\n");
 			Console.WriteLine("Произведение первого столбца: ");
 
 			for (int i = 0; i < array.GetLength(0); i++)
