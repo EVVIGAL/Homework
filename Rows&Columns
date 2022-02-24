@@ -1,0 +1,44 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int sumRows = 0;
+			int columnMultiplication = 1;
+			int wantRow = 1;
+			int wantColumn = 0;
+
+			int[,] array = { { 8, 4, 3 }, { 2, 3, 5 }, { 2, 7, 6 } };
+
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					Console.Write(array[i, j] + " ");
+				}
+				Console.WriteLine();
+			}
+
+			Console.WriteLine("\nСумма второй строки: ");
+
+			for (int i = 0; i < array.GetLength(1); i++)
+			{
+				sumRows += array[wantRow, i];
+			}
+
+			Console.WriteLine(sumRows + "\n");
+			Console.WriteLine("Произведение первого столбца: ");
+
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				columnMultiplication = columnMultiplication * array[i, wantColumn];
+			}
+
+			Console.WriteLine(columnMultiplication);
+			Console.ReadKey();
+		}
+	}
+}
