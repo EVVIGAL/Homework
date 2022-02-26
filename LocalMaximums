@@ -25,31 +25,24 @@ namespace Homework_2
 
 			Console.WriteLine("\n\nЛокальные максимумы:\n");
 
-			for (int i = 0;i < array.Length; i++)
-            {
-				if (i == leftEdge)
-				{
-					if (array[i + 1] < array[i])
-					{
-						Console.Write(array[i] + " ");
-					}
-				}
-				else if (i == rightEdge)
-				{
-					if (array[i - 1] < array[i])
-					{
-						Console.Write(array[i] + " ");
-					}
-				}
-				else
-                {
-					if (array[i] > array[i-1] && array[i] > array[i + 1])
-                    {
-						Console.Write(array[i] + " ");
-					}
-                }
+			if (array[leftEdge + 1] < array[leftEdge])
+			{
+				Console.Write(array[leftEdge] + " ");
 			}
-			
+
+			for (int i = 1; i < rightEdge; i++)
+			{
+				if (array[i] > array[i - 1] && array[i] > array[i + 1])
+				{
+					Console.Write(array[i] + " ");
+				}
+			}
+
+			if (array[rightEdge - 1] < array[rightEdge])
+			{
+				Console.Write(array[rightEdge] + " ");
+			}
+
 			Console.ReadKey();
 		}
 	}
