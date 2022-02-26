@@ -1,0 +1,56 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int leftEdge = 0;
+			int rightEdge;
+			int arrayLength;
+			Random random = new Random();
+			Console.WriteLine("Введите кол-во элементов в массиве:");
+			arrayLength = Convert.ToInt32(Console.ReadLine());
+			rightEdge = arrayLength - 1;
+			int[] array = new int[arrayLength];
+
+			Console.WriteLine("\nМассив:\n");
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i] = random.Next(0, 10);
+				Console.Write(array[i] + " ");
+			}
+
+			Console.WriteLine("\n\nЛокальные максимумы:\n");
+
+			for (int i = 0;i < array.Length; i++)
+            {
+				if (i == leftEdge)
+				{
+					if (array[i + 1] < array[i])
+					{
+						Console.Write(array[i] + " ");
+					}
+				}
+				else if (i == rightEdge)
+				{
+					if (array[i - 1] < array[i])
+					{
+						Console.Write(array[i] + " ");
+					}
+				}
+				else
+                {
+					if (array[i] > array[i-1] && array[i] > array[i + 1])
+                    {
+						Console.Write(array[i] + " ");
+					}
+                }
+			}
+			
+			Console.ReadKey();
+		}
+	}
+}
