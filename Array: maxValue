@@ -1,0 +1,63 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int changeMaximumValueTo = 0;
+			int rows;
+			int columns;
+			int maximumValue;
+			Random random = new Random();
+
+			Console.WriteLine("Введите количество строк массива: ");
+			rows = Convert.ToInt32(Console.ReadLine());
+			Console.WriteLine("Введите количество столбцов массива: ");
+			columns = Convert.ToInt32(Console.ReadLine());
+			Console.WriteLine();
+
+			int[,] array = new int[rows, columns];
+
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					array[i, j] = random.Next(0, 10);
+					Console.Write(array[i, j] + " ");
+				}
+				Console.WriteLine();
+			}
+
+			Console.WriteLine("\nНаибольшее значение в массиве: ");
+			maximumValue = array[0, 0];
+
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					if (array[i, j] > maximumValue)
+					{
+						maximumValue = array[i, j];
+					}
+				}
+			}
+
+			Console.WriteLine(maximumValue + "\n\nВсе ячейки со значением " + maximumValue + " заменены на " + changeMaximumValueTo + ":\n");
+
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					if (array[i, j] == maximumValue)
+					{
+						array[i, j] = changeMaximumValueTo;
+					}
+					Console.Write(array[i, j] + " ");
+				}
+				Console.WriteLine();
+			}
+		}
+	}
+}
