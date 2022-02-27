@@ -1,0 +1,51 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			string userInputCommand = " ";
+			int userInputGold = 0;
+			int summary = 0;
+
+			int[] array = new int[0];			
+
+			while (userInputCommand != "Exit")
+			{
+				Console.Clear();
+				Console.WriteLine("Введите количество золота для добавления в копилку или команду 'sum' для вывода баланса.\nДля выхода введите 'Exit'");
+				userInputCommand = Console.ReadLine();
+
+				if (userInputCommand == "Exit")
+				{
+					break;
+				}
+				else if (userInputCommand == "sum")
+				{
+					for (int i = 0; i < array.Length; i++)
+					{
+						summary += array[i];
+					}
+					Console.WriteLine(summary);
+					Console.ReadKey();
+				}
+				else
+				{
+					userInputGold = Convert.ToInt32(userInputCommand);
+				}
+
+				int[] temporaryArray = new int[array.Length + 1];
+
+				for (int i = 0; i < array.Length; i++)
+				{
+					temporaryArray[i] = array[i];
+				}
+
+				temporaryArray[temporaryArray.Length - 1] = userInputGold;
+				array = temporaryArray;
+			}
+		}
+	}
+}
