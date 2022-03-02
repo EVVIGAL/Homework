@@ -28,19 +28,30 @@ namespace Homework_2
 					Console.WriteLine(sum);
 					Console.ReadKey();
 				}
-				else if (userInputCommand != "Exit")
+
+				else
 				{
-					userInputGold = Convert.ToInt32(userInputCommand);
-
-					int[] temporaryArray = new int[array.Length + 1];
-
-					for (int i = 0; i < array.Length; i++)
+					try
 					{
-						temporaryArray[i] = array[i];
+						userInputGold = Convert.ToInt32(userInputCommand);
 					}
+					catch
+					{
+						Console.WriteLine("Введите число или правильную команду.");
+						Console.ReadKey();
+					}
+					finally
+					{
+						int[] temporaryArray = new int[array.Length + 1];
 
-					temporaryArray[temporaryArray.Length - 1] = userInputGold;
-					array = temporaryArray;
+						for (int i = 0; i < array.Length; i++)
+						{
+							temporaryArray[i] = array[i];
+						}
+
+						temporaryArray[temporaryArray.Length - 1] = userInputGold;
+						array = temporaryArray;
+					}
 				}
 			}
 		}
