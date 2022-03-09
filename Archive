@@ -1,0 +1,96 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			string userInput = "";
+			string fullName;
+			string position;
+			int indexToDelete;
+			string[] fullNameArray = new string[0];
+			string[] positionArray = new string[0];
+
+			while (userInput != "5")
+            {
+				Console.Clear();
+				Console.WriteLine("1 - Добавить досье\n2 - Вывести все досье\n3 - Удалить досье\n4 - Поиск по фамилии\n5 - Выход.");
+				Console.Write("Выберите пункт меню:");
+				userInput = Console.ReadLine();
+
+				switch (userInput)
+                {
+					case "1":
+						Console.WriteLine("Введите ФИО:");
+						fullName = Console.ReadLine();
+						fullNameArray = personInformationAdding(fullNameArray, fullName);
+						Console.WriteLine("Введите должность:");
+						position = Console.ReadLine();
+						positionArray = personInformationAdding(positionArray, position);						
+						Console.WriteLine("Досье добавлено");
+						Console.ReadKey();
+						break;
+					case "2":
+						showInfo(fullNameArray, positionArray);
+						Console.ReadKey();
+						break;
+					case "3":
+						Console.Write("Введите порядковый номер досье, которое хотите удалить:");
+						indexToDelete = Convert.ToInt32(Console.ReadLine());
+						fullNameArray = deleteInfo(fullNameArray, indexToDelete);
+						positionArray = deleteInfo(positionArray, indexToDelete);
+						Console.WriteLine("Досье #" + indexToDelete + " успешно удалено.");
+						Console.ReadKey();
+						break;
+					case "4":
+
+						break;
+                }
+            }			
+		}
+	
+		static string[] personInformationAdding(string[] array, string addedValue)
+		{
+			string[] temporaryArray = new string[array.Length + 1];
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				temporaryArray[i] = array[i];
+			}
+
+			temporaryArray[temporaryArray.Length - 1] = addedValue;
+			array = temporaryArray;
+			return array;
+		}
+	
+		static void showInfo(string[] nameListArray, string[] positionListArray)
+        {
+			for (int i = 0; i < nameListArray.Length; i++)
+			{
+				Console.WriteLine((i+1) + ". " + nameListArray[i] + " - " + positionListArray[i]);
+			}
+		}
+
+		static string[] deleteInfo(string[] array, int indexToDelete)
+        {
+			indexToDelete--;
+			string[] temporaryArray = new string[array.Length - 1];
+
+			for (int i = 0; i < indexToDelete; i++)
+			{
+				temporaryArray[i] = array[i];
+			}
+
+			for (int i = indexToDelete + 1; i < array.Length; i++)
+			{
+				temporaryArray[i - 1] = array[i];
+			}
+
+			array = temporaryArray;
+			return array;
+		}
+	}
+		
+}
