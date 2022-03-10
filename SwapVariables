@@ -1,0 +1,21 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			string name = "Kurosawa";
+			string surname = "Itto";
+			string temporaryValue;
+			Console.WriteLine("Name: " + name + "\nSurname: " + surname + "\nНажмите Enter, чтобы поменять имя и фамилию местами.");
+			Console.ReadKey();
+			temporaryValue = surname;
+			surname = name;
+			name = temporaryValue;
+			Console.WriteLine("Name: " + name + "\nSurname: " + surname);
+			Console.ReadKey();
+		}
+	}
+}
