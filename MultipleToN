@@ -1,0 +1,35 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Random random = new Random();
+			int numberN;
+			int multipleNumber;
+			int quantityOfMultipleNumbers = 0;
+			int minimalThreeDigitNumber = 100;
+			int maximumThreeDigitNumber = 999;
+
+			numberN = random.Next(0, 28);
+			Console.WriteLine("Число N: " + numberN);
+
+			Console.SetCursorPosition(0, 2);
+			for (int i = 0; i * numberN <= maximumThreeDigitNumber; i++)
+			{
+				multipleNumber = i * numberN;
+				if (multipleNumber >= minimalThreeDigitNumber && multipleNumber <= maximumThreeDigitNumber)
+				{
+					quantityOfMultipleNumbers++;
+					Console.Write(multipleNumber + " ");
+				}
+			}
+
+			Console.SetCursorPosition(0, 1);
+			Console.WriteLine("Всего " + quantityOfMultipleNumbers + " трёхзначных числа, кратных " + numberN + ":");
+			Console.ReadKey();
+		}
+	}
+}
