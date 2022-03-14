@@ -17,10 +17,10 @@ namespace Homework_2
 			Console.WriteLine("Число N: " + numberN);
 
 			Console.SetCursorPosition(0, 2);
-			for (int i = 0; i * numberN <= maximumThreeDigitNumber; i++)
+			for (int i = numberN; i <= maximumThreeDigitNumber; i += numberN)
 			{
-				multipleNumber = i * numberN;
-				if (multipleNumber >= minimalThreeDigitNumber && multipleNumber <= maximumThreeDigitNumber)
+				multipleNumber = i;
+				if (multipleNumber >= minimalThreeDigitNumber)
 				{
 					quantityOfMultipleNumbers++;
 					Console.Write(multipleNumber + " ");
