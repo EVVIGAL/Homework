@@ -18,9 +18,9 @@ namespace Homework_2
 			Console.Write("Введите последовательность из символов '(' и ')':");
 			text = Console.ReadLine();
 
-			foreach (char c in text)
+			foreach (char symbol in text)
 			{
-				if (c == symbol1 && Counter >= 0)
+				if (symbol == symbol1 && Counter >= 0)
 				{
 					Counter++;
 					symbol1Counter++;
@@ -32,7 +32,7 @@ namespace Homework_2
 
 					symbol2Counter = reset;
 				}
-				else if (c == symbol2 && Counter >= 0)
+				else if (symbol == symbol2 && Counter >= 0)
 				{
 					Counter--;
 					symbol2Counter++;
