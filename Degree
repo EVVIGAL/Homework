@@ -18,14 +18,14 @@ namespace Homework_2
 			Console.WriteLine("Число: " + number);
 
 			while (neededNumber <= number)
-            {
+			{
 				degree++;
 				neededNumber *= numberOfDegree;
 			}
 
 			Console.WriteLine("Минимальная степень числа " + numberOfDegree + " превосходящая заданное число: " + degree);
 			Console.WriteLine("Число " + numberOfDegree + " в найденной степени: " + neededNumber);
-			Console.ReadKey();			
+			Console.ReadKey();
 		}
 	}
 }
