@@ -1,0 +1,61 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			char symbol1 = '(';
+			char symbol2 = ')';
+			string text;
+			int symbol1Counter = 0;
+			int symbol2Counter = 0;
+			int Counter = 0;
+			int maxCounter = 0;
+			int reset = 0;
+
+			Console.Write("Введите последовательность из символов '(' и ')':");
+			text = Console.ReadLine();
+
+			foreach (char c in text)
+			{
+				if (c == symbol1 && Counter >= 0)
+				{
+					Counter++;
+					symbol1Counter++;
+
+					if (symbol1Counter >= symbol2Counter && symbol1Counter >= maxCounter)
+					{
+						maxCounter = symbol1Counter;
+					}
+
+					symbol2Counter = reset;
+				}
+				else if (c == symbol2 && Counter >= 0)
+				{
+					Counter--;
+					symbol2Counter++;
+
+					if (symbol2Counter >= symbol1Counter && symbol2Counter >= maxCounter)
+					{
+						maxCounter = symbol2Counter;						
+					}
+
+					symbol1Counter = reset;
+				}
+			}
+
+			if (Counter != 0)
+			{
+				Console.WriteLine("Некорректное выражение.");
+				Console.ReadKey();
+			}
+			else
+			{
+				Console.WriteLine("Корректное выражение. Максимальная глубина вложенности скобок: " + maxCounter);
+				Console.ReadKey();
+			}
+		}
+	}
+}
