@@ -7,12 +7,14 @@ namespace Homework_2
 		static void Main(string[] args)
 		{
 			int number;
+			int minimalRangeOfNumber = 0;
+			int maximalRangeOfNumber = 1000;
 			int numberOfDegree = 2;
 			int degree = 0;
 			int neededNumber = 1;
 			Random random = new Random();
 
-			number = random.Next(0, 100);
+			number = random.Next(minimalRangeOfNumber, maximalRangeOfNumber);
 			Console.WriteLine("Число: " + number);
 
 			while (neededNumber <= number)
@@ -21,8 +23,8 @@ namespace Homework_2
 				neededNumber *= numberOfDegree;
 			}
 
-			Console.WriteLine("Минимальная степень двойки, превосходящая заданное число: " + degree);
-			Console.WriteLine("Число 2 в найденной степени: " + neededNumber);
+			Console.WriteLine("Минимальная степень числа " + numberOfDegree + " превосходящая заданное число: " + degree);
+			Console.WriteLine("Число " + numberOfDegree + " в найденной степени: " + neededNumber);
 			Console.ReadKey();			
 		}
 	}
