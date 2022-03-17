@@ -37,8 +37,8 @@ namespace Homework_2
                 }
             }
 
-            Console.WriteLine("\n\nЧисло: " + neededNumber);
-            Console.WriteLine("Кол-во: " + maximumCounter);
+            Console.WriteLine("\n\nПовторяющееся число: " + neededNumber);
+            Console.WriteLine("Кол-во повторений: " + maximumCounter);
             Console.ReadKey();
         }
     }
