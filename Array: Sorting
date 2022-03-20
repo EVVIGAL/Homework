@@ -1,0 +1,46 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int temporaryNumber;
+			int maximumNumberInArray = 9;
+			int minimumNumberInArray = 0;
+			int[] array = new int[10];
+			Random random = new Random();
+
+			Console.WriteLine("Дан массив:");
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i] = random.Next(minimumNumberInArray, maximumNumberInArray + 1);
+				Console.Write(array[i] + " ");
+			}
+
+			Console.WriteLine("\nОтсортированный по возрастанию массив:");
+
+			for (int i = 0; i < array.Length - 1; i++)
+			{
+				for (int j = i + 1; j < array.Length; j++)
+				{
+					if (array[i] > array[j])
+					{
+						temporaryNumber = array[i];
+						array[i] = array[j];
+						array[j] = temporaryNumber;
+					}
+				}
+			}
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				Console.Write(array[i] + " ");
+			}
+
+			Console.ReadKey();
+		}
+	}
+}
