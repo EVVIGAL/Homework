@@ -9,9 +9,9 @@ namespace Homework_2
 			string text = "Добро пожаловать в Междумирье!";
 			string[] stringArray = text.Split(' ');
 
-			foreach (string str in stringArray)
+			foreach (string oneWordInSentence in stringArray)
 			{
-				Console.WriteLine(str);
+				Console.WriteLine(oneWordInSentence);
 			}
 
 			Console.ReadKey();
