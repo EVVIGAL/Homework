@@ -1,0 +1,46 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int inputNumber;
+			int temporaryNumber;
+			int minValueInArray = 0;
+			int maxValueInArray = 10;
+			Random random = new Random();
+			int[] array = new int[5];
+
+			Console.WriteLine("Имеется массив:");
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i] = random.Next(minValueInArray, maxValueInArray);
+				Console.Write(array[i] + " ");
+			}
+
+			Console.Write("\nНа сколько позиций влево сместить массив? Введите число: ");
+			inputNumber = Convert.ToInt32(Console.ReadLine());
+			inputNumber %= array.Length;
+
+			for (int j = 0; j < inputNumber; j++)
+			{
+				temporaryNumber = array[0];
+				for (int i = 0; i < array.Length - 1; i++)
+				{					
+					array[i] = array[i + 1];					
+				}
+				array[array.Length - 1] = temporaryNumber;
+			}
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				Console.Write(array[i] + " ");
+			}
+
+			Console.ReadKey();
+		}
+	}
+}
