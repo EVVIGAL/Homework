@@ -7,8 +7,8 @@ namespace Homework_2
 		static void Main(string[] args)
 		{
 			string userInput = "";
-			string[] fullNameArray = new string[0];
-			string[] positionArray = new string[0];
+			string[] fullNamesArray = new string[0];
+			string[] positionsArray = new string[0];
 
 			while (userInput != "5")
 			{
@@ -20,45 +20,52 @@ namespace Homework_2
 				switch (userInput)
 				{
 					case "1":
-						AddPerson(ref fullNameArray, ref positionArray);
+						AddPerson(ref fullNamesArray, ref positionsArray);
 						break;
 					case "2":
-						ShowInfo(fullNameArray, positionArray);
+						ShowInfo(fullNamesArray, positionsArray);
 						break;
 					case "3":
-						DeletePersonFromDataBase(ref fullNameArray, ref positionArray);
+						DeletePerson(ref fullNamesArray, ref positionsArray);
 						break;
 					case "4":
-						SearchBySurname(fullNameArray, positionArray);
+						SearchBySurname(fullNamesArray, positionsArray);
+						break;
+					case "5":
+						Console.Write("Всего хорошего!");
+						break;
+					default:
+						Console.Write("Ошибка ввода.");
+						Console.ReadKey();
 						break;
 				}
 			}
 		}
 
-		static void AddPerson(ref string[] fullNameArray, ref string[] positionArray)
+		static void AddPerson(ref string[] fullNamesArray, ref string[] positionsArray)
 		{
 			Console.WriteLine("Введите ФИО:");
 			string fullName = Console.ReadLine();
-			fullNameArray = SetPersonalInformation(fullNameArray, fullName);
+			fullNamesArray = AddElement(fullNamesArray, fullName);
 			Console.WriteLine("Введите должность:");
 			string position = Console.ReadLine();
-			positionArray = SetPersonalInformation(positionArray, position);
+			positionsArray = AddElement(positionsArray, position);
 			Console.WriteLine("Досье добавлено");
 			Console.ReadKey();
+		}
 
-			static string[] SetPersonalInformation(string[] array, string addedInformation)
+		static string[] AddElement(string[] array, string addedInformation)
+		{
+			string[] temporaryArray = new string[array.Length + 1];
+
+			for (int i = 0; i < array.Length; i++)
 			{
-				string[] temporaryArray = new string[array.Length + 1];
-
-				for (int i = 0; i < array.Length; i++)
-				{
-					temporaryArray[i] = array[i];
-				}
-
-				temporaryArray[temporaryArray.Length - 1] = addedInformation;
-				array = temporaryArray;
-				return array;
+				temporaryArray[i] = array[i];
 			}
+
+			temporaryArray[temporaryArray.Length - 1] = addedInformation;
+			array = temporaryArray;
+			return array;
 		}
 		static void ShowInfo(string[] array, string[] array2)
 		{
@@ -69,33 +76,41 @@ namespace Homework_2
 			Console.ReadKey();
 		}
 
-		static void DeletePersonFromDataBase(ref string[] fullNameArray, ref string[] positionArray)
+		static void DeletePerson(ref string[] fullNamesArray, ref string[] positionsArray)
 		{
 			Console.Write("Введите порядковый номер досье, которое хотите удалить:");
 			int indexToDelete = Convert.ToInt32(Console.ReadLine());
-			fullNameArray = DeleteInfo(fullNameArray, indexToDelete);
-			positionArray = DeleteInfo(positionArray, indexToDelete);
-			Console.WriteLine("Досье #" + indexToDelete + " успешно удалено.");
-			Console.ReadKey();
-
-			static string[] DeleteInfo(string[] array, int indexToDelete)
+			if (indexToDelete <= fullNamesArray.Length && indexToDelete > 0)
 			{
-				indexToDelete--;
-				string[] temporaryArray = new string[array.Length - 1];
-
-				for (int i = 0; i < indexToDelete; i++)
-				{
-					temporaryArray[i] = array[i];
-				}
-
-				for (int i = indexToDelete + 1; i < array.Length; i++)
-				{
-					temporaryArray[i - 1] = array[i];
-				}
-
-				array = temporaryArray;
-				return array;
+				fullNamesArray = DeleteInfo(fullNamesArray, indexToDelete);
+				positionsArray = DeleteInfo(positionsArray, indexToDelete);
+				Console.WriteLine("Досье #" + indexToDelete + " успешно удалено.");
+				Console.ReadKey();
 			}
+			else
+			{
+				Console.WriteLine("Ошибка, такого досье нет.");
+				Console.ReadKey();
+			}
+		}
+
+		static string[] DeleteInfo(string[] array, int indexToDelete)
+		{
+			indexToDelete--;
+			string[] temporaryArray = new string[array.Length - 1];
+
+			for (int i = 0; i < indexToDelete; i++)
+			{
+				temporaryArray[i] = array[i];
+			}
+
+			for (int i = indexToDelete + 1; i < array.Length; i++)
+			{
+				temporaryArray[i - 1] = array[i];
+			}
+
+			array = temporaryArray;
+			return array;
 		}
 
 		static void SearchBySurname(string[] array, string[] array2)
@@ -105,9 +120,14 @@ namespace Homework_2
 
 			for (int i = 0; i < array.Length; i++)
 			{
-				if (array[i].Contains(searchingSurname))
+				string[] temporaryArray = array[i].Split(" ");
+
+				for (int j = 0; j < temporaryArray.Length; j++)
 				{
-					Console.WriteLine((i + 1) + ". " + array[i] + " - " + array2[i]);
+					if (searchingSurname == temporaryArray[j])
+					{
+						Console.WriteLine((i + 1) + ". " + array[i] + " - " + array2[i]);
+					}
 				}
 			}
 
