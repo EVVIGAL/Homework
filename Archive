@@ -35,17 +35,16 @@ namespace Homework_2
 			}
 		}
 
-		static string[] AddPerson(ref string[] fullNameArray, ref string[] positionArray)
+		static void AddPerson(ref string[] fullNameArray, ref string[] positionArray)
 		{
 			Console.WriteLine("Введите ФИО:");
 			string fullName = Console.ReadLine();
 			fullNameArray = SetPersonalInformation(fullNameArray, fullName);
 			Console.WriteLine("Введите должность:");
 			string position = Console.ReadLine();
-			positionArray = SetPersonalInformation(positionArray, position);			
+			positionArray = SetPersonalInformation(positionArray, position);
 			Console.WriteLine("Досье добавлено");
 			Console.ReadKey();
-			return positionArray;
 
 			static string[] SetPersonalInformation(string[] array, string addedInformation)
 			{
@@ -70,7 +69,7 @@ namespace Homework_2
 			Console.ReadKey();
 		}
 
-		static string[] DeletePersonFromDataBase(ref string[] fullNameArray, ref string[] positionArray)
+		static void DeletePersonFromDataBase(ref string[] fullNameArray, ref string[] positionArray)
 		{
 			Console.Write("Введите порядковый номер досье, которое хотите удалить:");
 			int indexToDelete = Convert.ToInt32(Console.ReadLine());
@@ -78,7 +77,6 @@ namespace Homework_2
 			positionArray = DeleteInfo(positionArray, indexToDelete);
 			Console.WriteLine("Досье #" + indexToDelete + " успешно удалено.");
 			Console.ReadKey();
-			return fullNameArray;
 
 			static string[] DeleteInfo(string[] array, int indexToDelete)
 			{
