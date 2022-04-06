@@ -1,0 +1,50 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int mana;
+			int maxMana;
+
+			Console.Write("Введите максимальный запас маны:");
+			maxMana = Convert.ToInt32(Console.ReadLine());
+			Console.Write("Введите текущий запас маны:");
+			mana = Convert.ToInt32(Console.ReadLine());
+
+			DrawBar(mana, maxMana, ConsoleColor.Blue);
+
+			Console.ReadKey();
+		}
+
+		static void DrawBar(int value, int maxValue, ConsoleColor consoleColor)
+		{
+			ConsoleColor defaultColore = Console.BackgroundColor;
+
+			string bar = "";
+
+			for (int i = 0; i < value; i++)
+			{
+				bar += ' ';
+			}
+
+			Console.Write("[");
+			Console.BackgroundColor = consoleColor;
+			Console.Write(bar);
+			Console.BackgroundColor = defaultColore;
+
+			bar = "";
+
+			for (int i = value; i < maxValue; i++)
+			{
+				bar += ' ';
+			}
+
+			Console.Write(bar + "]");
+		}
+
+	}
+}
+
