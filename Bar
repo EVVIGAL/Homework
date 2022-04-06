@@ -6,20 +6,23 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			int mana;
-			int maxMana;
+			float mana;
+			float maxMana;
+			float percent;
+			float oneHundredPercent = 100;
 
 			Console.Write("Введите максимальный запас маны:");
 			maxMana = Convert.ToInt32(Console.ReadLine());
-			Console.Write("Введите текущий запас маны:");
-			mana = Convert.ToInt32(Console.ReadLine());
+			Console.Write("На сколько процентов заполнить ману?:");
+			percent = Convert.ToInt32(Console.ReadLine());
+			mana = maxMana * (percent / oneHundredPercent);
 
 			DrawBar(mana, maxMana, ConsoleColor.Blue);
 
 			Console.ReadKey();
 		}
 
-		static void DrawBar(int value, int maxValue, ConsoleColor consoleColor)
+		static void DrawBar(float value, float maxValue, ConsoleColor consoleColor)
 		{
 			ConsoleColor defaultColore = Console.BackgroundColor;
 
@@ -37,14 +40,13 @@ namespace Homework_2
 
 			bar = "";
 
-			for (int i = value; i < maxValue; i++)
+			for (float i = value; i < maxValue; i++)
 			{
 				bar += ' ';
 			}
 
 			Console.Write(bar + "]");
 		}
-
 	}
 }
 
