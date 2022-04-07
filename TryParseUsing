@@ -8,13 +8,13 @@ namespace Homework_2
 		{
 			int number;
 
-			number = ConvertToInt();
+			number = GetIntegerNumber();
 			Console.WriteLine("Отлично! Число успешно сконвертировано: " + number);
 
 			Console.ReadKey();
 		}
 
-		static int ConvertToInt()
+		static int GetIntegerNumber()
 		{
 			int number = 0;
 			string userInput;
