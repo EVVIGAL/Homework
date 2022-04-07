@@ -6,6 +6,17 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
+			int number;
+
+			number = ConvertToInt();
+			Console.WriteLine("Отлично! Число успешно сконвертировано: " + number);
+
+			Console.ReadKey();
+		}
+
+		static int ConvertToInt()
+		{
+			int number = 0;
 			string userInput;
 			bool success = false;
 
@@ -14,25 +25,14 @@ namespace Homework_2
 				Console.Write("Введите целое число:");
 				userInput = Console.ReadLine();
 
-				success = ConvertToInt(userInput);
+				success = int.TryParse(userInput, out number);
+				if (success == false)
+				{
+					Console.WriteLine("Ошибка, попробуйте ещё раз ввести целое число.");
+				}
 			}
 
-			Console.ReadKey();
-		}
-
-		static bool ConvertToInt(string userInput)
-		{
-			int number;
-			bool success = int.TryParse(userInput, out number);
-			if (success)
-			{
-				Console.WriteLine("Отлично! Число успешно сконвертировано: " + number);
-			}
-			else
-			{
-				Console.WriteLine("Ошибка, попробуйте ещё раз ввести целое число.");
-			}
-			return success;
+			return number;
 		}
 	}
 }
