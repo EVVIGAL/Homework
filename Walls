@@ -6,13 +6,70 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			DrawMap();
-			Console.ReadKey();
+			Console.CursorVisible = false;
+
+			bool isPlaying = true;
+			char player = 'O';
+			char wall = '#'; 
+			int playerY = 3;
+			int playerX = 1;
+			int playerDirectionX = 0;
+			int playerDirectionY = -1;
+
+			char[,] map = DrawMap(wall);
+
+			while (isPlaying)
+            {
+				Console.SetCursorPosition(playerY, playerX);
+				Console.Write(player);
+
+				if (Console.KeyAvailable)
+                {
+					ConsoleKeyInfo key = Console.ReadKey(true);
+
+					switch (key.Key)
+                    {
+						case ConsoleKey.W:
+							playerDirectionX = -1;
+							playerDirectionY = 0;
+							break;
+						case ConsoleKey.S:
+							playerDirectionX = 1;
+							playerDirectionY = 0;
+							break;
+						case ConsoleKey.A:
+							playerDirectionX = 0;
+							playerDirectionY = -1;
+							break;
+						case ConsoleKey.D:
+							playerDirectionX = -1;
+							playerDirectionY = 1;
+							break;
+					}
+
+                    if (map[playerX + playerDirectionX, playerY + playerDirectionY] != wall)
+                    {
+						Console.SetCursorPosition(playerY, playerX);
+						Console.Write(" ");
+
+						playerX += playerDirectionX;
+						playerY += playerDirectionY;
+
+						Console.SetCursorPosition(playerY, playerX);
+						Console.Write(player);
+                    }
+                }
+				Console.ReadKey(true);
+            }
 		}
 
-		static void DrawMap(char wall = '#')
-        {
-			char[,] array = { { wall, wall, wall }, { wall, ' ', wall }, { wall, wall, wall } };
+		static char[,] DrawMap(char wall)
+		{
+			char[,] array = { { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall },
+							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
+							  { wall, ' ', wall, wall, wall, wall, wall, ' ', wall, wall, wall, wall },
+							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
+						      { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall }};
 
 			for (int i = 0; i < array.GetLength(0); i++)
 			{
@@ -23,6 +80,8 @@ namespace Homework_2
 
 				Console.WriteLine("");
 			}
+
+			return array;
 		}
 	}
 }
