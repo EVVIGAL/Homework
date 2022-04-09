@@ -22,16 +22,16 @@ namespace Homework_2
 							  { wall,' ', ' ', ' ', ' ', ' ', ' ',' ', ' ', ' ', ' ', wall },
 							  { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall }};
 
-			ToDrawMap(map, wall);
+			DrawMap(map, wall);
 
-			ToPlay(playerX, playerY, player, map, wall);
+			Play(playerX, playerY, player, map, wall);
 
 			Console.SetCursorPosition(0, 10);
 			Console.Write("Bye!");
 			Console.ReadKey();
 		}
 
-		static void ToDrawMap(char[,] array, char wall)
+		static void DrawMap(char[,] array, char wall)
 		{
 			for (int i = 0; i < array.GetLength(0); i++)
 			{
@@ -44,7 +44,7 @@ namespace Homework_2
 			}
 		}
 
-		static void ToPlay(int positionX, int positionY, char player, char[,] array, char wall)
+		static void Play(int positionX, int positionY, char player, char[,] array, char wall)
 		{
 			bool isPlaying = true;
 
@@ -57,13 +57,13 @@ namespace Homework_2
 				Console.Write(player);
 
 				Console.SetCursorPosition(0, 8);
-				Console.Write("W - move up, S - move down, A - move left, D - move right\nEsc - Exit");
+				Console.Write("W - move up, S - move down, A - move left, D - move right\nEat @ to exit");
 
-				ToSetDirection(out playerDirectionX, out playerDirectionY, out isPlaying);
+				GetDirection(out playerDirectionX, out playerDirectionY);
 
 				if (array[positionX + playerDirectionX, positionY + playerDirectionY] != wall)
 				{
-					ToMove(ref positionX, ref positionY, playerDirectionX, playerDirectionY, player);
+					Move(ref positionX, ref positionY, playerDirectionX, playerDirectionY, player);
 
 					if (array[positionX, positionY] == '@')
 					{
@@ -75,39 +75,35 @@ namespace Homework_2
 			}
 		}
 
-		static void ToSetDirection(out int DirectionX, out int DirectionY, out bool isPlaying)
+		static void GetDirection(out int directionX, out int directionY)
 		{
-			DirectionX = 0;
-			DirectionY = 0;
-			isPlaying = true;
+			directionX = 0;
+			directionY = 0;
 
 			ConsoleKeyInfo key = Console.ReadKey(true);
 
 			switch (key.Key)
 			{
 				case ConsoleKey.W:
-					DirectionX = -1;
-					DirectionY = 0;
+					directionX = -1;
+					directionY = 0;
 					break;
 				case ConsoleKey.S:
-					DirectionX = 1;
-					DirectionY = 0;
+					directionX = 1;
+					directionY = 0;
 					break;
 				case ConsoleKey.A:
-					DirectionX = 0;
-					DirectionY = -1;
+					directionX = 0;
+					directionY = -1;
 					break;
 				case ConsoleKey.D:
-					DirectionX = 0;
-					DirectionY = 1;
-					break;
-				case ConsoleKey.Escape:
-					isPlaying = false;
+					directionX = 0;
+					directionY = 1;
 					break;
 			}
 		}
 
-		static void ToMove(ref int positionX, ref int positionY, int directionX, int directionY, char player)
+		static void Move(ref int positionX, ref int positionY, int directionX, int directionY, char player)
 		{
 			Console.SetCursorPosition(positionY, positionX);
 			Console.Write(" ");
