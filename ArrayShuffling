@@ -1,0 +1,62 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isWorking = true;
+			int[] numbers = { 1, 2, 3, 4, 5 };
+
+			Console.WriteLine("Press Enter to shuffle array\nPress Esc to exit");
+
+			Console.SetCursorPosition(0, 3);
+			DrawingArray(numbers);
+
+			while (isWorking)
+			{
+				ConsoleKeyInfo key = Console.ReadKey(true);
+
+				if (key.Key == ConsoleKey.Enter)
+				{
+					numbers = ShufflingArray(numbers);
+
+					Console.SetCursorPosition(0, 5);
+					DrawingArray(numbers);
+				}
+				else if (key.Key == ConsoleKey.Escape)
+				{
+					isWorking = false;
+					Console.SetCursorPosition(0, 7);
+					Console.WriteLine("Bye!");
+				}
+			}
+		}
+
+		static int[] ShufflingArray(int[] array)
+		{
+			Random random = new Random();
+			int temporaryNumber;
+			int temporaryIndex;
+
+			for (int i = 0; i < array.Length; i++)
+			{
+				temporaryNumber = array[i];
+				temporaryIndex = random.Next(i, array.Length);
+				array[i] = array[temporaryIndex];
+				array[temporaryIndex] = temporaryNumber;
+			}
+
+			return array;
+		}
+
+		static void DrawingArray(int[] array)
+		{
+			for (int i = 0; i < array.Length; i++)
+			{
+				Console.Write(array[i]);
+			}
+		}
+	}
+}
