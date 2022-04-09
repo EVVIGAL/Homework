@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isWorking = true;
+			string userInput;
+
+			Dictionary<string, string> words = new Dictionary<string, string>()
+			{
+				{"Абзац", "Красная строка, отступ в начале строки."},
+				{"Радуга", "Разноцветная дуга на небесном своде, образующаяся вследствие преломления солнечных лучей в дождевых каплях."},
+				{"Магнит", "Кусок железной руды, обладающий свойством притягивать железные или стальные предметы." }
+			};
+
+			while (isWorking)
+			{
+				Console.Clear();
+				ShowDictionary(words);
+				Console.SetCursorPosition(0, 5);
+				Console.WriteLine("Введите слово, значение которого Вы хотите узнать или введите Exit для выхода.");
+				userInput = Console.ReadLine();
+				if (userInput == "Exit")
+				{
+					isWorking = false;
+				}
+				else
+				{
+					FindWord(words, userInput);
+				}
+			}
+		}
+
+		static void ShowDictionary(Dictionary<string, string> dictionary)
+		{
+			Console.WriteLine("Список слов в словаре:");
+
+			foreach (var word in dictionary)
+			{
+				Console.WriteLine(word.Key);
+			}
+		}
+
+		static void FindWord(Dictionary<string, string> dictionary, string word)
+		{
+			if (dictionary.ContainsKey(word))
+			{
+				Console.WriteLine(dictionary[word]);
+				Console.ReadKey();
+			}
+			else
+			{
+				Console.WriteLine("Такого слова нет, попробуйте ещё раз.");
+				Console.ReadKey();
+			}
+		}
+	}
+}
