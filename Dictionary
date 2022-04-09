@@ -20,7 +20,7 @@ namespace Homework_2
 			while (isWorking)
 			{
 				Console.Clear();
-				ShowDictionary(words);
+				Show(words);
 				Console.SetCursorPosition(0, 5);
 				Console.WriteLine("Введите слово, значение которого Вы хотите узнать или введите Exit для выхода.");
 				userInput = Console.ReadLine();
@@ -30,12 +30,12 @@ namespace Homework_2
 				}
 				else
 				{
-					FindWord(words, userInput);
+					Find(words, userInput);
 				}
 			}
 		}
 
-		static void ShowDictionary(Dictionary<string, string> dictionary)
+		static void Show(Dictionary<string, string> dictionary)
 		{
 			Console.WriteLine("Список слов в словаре:");
 
@@ -45,7 +45,7 @@ namespace Homework_2
 			}
 		}
 
-		static void FindWord(Dictionary<string, string> dictionary, string word)
+		static void Find(Dictionary<string, string> dictionary, string word)
 		{
 			if (dictionary.ContainsKey(word))
 			{
