@@ -12,7 +12,7 @@ namespace Homework_2
 			Console.WriteLine("Press Enter to shuffle array\nPress Esc to exit");
 
 			Console.SetCursorPosition(0, 3);
-			DrawingArray(numbers);
+			DrawArray(numbers);
 
 			while (isWorking)
 			{
@@ -20,10 +20,10 @@ namespace Homework_2
 
 				if (key.Key == ConsoleKey.Enter)
 				{
-					numbers = ShufflingArray(numbers);
+					ShuffleArray(numbers);
 
 					Console.SetCursorPosition(0, 5);
-					DrawingArray(numbers);
+					DrawArray(numbers);
 				}
 				else if (key.Key == ConsoleKey.Escape)
 				{
@@ -34,7 +34,7 @@ namespace Homework_2
 			}
 		}
 
-		static int[] ShufflingArray(int[] array)
+		static void ShuffleArray(int[] array)
 		{
 			Random random = new Random();
 			int temporaryNumber;
@@ -47,11 +47,9 @@ namespace Homework_2
 				array[i] = array[temporaryIndex];
 				array[temporaryIndex] = temporaryNumber;
 			}
-
-			return array;
 		}
 
-		static void DrawingArray(int[] array)
+		static void DrawArray(int[] array)
 		{
 			for (int i = 0; i < array.Length; i++)
 			{
