@@ -1,0 +1,100 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Console.CursorVisible = false;
+
+			char player = 'O';
+			char wall = '#';
+			int playerY = 3;
+			int playerX = 1;
+
+			char[,] map = { { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall },
+							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
+							  { wall, ' ', wall, wall, wall, wall, wall, ' ', wall, wall, wall, wall },
+							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
+							  { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall }};
+
+			DrawMap(map, wall);
+
+			Movement(playerX, playerY, player, map, wall);
+
+			Console.SetCursorPosition(0, 8);
+			Console.Write("До скорого!");
+			Console.ReadKey();
+		}
+
+		static void DrawMap(char[,] array, char wall)
+		{
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					Console.Write(array[i, j]);
+				}
+
+				Console.WriteLine("");
+			}
+		}
+
+		static void Movement(int positionX, int positionY, char player, char[,] array, char wall)
+		{
+			bool isPlaying = true;
+
+			while (isPlaying)
+			{
+				Console.SetCursorPosition(positionY, positionX);
+				Console.Write(player);
+
+				Console.SetCursorPosition(0, 6);
+				Console.Write("W - move up, S - move down, A - move left, D - move right\nEsc - Exit");
+				int playerDirectionX = 0;
+				int playerDirectionY = 0;
+
+				if (Console.KeyAvailable)
+				{
+					ConsoleKeyInfo key = Console.ReadKey(true);
+
+					switch (key.Key)
+					{
+						case ConsoleKey.W:
+							playerDirectionX = -1;
+							playerDirectionY = 0;
+							break;
+						case ConsoleKey.S:
+							playerDirectionX = 1;
+							playerDirectionY = 0;
+							break;
+						case ConsoleKey.A:
+							playerDirectionX = 0;
+							playerDirectionY = -1;
+							break;
+						case ConsoleKey.D:
+							playerDirectionX = 0;
+							playerDirectionY = 1;
+							break;
+						case ConsoleKey.Escape:
+							isPlaying = false;
+							break;
+					}
+
+					if (array[positionX + playerDirectionX, positionY + playerDirectionY] != wall)
+					{
+						Console.SetCursorPosition(positionY, positionX);
+						Console.Write(" ");
+
+						positionX += playerDirectionX;
+						positionY += playerDirectionY;
+
+						Console.SetCursorPosition(positionY, positionX);
+						Console.Write(player);
+					}
+				}
+			}
+		}
+	}
+}
