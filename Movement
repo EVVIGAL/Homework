@@ -10,21 +10,24 @@ namespace Homework_2
 
 			char player = 'O';
 			char wall = '#';
+			char goal = '@';
 			int playerY = 3;
 			int playerX = 1;
 
 			char[,] map = { { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall },
 							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
 							  { wall, ' ', wall, wall, wall, wall, wall, ' ', wall, wall, wall, wall },
-							  { wall, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', wall },
+							  { wall, ' ', ' ', ' ', ' ', goal, ' ', ' ', ' ', ' ', ' ', wall },
+							  { wall, wall, wall, wall, ' ', wall, ' ' , wall, wall, wall, wall, wall },
+							  { wall,' ', ' ', ' ', ' ', ' ', ' ',' ', ' ', ' ', ' ', wall },
 							  { wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall }};
 
 			DrawMap(map, wall);
 
 			Movement(playerX, playerY, player, map, wall);
 
-			Console.SetCursorPosition(0, 8);
-			Console.Write("До скорого!");
+			Console.SetCursorPosition(0, 10);
+			Console.Write("Bye!");
 			Console.ReadKey();
 		}
 
@@ -50,7 +53,7 @@ namespace Homework_2
 				Console.SetCursorPosition(positionY, positionX);
 				Console.Write(player);
 
-				Console.SetCursorPosition(0, 6);
+				Console.SetCursorPosition(0, 8);
 				Console.Write("W - move up, S - move down, A - move left, D - move right\nEsc - Exit");
 				int playerDirectionX = 0;
 				int playerDirectionY = 0;
@@ -92,6 +95,13 @@ namespace Homework_2
 
 						Console.SetCursorPosition(positionY, positionX);
 						Console.Write(player);
+
+						if (array[positionX, positionY] == '@')
+						{
+							Console.SetCursorPosition(0, 7);
+							Console.Write("WIN!");
+							isPlaying = false;
+						}
 					}
 				}
 			}
