@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isWorking = true;
+			string userInput;
+			Dictionary<string, string> workers = new Dictionary<string, string>();
+
+			while (isWorking)
+			{
+				Console.Clear();
+				Console.WriteLine("Выберите пункт меню:\n1 - Добавить досье\n2 - Вывести все досье\n3 - Удалить досье\n4 - Выход");
+
+				userInput = Console.ReadLine();
+
+				switch (userInput)
+				{
+					case "1":
+						Add(workers);
+						break;
+					case "2":
+						Show(workers);
+						break;
+					case "3":
+						Delete(workers);
+						break;
+					case "4":
+						isWorking = false;
+						break;
+					default:
+						Console.WriteLine("Ошибка ввода, попробуйте ещё раз.");
+						break;
+				}
+
+				Console.ReadKey();
+			}
+		}
+
+		static void Add(Dictionary<string, string> dictionary)
+		{
+			string fullName;
+			string position;
+
+			Console.WriteLine("Введите ФИО:");
+			fullName = Console.ReadLine();
+
+			Console.WriteLine("Введите должность:");
+			position = Console.ReadLine();
+
+			dictionary.Add(fullName, position);
+		}
+
+		static void Show(Dictionary<string, string> dictionary)
+		{
+			foreach (var item in dictionary)
+				Console.WriteLine(item.Key + " - " + item.Value);
+		}
+
+		static void Delete(Dictionary<string, string> dictionary)
+		{
+			string userInput;
+			Console.WriteLine("Введите ФИО, досье которого хотите удалить:");
+			userInput = Console.ReadLine();
+
+			if (dictionary.ContainsKey(userInput))
+			{
+				dictionary.Remove(userInput);
+			}
+			else
+			{
+				Console.WriteLine("Такого досье нет.");
+			}
+		}
+	}
+}
