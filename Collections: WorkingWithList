@@ -14,7 +14,6 @@ namespace Homework_2
 
 			while (isWorking)
 			{
-				sum = 0;
 				Console.Clear();
 
 				Console.WriteLine("Введите целое число для добавления в список.\nВведите команду 'sum' для вывода суммы чисел в списке\nВведите команду 'exit' для выхода из программы.\nВведите команду 'show' для отображения списка.");
@@ -27,7 +26,8 @@ namespace Homework_2
 						isWorking = false;
 						break;
 					case "sum":
-						SumUp(list, ref sum);
+						sum = SumUp(list);
+						Console.WriteLine($"Сумма всех чисел в списке: {sum}");
 						break;
 					case "show":
 						Show(list);
@@ -36,6 +36,8 @@ namespace Homework_2
 						Add(list, userInput);
 						break;
 				}
+
+				Console.ReadKey();
 			}
 		}
 
@@ -46,29 +48,27 @@ namespace Homework_2
 			{
 				list.Add(number);
 				Console.WriteLine("Число успешно добавлено.");
-				Console.ReadKey();
 			}
 			else
 			{
 				Console.WriteLine("Ошибка! Введённые данные не являются целым числом или командой.");
-				Console.ReadKey();
 			}
 		}
 
-		static void SumUp(List<int> list, ref int sum)
+		static int SumUp(List<int> list)
 		{
+			int sum = 0;
+
 			foreach (int number in list)
 				sum += number;
 
-			Console.WriteLine($"Сумма всех чисел в списке: {sum}");
-			Console.ReadKey();
+			return sum;			
 		}
 
 		static void Show(List<int> list)
 		{
-			foreach (int i in list)
-				Console.WriteLine(i);
-			Console.ReadKey();
+			foreach (int number in list)
+				Console.WriteLine(number);
 		}
 	}
 }
