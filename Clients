@@ -42,7 +42,7 @@ namespace Homework_2
 
 		static void Serve(Queue<string> queue1, Queue<int> queue2, ref int value)
 		{
-			Console.WriteLine($"Сейчас в очереди клиент {queue1.Peek()} с покупкой на сумму {queue2.Peek()} медяков.\nНажмите любую клавишу, чтобы обслужить клиента.");
+			Console.WriteLine($"Сейчас в очереди клиент {queue1.Dequeue()} с покупкой на сумму {queue2.Peek()} медяков.\nНажмите любую клавишу, чтобы обслужить клиента.");
 			Console.ReadKey();
 
 			value += queue2.Dequeue();
