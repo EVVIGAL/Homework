@@ -15,7 +15,6 @@ namespace Homework_2
 			{
 				Console.Clear();
 				Console.WriteLine("Выберите пункт меню:\n1 - Добавить досье\n2 - Вывести все досье\n3 - Удалить досье\n4 - Выход");
-
 				userInput = Console.ReadLine();
 
 				switch (userInput)
@@ -45,9 +44,9 @@ namespace Homework_2
 		{
 			string fullName;
 			string position;
-
 			Console.WriteLine("Введите ФИО:");
 			fullName = Console.ReadLine();
+
 			if (workers.ContainsKey(fullName))
 			{
 				Console.WriteLine("Сотрудник с таким именем уже внесён. При внесении дублирующихся имён, добавьте порядковый номер после ФИО. Спасибо");
@@ -56,15 +55,14 @@ namespace Homework_2
 			{
 				Console.WriteLine("Введите должность:");
 				position = Console.ReadLine();
-
 				workers.Add(fullName, position);
 			}
 		}
 
 		static void ShowList(Dictionary<string, string> dictionary)
 		{
-			foreach (var item in dictionary)
-				Console.WriteLine(item.Key + " - " + item.Value);
+			foreach (var dictionaryElement in dictionary)
+				Console.WriteLine(dictionaryElement.Key + " - " + dictionaryElement.Value);
 		}
 
 		static void DeleteWorker(Dictionary<string, string> workers)
