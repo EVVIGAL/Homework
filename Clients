@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isWorking = true;
+			int money = 0;
+			Queue<string> customers = new Queue<string>();
+			Queue<int> customersCash = new Queue<int>();
+
+			customers.Enqueue("Jack");
+			customers.Enqueue("Ivan");
+			customers.Enqueue("Kirito");
+			customers.Enqueue("Ragnar");
+
+			customersCash.Enqueue(25);
+			customersCash.Enqueue(215);
+			customersCash.Enqueue(14);
+			customersCash.Enqueue(132);
+
+
+			while (isWorking)
+			{
+				Console.Clear();
+				Console.WriteLine($"У Вас {money} медяков.");
+				if (customers.Count >= 1 && customersCash.Count >= 1)
+				{
+					Serve(customers, customersCash, ref money);
+				}
+				else
+				{
+					Console.WriteLine($"Вы обслужили всех клиентов, Вы молодцы! Нажмите любую клавишу, чтобы выйти.");
+					Console.ReadKey();
+					isWorking = false;
+				}
+			}
+		}
+
+		static void Serve(Queue<string> queue1, Queue<int> queue2, ref int value)
+		{
+			Console.WriteLine($"Сейчас в очереди клиент {queue1.Peek()} с покупкой на сумму {queue2.Peek()} медяков.\nНажмите любую клавишу, чтобы обслужить клиента.");
+			Console.ReadKey();
+
+			value += queue2.Dequeue();
+		}
+	}
+}
