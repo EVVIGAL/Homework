@@ -1,0 +1,34 @@
+using System;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			List<string> list = new List<string>();
+			string[] namesOfFirstGroup = { "Tom", "Ron", "Ivan", "Elena" };
+			string[] namesOfSecondGroup = { "Irina", "Tom", "Ron" };
+
+			AddArray(list, namesOfFirstGroup);
+
+			AddArray(list, namesOfSecondGroup);
+
+			foreach (var element in list)
+				Console.WriteLine(element);
+
+			Console.ReadKey();
+		}
+
+		static void AddArray(List<string> list, string[] array)
+		{
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (list.Contains(array[i]) == false)
+				{
+					list.Add(array[i]);
+				}
+			}
+		}
+	}
+}
