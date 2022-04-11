@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Hero Gendalf = new Hero(300);
+
+			Gendalf.ShowStats();
+
+			Console.ReadKey();
+		}
+	}
+
+	class Hero
+	{
+		private int _health;
+		public int Mana;
+
+		public Hero(int mana)
+		{
+			_health = 100;
+			Mana = mana;
+		}
+
+		public void ShowStats()
+		{
+			Console.WriteLine($"Health - {_health}, Mana - {Mana}");
+		}
+	}
+}
