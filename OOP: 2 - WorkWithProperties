@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Homework_2
 {
@@ -7,13 +6,13 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			Hero Gendalf = new Hero();
+			Hero gendalf = new Hero();
 
 			Renderer renderer = new Renderer();
 
-			Gendalf.YPosition = 5;
+			gendalf.YPosition = 5;
 
-			renderer.Draw(Gendalf.XPosition, Gendalf.YPosition);
+			renderer.Draw(gendalf.XPosition, gendalf.YPosition);
 
 			Console.ReadKey();
 		}
