@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Hero Gendalf = new Hero();
+
+			Renderer renderer = new Renderer();
+
+			Gendalf.YPosition = 5;
+
+			renderer.Draw(Gendalf.XPosition, Gendalf.YPosition);
+
+			Console.ReadKey();
+		}
+	}
+
+	class Hero
+	{
+		int _xPosition;
+		int _yPosition;
+
+		public Hero()
+		{
+			_xPosition = 7;
+			_yPosition = 7;
+		}
+
+		public int XPosition
+		{
+			get { return _xPosition; }
+		}
+
+		public int YPosition
+		{
+			get
+			{
+				return _yPosition;
+			}
+			set
+			{
+				if (value > 0)
+					_yPosition = value;
+			}
+		}
+	}
+
+	class Renderer
+	{
+		public void Draw(int xPosition, int yPosition, char player = 'D')
+		{
+			Console.SetCursorPosition(xPosition, yPosition);
+			Console.Write(player);
+		}
+	}
+}
