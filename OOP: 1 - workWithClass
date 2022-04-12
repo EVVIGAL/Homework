@@ -7,7 +7,7 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			Hero Gendalf = new Hero(300);
+			Hero Gendalf = new Hero(222);
 
 			Gendalf.ShowStats();
 
@@ -18,17 +18,17 @@ namespace Homework_2
 	class Hero
 	{
 		private int _health;
-		public int Mana;
+		private int _mana;
 
 		public Hero(int mana)
 		{
 			_health = 100;
-			Mana = mana;
+			_mana = mana;
 		}
 
 		public void ShowStats()
 		{
-			Console.WriteLine($"Health - {_health}, Mana - {Mana}");
+			Console.WriteLine($"Health - {_health}, Mana - {_mana}");
 		}
 	}
 }
