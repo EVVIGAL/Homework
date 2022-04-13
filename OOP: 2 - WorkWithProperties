@@ -20,8 +20,8 @@ namespace Homework_2
 
 	class Hero
 	{
-		int _xPosition;
-		int _yPosition;
+		private int _xPosition;
+		private int _yPosition;
 
 		public Hero()
 		{
