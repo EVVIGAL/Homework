@@ -10,8 +10,6 @@ namespace Homework_2
 
 			Renderer renderer = new Renderer();
 
-			gendalf.YPosition = 5;
-
 			renderer.Draw(gendalf.XPosition, gendalf.YPosition);
 
 			Console.ReadKey();
@@ -20,32 +18,15 @@ namespace Homework_2
 
 	class Hero
 	{
-		private int _xPosition;
-		private int _yPosition;
-
 		public Hero()
 		{
-			_xPosition = 7;
-			_yPosition = 7;
+			XPosition = 7;
+			YPosition = 7;
 		}
 
-		public int XPosition
-		{
-			get { return _xPosition; }
-		}
+		public int XPosition { get; private set; }
 
-		public int YPosition
-		{
-			get
-			{
-				return _yPosition;
-			}
-			set
-			{
-				if (value > 0)
-					_yPosition = value;
-			}
-		}
+		public int YPosition { get; private set; }
 	}
 
 	class Renderer
