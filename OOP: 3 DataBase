@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			List<Players> players = new List<Players>();
+
+
+		}
+
+		static void AddPlayer(List<Players> list)
+        {
+			Random random = new Random();
+			int uniqueNumber = random.Next(0, int.MaxValue);
+            Console.WriteLine("Введите данные нового игрока:\nИмя:");
+			string name = Console.ReadLine();
+			Console.WriteLine("Уровень:");
+			int level = Convert.ToInt32(Console.ReadLine());
+
+		}
+	}
+
+	class Players
+	{
+		public int _uniqueNumber;
+		private string _name;
+		private int _level;
+		private bool _ban;
+
+		public Players(int uniqueNumber, string name, int level)
+		{
+			_uniqueNumber = uniqueNumber;
+			_name = name;
+			_level = level;
+			_ban = false;
+		}
+	}
+}
