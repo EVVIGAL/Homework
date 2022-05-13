@@ -7,32 +7,65 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
+			DataBase dataBase = new DataBase();
 			bool isWorking = true;
 
 			while (isWorking)
             {
-                Console.WriteLine("Выебрите действие:");
+                Console.WriteLine("Выберите действие:");
 				string userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
-
-                }
+					case "1":
+						dataBase.ShowInfo();
+						break;
+					case "2":
+						dataBase.AddPlayer();
+						break;
+				}
 			}
 		}
 	}
 
 	class DataBase
     {
-		List<Players> players = new List<Players>();
-    }
+		private List<Players> _players = new List<Players>();
+
+		public void AddPlayer()
+        {
+			Console.WriteLine("Введите имя:");
+			string name = Console.ReadLine();
+			Console.WriteLine("Введите уровень:");
+			int level = Convert.ToInt32(Console.ReadLine());
+
+			Players player = new Players(name, level);
+			_players.Add(player);
+        }
+
+		public void DeletePlayer(Players player)
+		{
+			_players.Remove(player);
+		}
+
+		public void ShowInfo()
+        {
+			for (int i = 0; i < _players.Count; i++)
+            {
+                Console.WriteLine(_players[i].ShowInfo);
+            }
+
+			Console.ReadKey();
+        }
+	}
 	class Players
 	{
 		private int _uniqueNumbers;
-		public int _uniqueNumber;
 		private string _name;
 		private int _level;
 		private bool _ban;
+
+		public int _uniqueNumber { get; private set; }
 
 		public Players(string name, int level)
 		{
