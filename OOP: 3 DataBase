@@ -7,87 +7,130 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			DataBase dataBase = new DataBase();
 			bool isWorking = true;
+			DataBase dataBase = new DataBase();
 
 			while (isWorking)
-            {
-                Console.WriteLine("Выберите действие:");
+			{
+				Console.Clear();
+				Console.WriteLine("Управление базой пользователей. Введите номер команды:");
+				Console.WriteLine("1 - Добавить пользователя\n2 - Удалить пользователя\n3 - Забанить пользователя\n4 - Разбанить пользователя\n5 - Показать информацию\n6 - Выйти");
+
 				string userInput = Console.ReadLine();
 
-                switch (userInput)
-                {
+				switch (userInput)
+				{
 					case "1":
-						dataBase.ShowInfo();
+						dataBase.AddUser();
+						Console.WriteLine("Пользователь добавлен");
+						Console.ReadKey();
 						break;
 					case "2":
-						dataBase.AddPlayer();
+						dataBase.RemoveUser();
+						Console.WriteLine("Пользователь удалён");
+						Console.ReadKey();
+						break;
+					case "3":
+						dataBase.BanUser();
+						Console.WriteLine("Пользователь забанен");
+						Console.ReadKey();
+						break;
+					case "4":
+						dataBase.UnbanUser();
+						Console.WriteLine("Пользователь разбанен");
+						Console.ReadKey();
+						break;
+					case "5":
+						dataBase.ShowInfo();
+						Console.ReadKey();
+						break;
+					case "6":
+						isWorking = false;
 						break;
 				}
+
 			}
+
 		}
 	}
 
 	class DataBase
-    {
-		private List<Players> _players = new List<Players>();
+	{
+		private List<Players> _data = new List<Players>();
 
-		public void AddPlayer()
-        {
-			Console.WriteLine("Введите имя:");
-			string name = Console.ReadLine();
-			Console.WriteLine("Введите уровень:");
-			int level = Convert.ToInt32(Console.ReadLine());
-
-			Players player = new Players(name, level);
-			_players.Add(player);
-        }
-
-		public void DeletePlayer(Players player)
+		public void BanUser()
 		{
-			_players.Remove(player);
+			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо забанить: ");
+			int ID = Convert.ToInt32(Console.ReadLine());
+			for (int i = 0; i < _data.Count; i++)
+			{
+				if (ID == _data[i]._uniqueNumber)
+					_data[i].Ban = true;
+			}
+		}
+		public void UnbanUser()
+		{
+			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо разбанить: ");
+			int ID = Convert.ToInt32(Console.ReadLine());
+			for (int i = 0; i < _data.Count; i++)
+			{
+				if (ID == _data[i]._uniqueNumber)
+					_data[i].Ban = false;
+			}
 		}
 
 		public void ShowInfo()
-        {
-			for (int i = 0; i < _players.Count; i++)
-            {
-                Console.WriteLine(_players[i].ShowInfo);
-            }
-
-			Console.ReadKey();
-        }
+		{
+			for (int i = 0; i < _data.Count; i++)
+			{
+				_data[i].ShowInfo();
+			}
+		}
+		public void AddUser()
+		{
+			Console.WriteLine("Введите ник: ");
+			string nick = Console.ReadLine();
+			_data.Add(new Players(nick));
+		}
+		public void RemoveUser()
+		{
+			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо удалить: ");
+			int ID = Convert.ToInt32(Console.ReadLine());
+			for (int i = 0; i < _data.Count; i++)
+			{
+				if (ID == _data[i]._uniqueNumber)
+					_data.RemoveAt(i);
+			}
+		}
 	}
 	class Players
 	{
-		private int _uniqueNumbers;
-		private string _name;
-		private int _level;
-		private bool _ban;
+		private static int _uniqueNumbers = 0;
+
+		public Players(string nickname)
+		{
+			int BeginnerLvl = 1;
+
+			_uniqueNumber = ++_uniqueNumbers;
+			Nickname = nickname;
+			Level = BeginnerLvl;
+			Ban = false;
+		}
 
 		public int _uniqueNumber { get; private set; }
-
-		public Players(string name, int level)
-		{
-			_name = name;
-			_level = level;
-			_uniqueNumber = ++_uniqueNumbers;
-			_ban = false;
-		}
-
-		public void Ban()
-        {
-			_ban = true;
-        }
-
-		public void Unban()
-		{
-			_ban = false;
-		}
+		public string Nickname { get; private set; }
+		public int Level { get; private set; }
+		public bool Ban { get; set; }
 
 		public void ShowInfo()
 		{
-            Console.WriteLine($"Имя: {_name}\nУровень: {_level}");
+			Console.WriteLine("Уникальный номер пользователя: " + _uniqueNumber);
+			Console.WriteLine("Ник пользователя: " + Nickname);
+			Console.WriteLine("Уровень пользователя: " + Level);
+			if (Ban)
+				Console.WriteLine("Пользователь забанен" + "\n");
+			else
+				Console.WriteLine("Пользователь не забанен" + "\n");
 		}
 	}
 }
