@@ -22,27 +22,18 @@ namespace Homework_2
 				{
 					case "1":
 						dataBase.AddUser();
-						Console.WriteLine("Пользователь добавлен");
-						Console.ReadKey();
 						break;
 					case "2":
 						dataBase.RemoveUser();
-						Console.WriteLine("Пользователь удалён");
-						Console.ReadKey();
 						break;
 					case "3":
 						dataBase.BanUser();
-						Console.WriteLine("Пользователь забанен");
-						Console.ReadKey();
 						break;
 					case "4":
 						dataBase.UnbanUser();
-						Console.WriteLine("Пользователь разбанен");
-						Console.ReadKey();
 						break;
 					case "5":
 						dataBase.ShowInfo();
-						Console.ReadKey();
 						break;
 					case "6":
 						isWorking = false;
@@ -56,81 +47,100 @@ namespace Homework_2
 
 	class DataBase
 	{
-		private List<Players> _data = new List<Players>();
+		private List<Player> _data = new List<Player>();
 
-		public void BanUser()
-		{
-			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо забанить: ");
+		private int FindUser()
+        {
+			int userID = 0;
+
+			Console.WriteLine("Введите уникалный номер пользователя: ");
 			int ID = Convert.ToInt32(Console.ReadLine());
 			for (int i = 0; i < _data.Count; i++)
 			{
-				if (ID == _data[i]._uniqueNumber)
-					_data[i].Ban = true;
+				if (ID == _data[i].UniqueNumber)
+					userID = i;
 			}
+
+			return userID;
+		}
+		public void BanUser()
+		{
+			int id = FindUser();
+			_data[id].BanUser();
+
+			Console.WriteLine("Пользователь забанен");
+			Console.ReadKey();
 		}
 		public void UnbanUser()
 		{
-			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо разбанить: ");
-			int ID = Convert.ToInt32(Console.ReadLine());
-			for (int i = 0; i < _data.Count; i++)
-			{
-				if (ID == _data[i]._uniqueNumber)
-					_data[i].Ban = false;
-			}
-		}
+			int id = FindUser();
+			_data[id].UnbanUser();
 
+			Console.WriteLine("Пользователь разбанен");
+			Console.ReadKey();
+		}
 		public void ShowInfo()
 		{
 			for (int i = 0; i < _data.Count; i++)
 			{
 				_data[i].ShowInfo();
 			}
+			Console.ReadKey();
 		}
 		public void AddUser()
 		{
 			Console.WriteLine("Введите ник: ");
 			string nick = Console.ReadLine();
-			_data.Add(new Players(nick));
+			_data.Add(new Player(nick));
+			Console.WriteLine("Пользователь добавлен");
+			Console.ReadKey();
 		}
 		public void RemoveUser()
 		{
-			Console.WriteLine("Введите уникалный номер пользователя, которого необходимо удалить: ");
-			int ID = Convert.ToInt32(Console.ReadLine());
-			for (int i = 0; i < _data.Count; i++)
-			{
-				if (ID == _data[i]._uniqueNumber)
-					_data.RemoveAt(i);
-			}
+			int id = FindUser();
+			_data.RemoveAt(id);
+
+			Console.WriteLine("Пользователь удалён");
+			Console.ReadKey();
 		}
 	}
-	class Players
+	class Player
 	{
 		private static int _uniqueNumbers = 0;
 
-		public Players(string nickname)
+		public Player(string nickname)
 		{
 			int BeginnerLvl = 1;
 
-			_uniqueNumber = ++_uniqueNumbers;
+			UniqueNumber = ++_uniqueNumbers;
 			Nickname = nickname;
 			Level = BeginnerLvl;
 			Ban = false;
 		}
 
-		public int _uniqueNumber { get; private set; }
+		public int UniqueNumber { get; private set; }
 		public string Nickname { get; private set; }
 		public int Level { get; private set; }
-		public bool Ban { get; set; }
+		public bool Ban { get; private set; }
 
 		public void ShowInfo()
 		{
-			Console.WriteLine("Уникальный номер пользователя: " + _uniqueNumber);
+			Console.WriteLine("Уникальный номер пользователя: " + UniqueNumber);
 			Console.WriteLine("Ник пользователя: " + Nickname);
 			Console.WriteLine("Уровень пользователя: " + Level);
 			if (Ban)
 				Console.WriteLine("Пользователь забанен" + "\n");
 			else
 				Console.WriteLine("Пользователь не забанен" + "\n");
+		}
+		public void BanUser()
+        {
+			Ban = true;
+        }
+
+		public void UnbanUser()
+		{
+			Ban = false;
 		}
 	}
 }
