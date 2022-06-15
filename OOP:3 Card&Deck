@@ -1,0 +1,129 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Player player = new Player();
+			bool isPlaying = true;
+
+			while (isPlaying)
+            {
+				Console.Clear();
+				Console.WriteLine("Изначально Вы получаете одну карту из колоды. Чтобы победить, Вы должны набрать не больше 43 очков. В колоде 36 карт номиналом от 1 до 11. Введите номер команды:");
+				Console.WriteLine("1 - Взять ещё одну карту\n2 - Посмотреть карты на руках\n3 - Выложить карты\n4 - Выйти");
+				string userInput = Console.ReadLine();
+
+				switch (userInput)
+				{
+					case "1":
+						player.TakeCard();
+						break;
+					case "2":
+						player.LookAtCards();
+						break;
+					case "3":
+						player.ShowCards();
+						isPlaying = false;
+						break;
+					case "4":
+						isPlaying = false;
+						break;
+				}
+			}
+		}
+	}
+
+	class Deck
+	{
+		private List<Card> _deck = new List<Card>();
+
+		public Deck()
+        {
+			int deckCapacity = 35;
+
+			for (int i = 0; i <= deckCapacity; i++)
+				_deck.Add(new Card());
+        }
+
+		public Card GiveCard()
+        {
+			Random random = new Random();
+			int randomCard = random.Next(0, _deck.Count);
+			_deck.RemoveAt(randomCard);
+			return _deck[randomCard];
+        }
+	}
+	class Card
+	{
+		Random random = new Random();
+
+		public Card()
+        {
+			int minCardValue = 3;
+			int maxCardValue = 12;
+			CardValue = random.Next(minCardValue, maxCardValue);
+        }
+
+		public int CardValue { get; private set; }
+	}
+	class Player
+    {
+		private List<Card> _cards = new List<Card>();
+		private Deck _deck = new Deck();
+		private int _maxQuantityOfCards = 7;
+		private int _loseNumber = 43;
+
+		public Player()
+        {
+			Card card = _deck.GiveCard();
+			_cards.Add(card);
+		}
+
+		public void TakeCard()
+        {
+			Card card = _deck.GiveCard();
+
+			if (_cards.Count < _maxQuantityOfCards)
+            {
+				_cards.Add(card);
+				Console.WriteLine("Вы получили ещё одну карту.");
+			}
+			else
+                Console.WriteLine("Вы уже набрали семь карт.");
+
+			Console.ReadKey();
+		}
+
+		public void LookAtCards()
+        {
+			for (int i = 0; i < _cards.Count; i++)
+                Console.Write(_cards[i].CardValue + " ");
+
+			Console.ReadKey();
+        }
+
+		public void ShowCards()
+        {
+			int sum = 0;
+
+			for (int i = 0; i < _cards.Count; i++)
+				Console.WriteLine(_cards[i].CardValue + " ");
+
+			for (int i = 0; i < _cards.Count; i++)
+				sum += _cards[i].CardValue;
+
+            Console.WriteLine("Сумма Ваших карт: " + sum);
+
+			if (sum >= _loseNumber)
+                Console.WriteLine("Вы проиграли!");
+			else
+                Console.WriteLine("Вы выиграли!");
+
+			Console.ReadKey();
+		}
+    }
+}
