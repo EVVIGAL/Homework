@@ -15,7 +15,6 @@ namespace Homework_2
 				Console.Clear();
 				Console.WriteLine("Управление базой пользователей. Введите номер команды:");
 				Console.WriteLine("1 - Добавить пользователя\n2 - Удалить пользователя\n3 - Забанить пользователя\n4 - Разбанить пользователя\n5 - Показать информацию\n6 - Выйти");
-
 				string userInput = Console.ReadLine();
 
 				switch (userInput)
@@ -39,9 +38,7 @@ namespace Homework_2
 						isWorking = false;
 						break;
 				}
-
 			}
-
 		}
 	}
 
@@ -52,39 +49,44 @@ namespace Homework_2
 		private int FindUser()
 		{
 			int userID = 0;
-
 			Console.WriteLine("Введите уникалный номер пользователя: ");
 			int ID = Convert.ToInt32(Console.ReadLine());
+
 			for (int i = 0; i < _data.Count; i++)
 			{
 				if (ID == _data[i].UniqueNumber)
+				{
 					userID = i;
+					break;
+				}
 			}
 
 			return userID;
 		}
+
 		public void BanUser()
 		{
 			int id = FindUser();
 			_data[id].BanUser();
-
 			Console.WriteLine("Пользователь забанен");
 			Console.ReadKey();
 		}
+
 		public void UnbanUser()
 		{
 			int id = FindUser();
 			_data[id].UnbanUser();
-
 			Console.WriteLine("Пользователь разбанен");
 			Console.ReadKey();
 		}
+
 		public void ShowInfo()
 		{
 			for (int i = 0; i < _data.Count; i++)
 			{
 				_data[i].ShowInfo();
 			}
+
 			Console.ReadKey();
 		}
 		public void AddUser()
@@ -95,11 +97,11 @@ namespace Homework_2
 			Console.WriteLine("Пользователь добавлен");
 			Console.ReadKey();
 		}
+
 		public void RemoveUser()
 		{
 			int id = FindUser();
 			_data.RemoveAt(id);
-
 			Console.WriteLine("Пользователь удалён");
 			Console.ReadKey();
 		}
@@ -110,17 +112,19 @@ namespace Homework_2
 
 		public Player(string nickname)
 		{
-			int BeginnerLvl = 1;
-
+			int beginnerLvl = 1;
 			UniqueNumber = ++_uniqueNumbers;
 			Nickname = nickname;
-			Level = BeginnerLvl;
+			Level = beginnerLvl;
 			Ban = false;
 		}
 
 		public int UniqueNumber { get; private set; }
+
 		public string Nickname { get; private set; }
+
 		public int Level { get; private set; }
+
 		public bool Ban { get; private set; }
 
 		public void ShowInfo()
@@ -128,6 +132,7 @@ namespace Homework_2
 			Console.WriteLine("Уникальный номер пользователя: " + UniqueNumber);
 			Console.WriteLine("Ник пользователя: " + Nickname);
 			Console.WriteLine("Уровень пользователя: " + Level);
+
 			if (Ban)
 				Console.WriteLine("Пользователь забанен" + "\n");
 			else
