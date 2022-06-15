@@ -50,7 +50,7 @@ namespace Homework_2
 		private List<Player> _data = new List<Player>();
 
 		private int FindUser()
-        {
+		{
 			int userID = 0;
 
 			Console.WriteLine("Введите уникалный номер пользователя: ");
@@ -134,9 +134,9 @@ namespace Homework_2
 				Console.WriteLine("Пользователь не забанен" + "\n");
 		}
 		public void BanUser()
-        {
+		{
 			Ban = true;
-        }
+		}
 
 		public void UnbanUser()
 		{
