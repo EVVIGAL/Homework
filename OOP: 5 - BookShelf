@@ -60,7 +60,7 @@ namespace Homework_2
 		private List<Book> FindBooksByTitle()
         {
 			List<Book> findedBooks = new List<Book>();
-            Console.WriteLine("Введите название книги:");
+                        Console.WriteLine("Введите название книги:");
 			string userInput = Console.ReadLine();
 			int bookIsPresent = 0;
 
@@ -106,7 +106,7 @@ namespace Homework_2
 
 			for (int i = 0; i < _books.Count; i++)
 				if (userInput == _books[i].Genre)
-                {
+                                {
 					findedBooks.Add(_books[i]);
 					bookIsPresent++;
 				}
@@ -224,7 +224,7 @@ namespace Homework_2
 				Console.WriteLine("Книга удалена.");
 			}
 			else
-                Console.WriteLine("Ошибка ввода.");
+                     		Console.WriteLine("Ошибка ввода.");
 
 			Console.ReadKey();
 		}
