@@ -37,6 +37,10 @@ namespace Homework_2
 					case "6":
 						isWorking = false;
 						break;
+					default:
+						Console.WriteLine("Ошибка ввода.");
+						Console.ReadKey();
+						break;
 				}
 			}
 		}
@@ -47,88 +51,142 @@ namespace Homework_2
 		private List<Book> _books = new List<Book>();
 
 		public Bookshelf()
-        {
-			_books.Add(new Book("The Lord Of The Ring", "J. R. R. Tolkien", "Fantasy", "EKSMO", 2003));
-			_books.Add(new Book("Witcher", "Andrzej Sapkowski", "Fantasy", "EKSMO", 2015));
-			_books.Add(new Book("Howl's Moving Castle", "Diana Wynne Jones", "Anime", "Greenwillow Books", 2003));
+		{
+			_books.Add(new Book("The Lord Of The Ring", "J. R. R. Tolkien", "Fantasy", "EKSMO", "2003"));
+			_books.Add(new Book("Witcher", "Andrzej Sapkowski", "Fantasy", "EKSMO", "2015"));
+			_books.Add(new Book("Howl's Moving Castle", "Diana Wynne Jones", "Anime", "Greenwillow Books", "2003"));
 		}
 
-		private List<int> FindBook()
+		private List<Book> FindBooksByTitle()
         {
-			List<int> idOfFindedBooks = new List<int>();
+			List<Book> findedBooks = new List<Book>();
+            Console.WriteLine("Введите название книги:");
+			string userInput = Console.ReadLine();
+			int bookIsPresent = 0;
+
+			for (int i = 0; i < _books.Count; i++)
+				if (userInput == _books[i].Title)
+				{
+					findedBooks.Add(_books[i]);
+					bookIsPresent++;
+				}
+
+			if (bookIsPresent == 0)
+				Console.WriteLine("Таких книг нет.");
+
+			return findedBooks;
+		}
+
+		private List<Book> FindBooksByWriter()
+		{
+			List<Book> findedBooks = new List<Book>();
+			Console.WriteLine("Введите автора книги:");
+			string userInput = Console.ReadLine();
+			int bookIsPresent = 0;
+
+			for (int i = 0; i < _books.Count; i++)
+				if (userInput == _books[i].Writer)
+				{
+					findedBooks.Add(_books[i]);
+					bookIsPresent++;
+				}
+
+			if (bookIsPresent == 0)
+				Console.WriteLine("Таких книг нет.");
+
+			return findedBooks;
+		}
+
+		private List<Book> FindBooksByGenre()
+		{
+			List<Book> findedBooks = new List<Book>();
+			Console.WriteLine("Введите жанр книги:");
+			string userInput = Console.ReadLine();
+			int bookIsPresent = 0;
+
+			for (int i = 0; i < _books.Count; i++)
+				if (userInput == _books[i].Genre)
+                {
+					findedBooks.Add(_books[i]);
+					bookIsPresent++;
+				}
+
+			if(bookIsPresent == 0)
+                Console.WriteLine("Таких книг нет.");
+
+			return findedBooks;
+		}
+
+		private List<Book> FindBooksByPublisher()
+		{
+			List<Book> findedBooks = new List<Book>();
+			Console.WriteLine("Введите издателя книги:");
+			string userInput = Console.ReadLine();
+			int bookIsPresent = 0;
+
+			for (int i = 0; i < _books.Count; i++)
+				if (userInput == _books[i].Publisher)
+				{
+					findedBooks.Add(_books[i]);
+					bookIsPresent++;
+				}
+
+			if (bookIsPresent == 0)
+				Console.WriteLine("Таких книг нет.");
+
+			return findedBooks;
+		}
+
+		private List<Book> FindBooksByYear()
+		{
+			List<Book> findedBooks = new List<Book>();
+			Console.WriteLine("Введите дату выпуска книги:");
+			string userInput = Console.ReadLine();
+			int bookIsPresent = 0;
+
+			for (int i = 0; i < _books.Count; i++)
+				if (userInput == _books[i].YearOfRelease)
+				{
+					findedBooks.Add(_books[i]);
+					bookIsPresent++;
+				}
+
+			if (bookIsPresent == 0)
+				Console.WriteLine("Таких книг нет.");
+
+			return findedBooks;
+		}
+
+		private List<Book> FindBooks()
+		{
+			List<Book> findedBooks = new List<Book>();
 			Console.WriteLine("Введите параметр сортировки книг: \n1 - Название\n2 - Автор\n3 - Жанр\n4 - Издатель\n5 - Год выпуска");
 			string userInput = Console.ReadLine();
 
 			switch (userInput)
 			{
 				case "1":
-                    Console.WriteLine("Введите название книги: ");
-					string inputTitle = Console.ReadLine();
-
-					for (int i = 0; i < _books.Count; i++)
-                    {
-						if(_books[i].Title == inputTitle)
-                        {
-							idOfFindedBooks.Add(i);
-						}
-                    }
-
+					findedBooks = FindBooksByTitle();
 					break;
 				case "2":
-					Console.WriteLine("Введите автора книги: ");
-					string inputWriter = Console.ReadLine();
-
-					for (int i = 0; i < _books.Count; i++)
-					{
-						if (_books[i].Writer == inputWriter)
-						{
-							idOfFindedBooks.Add(i);
-						}
-					}
-
+					findedBooks = FindBooksByWriter();
 					break;
 				case "3":
-					Console.WriteLine("Введите жанр книги: ");
-					string inputGenre = Console.ReadLine();
-
-					for (int i = 0; i < _books.Count; i++)
-					{
-						if (_books[i].Genre == inputGenre)
-						{
-							idOfFindedBooks.Add(i);
-						}
-					}
-
+					findedBooks = FindBooksByGenre();
 					break;
 				case "4":
-					Console.WriteLine("Введите издателя книги: ");
-					string inputPublisher = Console.ReadLine();
-
-					for (int i = 0; i < _books.Count; i++)
-					{
-						if (_books[i].Publisher == inputPublisher)
-						{
-							idOfFindedBooks.Add(i);
-						}
-					}
-
+					findedBooks = FindBooksByPublisher();
 					break;
 				case "5":
-					Console.WriteLine("Введите год выпуска книги: ");
-					int inputYear = Convert.ToInt32(Console.ReadLine());
-
-					for (int i = 0; i < _books.Count; i++)
-					{
-						if (_books[i].YearOfRelease == inputYear)
-						{
-							idOfFindedBooks.Add(i);
-						}
-					}
-
+					findedBooks = FindBooksByYear();
+					break;
+				default:
+					Console.WriteLine("Ошибка ввода.");
+					Console.ReadKey();
 					break;
 			}
 
-			return idOfFindedBooks;
+			return findedBooks;
 		}
 
 		public void AddBook()
@@ -142,21 +200,34 @@ namespace Homework_2
 			Console.WriteLine("Издатель: ");
 			string publisher = Console.ReadLine();
 			Console.WriteLine("Год выпуска: ");
-			int year = Convert.ToInt32(Console.ReadLine());
+			string year = Console.ReadLine();
 			_books.Add(new Book(title, writer, genre, publisher, year));
 			Console.WriteLine("Книга успешно добавлена.");
 			Console.ReadKey();
 		}
 
 		public void DeleteBook()
-        {
-			SortBooks();
+		{
 			Console.WriteLine("Введите номер книги, которую хотите удалить: ");
-			int userInput = Convert.ToInt32(Console.ReadLine());
-			_books.RemoveAt(userInput - 1);
-			Console.WriteLine("Книга удалена.");
+			string userInput = Console.ReadLine();
+			int number;
+			bool success = int.TryParse(userInput, out number);
+
+			if (success == false)
+			{
+				Console.WriteLine("Ошибка ввода.");
+			}
+
+			if (number - 1 < _books.Count && number - 1 > 0)
+			{
+				_books.RemoveAt(number - 1);
+				Console.WriteLine("Книга удалена.");
+			}
+			else
+                Console.WriteLine("Ошибка ввода.");
+
 			Console.ReadKey();
-        }
+		}
 
 		public void ShowBooks()
 		{
@@ -170,27 +241,26 @@ namespace Homework_2
 
 		public void SortBooks()
 		{
-			List<int> findedBooks = FindBook();
+			List<Book> findedBooks = new List<Book>();
+			findedBooks = FindBooks();
 
 			for (int i = 0; i < findedBooks.Count; i++)
-			{
-				Console.WriteLine((findedBooks[i] + 1) + ") " + "Название: " + _books[findedBooks[i]].Title + "\nАвтор: " + _books[findedBooks[i]].Writer + "\nЖанр: " + _books[findedBooks[i]].Genre + "\nИздатель: " + _books[findedBooks[i]].Publisher + "\nГод выпуска: " + _books[findedBooks[i]].YearOfRelease + "\n");
-			}
+				Console.WriteLine(_books.IndexOf(findedBooks[i]) + 1 + ") " + "Название: " + findedBooks[i].Title + "\nАвтор: " + findedBooks[i].Writer + "\nЖанр: " + findedBooks[i].Genre + "\nИздатель: " + findedBooks[i].Publisher + "\nГод выпуска: " + findedBooks[i].YearOfRelease + "\n");
 
-			Console.ReadKey();
-		}
-
-		public void DeleteAllBooks()
-        {
-			_books.Clear();
-            Console.WriteLine("Все книги были удалены с полки.");
 			Console.ReadKey();
         }
+
+		public void DeleteAllBooks()
+		{
+			_books.Clear();
+			Console.WriteLine("Все книги были удалены с полки.");
+			Console.ReadKey();
+		}
 	}
 
 	class Book
-    {
-		public Book(string title, string writer, string genre, string publisher, int year)
+	{
+		public Book(string title, string writer, string genre, string publisher, string year)
 		{
 			Title = title;
 			Writer = writer;
@@ -207,6 +277,6 @@ namespace Homework_2
 
 		public string Publisher { get; private set; }
 
-		public int YearOfRelease { get; private set; }
+		public string YearOfRelease { get; private set; }
 	}
 }
