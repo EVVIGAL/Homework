@@ -41,30 +41,30 @@ namespace Homework_2
 
 		static void Trade(Customer customer, Merchant merchant)
 		{
+			List<Product> products = merchant.GiveList();
 			Console.WriteLine("Какой товар купить?");
 			string name = Console.ReadLine();
 			Console.WriteLine("Какое количество товара купить?");
 			string userInput = Console.ReadLine();
-			int quantity = customer.CheckInput(userInput);
+			int quantity = customer.ConvertToInt(userInput);
 
-			for (int i = 0; i < merchant._products.Count; i++)
+			for (int i = 0; i < products.Count; i++)
 			{
-				if (merchant._products[i].Name == name && merchant._products[i].Quantity >= quantity && customer.Money >= merchant._products[i].Value * quantity)
+				if (products[i].Name == name && products[i].Quantity >= quantity && customer.CheckMoney() >= products[i].Value * quantity)
 				{
-					customer.GiveMoney(merchant._products[i], quantity);
-					merchant.TakeMoney(merchant._products[i], quantity);
-					merchant.SellProduct(merchant._products[i], i, quantity);
-					customer.TakeProduct(merchant._products[i], quantity);
+					customer.GiveMoney(products[i], quantity);
+					merchant.TakeMoney(products[i], quantity);
+					merchant.SellProduct(products[i], i, quantity);
+					customer.TakeProduct(products[i], quantity);
 					Console.WriteLine("Товар куплен.");
 					Console.ReadKey();
-					break;
 				}
-				else if (merchant._products[i].Name == name && merchant._products[i].Quantity <= quantity && customer.Money >= merchant._products[i].Value * quantity)
+				else if (products[i].Name == name && products[i].Quantity <= quantity && customer.CheckMoney() >= products[i].Value * quantity)
 				{
 					Console.WriteLine("Нет такого товара или его недостаточно.");
 					Console.ReadKey();
 				}
-				else if (merchant._products[i].Name == name && merchant._products[i].Quantity >= quantity && customer.Money <= merchant._products[i].Value * quantity)
+				else if (products[i].Name == name && products[i].Quantity >= quantity && customer.CheckMoney() <= products[i].Value * quantity)
 				{
 					Console.WriteLine("У Вас недостаточно денег");
 					Console.ReadKey();
@@ -75,12 +75,22 @@ namespace Homework_2
 
 	class Person
 	{
-		public List<Product> _products = new List<Product>();
-		public int Money;
+		protected List<Product> _products = new List<Product>();
+		protected int Money;
 
 		public Person()
 		{
 
+		}
+
+		public int CheckMoney()
+        {
+			return Money;
+        }
+
+		public List<Product> GiveList()
+		{
+			return _products;
 		}
 
 		public void ShowInfo()
@@ -93,9 +103,9 @@ namespace Homework_2
 			Console.ReadKey();
 		}
 
-		public int CheckInput(string userInput)
+		public int ConvertToInt(string userInput)
 		{
-			int number = 0;
+			int number;
 			bool success = int.TryParse(userInput, out number);
 
 			if (success == false)
@@ -161,7 +171,6 @@ namespace Homework_2
 				{
 					quantity += _products[i].Quantity;
 					_products.RemoveAt(i);
-					break;
                 }
             }
 
