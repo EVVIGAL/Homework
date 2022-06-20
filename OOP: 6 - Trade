@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isWorking = true;
+			Merchant merchant = new Merchant();
+			Customer customer = new Customer();
+
+			while (isWorking)
+			{
+				Console.Clear();
+				Console.WriteLine("Вы в магазине. Введите номер команды:");
+				Console.WriteLine("1 - Посмотреть товары у продавца\n2 - Посмотреть свою корзину\n3 - Купить товар\n4 - Цены\n5 - Выйти");
+				string userInput = Console.ReadLine();
+
+				switch (userInput)
+				{
+					case "1":
+						merchant.ShowInfo();
+						break;
+					case "2":
+						customer.ShowInfo();
+						break;
+					case "3":
+						Trade(customer, merchant);
+						break;
+					case "4":
+						merchant.ShowPrice();
+						break;
+					case "5":
+						isWorking = false;
+						break;
+				}
+			}
+		}
+
+		static void Trade(Customer customer, Merchant merchant)
+		{
+			Console.WriteLine("Какой товар купить?");
+			string name = Console.ReadLine();
+			Console.WriteLine("Какое количество товара купить?");
+			string userInput = Console.ReadLine();
+			int quantity = customer.CheckInput(userInput);
+
+			for (int i = 0; i < merchant._products.Count; i++)
+			{
+				if (merchant._products[i].Name == name && merchant._products[i].Quantity >= quantity && customer.Money >= merchant._products[i].Value * quantity)
+				{
+					customer.GiveMoney(merchant._products[i], quantity);
+					merchant.TakeMoney(merchant._products[i], quantity);
+					merchant.SellProduct(merchant._products[i], i, quantity);
+					customer.TakeProduct(merchant._products[i], quantity);
+					Console.WriteLine("Товар куплен.");
+					Console.ReadKey();
+					break;
+				}
+				else if (merchant._products[i].Name == name && merchant._products[i].Quantity <= quantity && customer.Money >= merchant._products[i].Value * quantity)
+				{
+					Console.WriteLine("Нет такого товара или его недостаточно.");
+					Console.ReadKey();
+				}
+				else if (merchant._products[i].Name == name && merchant._products[i].Quantity >= quantity && customer.Money <= merchant._products[i].Value * quantity)
+				{
+					Console.WriteLine("У Вас недостаточно денег");
+					Console.ReadKey();
+				}
+			}
+		}
+	}
+
+	class Person
+	{
+		public List<Product> _products = new List<Product>();
+		public int Money;
+
+		public Person()
+		{
+
+		}
+
+		public void ShowInfo()
+		{
+			Console.WriteLine($"\n{Money} денег\n");
+
+			for (int i = 0; i < _products.Count; i++)
+				Console.WriteLine($"{_products[i].Name} x {_products[i].Quantity}");
+
+			Console.ReadKey();
+		}
+
+		public int CheckInput(string userInput)
+		{
+			int number = 0;
+			bool success = int.TryParse(userInput, out number);
+
+			if (success == false)
+			{
+				Console.WriteLine("Ошибка ввода.");
+				Console.ReadKey();
+			}
+
+			return number;
+		}
+	}
+
+	class Merchant : Person
+	{
+		public Merchant()
+		{
+			Money = 0;
+			_products.Add(new Product("Apple", 32, 4));
+			_products.Add(new Product("Book", 3, 150));
+			_products.Add(new Product("Chair", 1, 780));
+			_products.Add(new Product("Pen", 98, 12));
+			_products.Add(new Product("Sword", 1, 999));
+			_products.Add(new Product("Shield", 2, 560));
+		}
+
+		public void ShowPrice()
+		{
+			for (int i = 0; i < _products.Count; i++)
+				Console.WriteLine($"{_products[i].Name} -- {_products[i].Value} денег за штуку");
+
+			Console.ReadKey();
+		}
+
+		public void TakeMoney(Product product, int quantity)
+		{
+			Money += product.Value * quantity;
+		}
+
+		public void SellProduct(Product product, int indexOfProduct, int quantity)
+		{
+			_products.RemoveAt(indexOfProduct);
+			_products.Insert(indexOfProduct, new Product(product.Name, product.Quantity - quantity, product.Value));
+		}
+	}
+
+	class Customer : Person
+	{
+		public Customer(int money = 1000)
+		{
+			Money = money;
+		}
+
+		public void GiveMoney(Product product, int quantity)
+		{
+			Money -= quantity * product.Value;
+		}
+
+		public void TakeProduct(Product product, int quantity)
+		{
+			for (int i = 0; i < _products.Count; i++)
+			{
+				if (product.Name == _products[i].Name)
+				{
+					quantity += _products[i].Quantity;
+					_products.RemoveAt(i);
+					break;
+                }
+            }
+
+			_products.Add(new Product(product.Name, quantity, product.Value));
+		}
+	}
+
+	class Product
+	{
+		public Product(string name = "Unknown product", int quantity = 1, int value = 10)
+		{
+			Name = name;
+			Quantity = quantity;
+			Value = value;
+		}
+
+		public string Name { get; private set; }
+
+		public int Value { get; private set; }
+
+		public int Quantity { get; private set; }
+	}
+}
