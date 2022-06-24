@@ -50,19 +50,19 @@ namespace Homework_2
 
 			for (int i = 0; i < stacks.Count; i++)
 			{
-				if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.LookAtMoney() >= stacks[i].Product.Value * quantity)
+				if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.Money >= stacks[i].Product.Value * quantity)
 				{
 					merchant.SellProduct(stacks[i], i, quantity);
 					customer.TakeProduct(stacks[i], quantity);
 					Console.WriteLine("Товар куплен.");
 					Console.ReadKey();
 				}
-				else if (stacks[i].Product.Name == name && stacks[i].Quantity <= quantity && customer.LookAtMoney() >= stacks[i].Product.Value * quantity)
+				else if (stacks[i].Product.Name == name && stacks[i].Quantity <= quantity && customer.Money >= stacks[i].Product.Value * quantity)
 				{
 					Console.WriteLine("Нет такого товара или его недостаточно.");
 					Console.ReadKey();
 				}
-				else if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.LookAtMoney() <= stacks[i].Product.Value * quantity)
+				else if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.Money <= stacks[i].Product.Value * quantity)
 				{
 					Console.WriteLine("У Вас недостаточно денег");
 					Console.ReadKey();
@@ -81,11 +81,6 @@ namespace Homework_2
 		}
 
 		public int Money { get; protected set; }
-
-		public int LookAtMoney()
-		{
-			return Money;
-		}
 
 		public List<Stack> GiveList()
 		{
