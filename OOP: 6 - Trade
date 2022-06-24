@@ -41,28 +41,28 @@ namespace Homework_2
 
 		static void Trade(Customer customer, Merchant merchant)
 		{
-			List<Product> products = merchant.GiveList();
+			List<Stack> stacks = merchant.GiveList();
 			Console.WriteLine("Какой товар купить?");
 			string name = Console.ReadLine();
 			Console.WriteLine("Какое количество товара купить?");
 			string userInput = Console.ReadLine();
 			int quantity = customer.GetIntegerNumber(userInput);
 
-			for (int i = 0; i < products.Count; i++)
+			for (int i = 0; i < stacks.Count; i++)
 			{
-				if (products[i].Name == name && products[i].Quantity >= quantity && customer.CheckMoney() >= products[i].Value * quantity)
+				if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.ShowMoney() >= stacks[i].Product.Value * quantity)
 				{
-					merchant.SellProduct(products[i], i, quantity);
-					customer.TakeProduct(products[i], quantity);
+					merchant.SellProduct(stacks[i], i, quantity);
+					customer.TakeProduct(stacks[i], quantity);
 					Console.WriteLine("Товар куплен.");
 					Console.ReadKey();
 				}
-				else if (products[i].Name == name && products[i].Quantity <= quantity && customer.CheckMoney() >= products[i].Value * quantity)
+				else if (stacks[i].Product.Name == name && stacks[i].Quantity <= quantity && customer.ShowMoney() >= stacks[i].Product.Value * quantity)
 				{
 					Console.WriteLine("Нет такого товара или его недостаточно.");
 					Console.ReadKey();
 				}
-				else if (products[i].Name == name && products[i].Quantity >= quantity && customer.CheckMoney() <= products[i].Value * quantity)
+				else if (stacks[i].Product.Name == name && stacks[i].Quantity >= quantity && customer.ShowMoney() <= stacks[i].Product.Value * quantity)
 				{
 					Console.WriteLine("У Вас недостаточно денег");
 					Console.ReadKey();
@@ -73,7 +73,7 @@ namespace Homework_2
 
 	class Person
 	{
-		protected List<Product> Products = new List<Product>();
+		protected List<Stack> Products = new List<Stack>();
 
 		public Person()
 		{
@@ -82,17 +82,17 @@ namespace Homework_2
 
 		public int Money { get; protected set; }
 
-		public int CheckMoney()
+		public int ShowMoney()
 		{
 			return Money;
 		}
 
-		public List<Product> GiveList()
+		public List<Stack> GiveList()
 		{
-			List<Product> products = new List<Product>();
+			List<Stack> products = new List<Stack>();
 			int maxQuantity = 0;
 
-			foreach (Product product in Products)
+			foreach (Stack product in Products)
 				maxQuantity += 1;
 
 			products = Products.GetRange(0, maxQuantity);
@@ -104,7 +104,7 @@ namespace Homework_2
 			Console.WriteLine($"\n{Money} денег\n");
 
 			for (int i = 0; i < Products.Count; i++)
-				Console.WriteLine($"{Products[i].Name} x {Products[i].Quantity}");
+				Console.WriteLine($"{Products[i].Product.Name} x {Products[i].Quantity}");
 
 			Console.ReadKey();
 		}
@@ -129,31 +129,31 @@ namespace Homework_2
 		public Merchant()
 		{
 			Money = 0;
-			Products.Add(new Product("Apple", 32, 4));
-			Products.Add(new Product("Book", 3, 150));
-			Products.Add(new Product("Chair", 1, 780));
-			Products.Add(new Product("Pen", 98, 12));
-			Products.Add(new Product("Sword", 1, 999));
-			Products.Add(new Product("Shield", 2, 560));
+			Products.Add(new Stack("Apple", 5, 20));
+			Products.Add(new Stack("Book", 150, 3));
+			Products.Add(new Stack("Chair", 700));
+			Products.Add(new Stack("Pen", 12, 98));
+			Products.Add(new Stack("Sword", 999, 1));
+			Products.Add(new Stack("Shield", 560, 2));
 		}
 
 		private void TakeMoney(Product product, int quantity)
 		{
 			Money += product.Value * quantity;
 		}
+
 		public void ShowPrice()
 		{
 			for (int i = 0; i < Products.Count; i++)
-				Console.WriteLine($"{Products[i].Name} -- {Products[i].Value} денег за штуку");
+				Console.WriteLine($"{Products[i].Product.Name} -- {Products[i].Product.Value} денег за штуку");
 
 			Console.ReadKey();
 		}
 
-		public void SellProduct(Product product, int indexOfProduct, int quantity)
+		public void SellProduct(Stack stack, int indexOfProduct, int quantity)
 		{
-			Products.RemoveAt(indexOfProduct);
-			Products.Insert(indexOfProduct, new Product(product.Name, product.Quantity - quantity, product.Value));
-			TakeMoney(product, quantity);
+			Products[indexOfProduct].RemoveProducts(quantity);
+			TakeMoney(stack.Product, quantity);
 		}
 	}
 
@@ -169,35 +169,55 @@ namespace Homework_2
 			Money -= quantity * product.Value;
 		}
 
-		public void TakeProduct(Product product, int quantity)
+		public void TakeProduct(Stack stack, int quantity)
 		{
 			for (int i = 0; i < Products.Count; i++)
 			{
-				if (product.Name == Products[i].Name)
+				if (stack.Product.Name == Products[i].Product.Name)
 				{
 					quantity += Products[i].Quantity;
 					Products.RemoveAt(i);
 				}
 			}
 
-			Products.Add(new Product(product.Name, quantity, product.Value));
-			GiveMoney(product, quantity);
+			Products.Add(new Stack(stack.Product.Name, stack.Product.Value, quantity));
+			GiveMoney(stack.Product, quantity);
 		}
 	}
 
 	class Product
 	{
-		public Product(string name = "Unknown product", int quantity = 1, int value = 10)
+		public Product(string name, int value)
 		{
 			Name = name;
-			Quantity = quantity;
 			Value = value;
 		}
 
 		public string Name { get; private set; }
 
 		public int Value { get; private set; }
+	}
+
+	class Stack
+    {
+		public Stack(string name, int value, int quantity = 1)
+        {
+			Product = new Product(name, value);
+			Quantity = quantity;
+        }
+
+		public Product Product { get; private set; }
 
 		public int Quantity { get; private set; }
+
+		public void RemoveProducts(int quantity)
+        {
+			Quantity -= quantity;
+        }
+
+		public void AddProducts(int quantity)
+		{
+			Quantity += quantity;
+		}
 	}
 }
