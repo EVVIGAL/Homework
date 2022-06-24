@@ -52,8 +52,6 @@ namespace Homework_2
 			{
 				if (products[i].Name == name && products[i].Quantity >= quantity && customer.CheckMoney() >= products[i].Value * quantity)
 				{
-					customer.GiveMoney(products[i], quantity);
-					merchant.TakeMoney(products[i], quantity);
 					merchant.SellProduct(products[i], i, quantity);
 					customer.TakeProduct(products[i], quantity);
 					Console.WriteLine("Товар куплен.");
@@ -75,13 +73,14 @@ namespace Homework_2
 
 	class Person
 	{
-		protected List<Product> _products = new List<Product>();
-		protected int Money;
+		protected List<Product> Products = new List<Product>();
 
 		public Person()
 		{
 
 		}
+
+		public int Money { get; protected set; }
 
 		public int CheckMoney()
         {
@@ -90,15 +89,22 @@ namespace Homework_2
 
 		public List<Product> GiveList()
 		{
-			return _products;
+			List<Product> products = new List<Product>();
+			int maxQuantity = 0;
+
+			foreach (Product product in Products)
+				maxQuantity += 1;
+
+			products = Products.GetRange(0, maxQuantity);
+			return products;
 		}
 
 		public void ShowInfo()
 		{
 			Console.WriteLine($"\n{Money} денег\n");
 
-			for (int i = 0; i < _products.Count; i++)
-				Console.WriteLine($"{_products[i].Name} x {_products[i].Quantity}");
+			for (int i = 0; i < Products.Count; i++)
+				Console.WriteLine($"{Products[i].Name} x {Products[i].Quantity}");
 
 			Console.ReadKey();
 		}
@@ -123,31 +129,31 @@ namespace Homework_2
 		public Merchant()
 		{
 			Money = 0;
-			_products.Add(new Product("Apple", 32, 4));
-			_products.Add(new Product("Book", 3, 150));
-			_products.Add(new Product("Chair", 1, 780));
-			_products.Add(new Product("Pen", 98, 12));
-			_products.Add(new Product("Sword", 1, 999));
-			_products.Add(new Product("Shield", 2, 560));
+			Products.Add(new Product("Apple", 32, 4));
+			Products.Add(new Product("Book", 3, 150));
+			Products.Add(new Product("Chair", 1, 780));
+			Products.Add(new Product("Pen", 98, 12));
+			Products.Add(new Product("Sword", 1, 999));
+			Products.Add(new Product("Shield", 2, 560));
 		}
 
+		private void TakeMoney(Product product, int quantity)
+		{
+			Money += product.Value * quantity;
+		}
 		public void ShowPrice()
 		{
-			for (int i = 0; i < _products.Count; i++)
-				Console.WriteLine($"{_products[i].Name} -- {_products[i].Value} денег за штуку");
+			for (int i = 0; i < Products.Count; i++)
+				Console.WriteLine($"{Products[i].Name} -- {Products[i].Value} денег за штуку");
 
 			Console.ReadKey();
 		}
 
-		public void TakeMoney(Product product, int quantity)
-		{
-			Money += product.Value * quantity;
-		}
-
 		public void SellProduct(Product product, int indexOfProduct, int quantity)
 		{
-			_products.RemoveAt(indexOfProduct);
-			_products.Insert(indexOfProduct, new Product(product.Name, product.Quantity - quantity, product.Value));
+			Products.RemoveAt(indexOfProduct);
+			Products.Insert(indexOfProduct, new Product(product.Name, product.Quantity - quantity, product.Value));
+			TakeMoney(product, quantity);
 		}
 	}
 
@@ -158,23 +164,24 @@ namespace Homework_2
 			Money = money;
 		}
 
-		public void GiveMoney(Product product, int quantity)
+		private void GiveMoney(Product product, int quantity)
 		{
 			Money -= quantity * product.Value;
 		}
 
 		public void TakeProduct(Product product, int quantity)
 		{
-			for (int i = 0; i < _products.Count; i++)
+			for (int i = 0; i < Products.Count; i++)
 			{
-				if (product.Name == _products[i].Name)
+				if (product.Name == Products[i].Name)
 				{
-					quantity += _products[i].Quantity;
-					_products.RemoveAt(i);
+					quantity += Products[i].Quantity;
+					Products.RemoveAt(i);
                 }
             }
 
-			_products.Add(new Product(product.Name, quantity, product.Value));
+			Products.Add(new Product(product.Name, quantity, product.Value));
+			GiveMoney(product, quantity);
 		}
 	}
 
