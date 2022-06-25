@@ -1,0 +1,231 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Route route = new Route();
+			bool isWorking = true;
+
+			while (isWorking)
+			{
+				Console.Clear();
+
+				if (route.routeIsCreated)
+					Console.WriteLine($"Маршрут {route.Departure} -- {route.Destination} сформирован.\nБилетов продано - {route.Passengers}\nСостав сформирован из вагонов:\n   {route.train.BigWagons} - Плацкарт\n   {route.train.MiddleWagons} - Купе\n   {route.train.SmallWagons} - Бизнес\n");
+				else
+					Console.WriteLine("Маршрут не создан.\n");
+
+				Console.WriteLine("Вы рулите железнодорожным вокзалом. Выберите команду:");
+				Console.WriteLine("1 - Создать маршрут\n2 - Продать билеты\n3 - Сформировать состав поезда\n4 - Отправить поезд\n5 - Выйти");
+				string userInput = Console.ReadLine();
+
+				switch (userInput)
+				{
+					case "1":
+						route.GenerateRoute();
+						break;
+					case "2":
+						route.SellTickets();
+						break;
+					case "3":
+						route.train.AddWagons(route.Passengers);
+						break;
+					case "4":
+						route.SendTrain();
+						break;
+					case "5":
+						isWorking = false;
+						break;
+				}
+			}
+		}
+	}
+
+	class Route
+	{
+		private Random Random = new Random();
+
+		private int maxPassengers = 201;
+
+		private List<String> _cities = new List<String>() { "Красноярск", "Абакан", "Новосибирск", "Иркутск", "Тюмень", "Томск" };
+
+		public Route()
+		{
+			Destination = "Пункт назначени не выбран";
+			Departure = "Пункт отправления не выбран";
+			routeIsCreated = false;
+		}
+
+		public Train train { get; private set; } = new Train();
+
+		public string Destination { get; private set; }
+
+		public string Departure { get; private set; }
+
+		public bool routeIsCreated { get; private set; }
+
+		public int Passengers { get; private set; }
+
+		public void GenerateRoute()
+		{
+			Random random = new Random();
+			int randomIndexOfDeparture = random.Next(0, _cities.Count);
+			int randomIndexOfDestination = random.Next(0, _cities.Count);
+			Departure = _cities[randomIndexOfDeparture];
+
+			while (randomIndexOfDeparture == randomIndexOfDestination)
+			{
+				randomIndexOfDestination = random.Next(0, _cities.Count);
+			}
+
+			Destination = _cities[randomIndexOfDestination];
+			routeIsCreated = true;
+		}
+
+		public void SellTickets()
+		{
+			if (routeIsCreated && Passengers == 0)
+				Passengers = Random.Next(0, maxPassengers);
+			else if (routeIsCreated == false)
+			{
+				Console.WriteLine("Маршрут не создан. Куда билеты продавать?");
+				Console.ReadKey();
+			}
+			else if (routeIsCreated && Passengers > 0)
+			{
+				Console.WriteLine("Народ набрали уже.");
+				Console.ReadKey();
+			}
+		}
+
+		public void SendTrain()
+		{
+			routeIsCreated = false;
+			train = new Train();
+			Passengers = 0;
+			Console.WriteLine("Поезд успешно умчал.");
+			Console.ReadKey();
+		}
+	}
+
+	class Train
+	{
+		public Stack<Wagon> Wagons = new Stack<Wagon>();
+
+		public Train()
+		{
+
+		}
+
+		public Wagon Wagon { get; private set; } = new Wagon();
+
+		public int BigWagons { get; private set; } = 0;
+
+		public int MiddleWagons { get; private set; } = 0;
+
+		public int SmallWagons { get; private set; } = 0;
+
+		public void AddWagons(int passengers)
+		{
+			int noPassengers = 0;
+
+			if (passengers == noPassengers)
+			{
+				Console.WriteLine("Пассажиров не набралось. Вагоны не нужны.");
+				Console.ReadKey();
+			}
+
+			while (passengers > noPassengers)
+			{
+				int wagons;
+
+				if (passengers > Wagon._middleWagonPlaces)
+				{
+					wagons = 0;
+
+					if (passengers <= Wagon._bigWagonPlaces)
+					{
+						Wagons.Push(new Wagon("Плацкарт"));
+						passengers -= Wagon._bigWagonPlaces;
+						wagons++;
+					}
+					else
+					{
+						wagons = passengers / Wagon._bigWagonPlaces;
+
+						for (int i = 0; i < wagons; i++)
+							Wagons.Push(new Wagon("Плацкарт"));
+
+						passengers = passengers % Wagon._bigWagonPlaces;
+					}
+
+					BigWagons = wagons;
+				}
+
+				if (passengers > Wagon._smallWagonPlaces)
+				{
+					wagons = 0;
+
+					if (passengers <= Wagon._middleWagonPlaces)
+					{
+						Wagons.Push(new Wagon("Купе"));
+						passengers -= Wagon._middleWagonPlaces;
+						wagons++;
+					}
+					else
+					{
+						wagons = passengers / Wagon._middleWagonPlaces;
+
+						for (int i = 0; i < wagons; i++)
+							Wagons.Push(new Wagon("Купе"));
+
+						passengers = passengers % Wagon._middleWagonPlaces;
+					}
+
+					MiddleWagons = wagons;
+				}
+
+				if (passengers > 0)
+				{
+					wagons = 0;
+
+					if (passengers <= Wagon._smallWagonPlaces)
+					{
+						Wagons.Push(new Wagon("Бизнес"));
+						passengers = 0;
+						wagons++;
+					}
+
+					SmallWagons = wagons;
+				}
+			}
+		}
+	}
+
+	class Wagon
+	{
+		public Wagon(string type = "Пустой")
+		{
+			if (type == "Плацкарт")
+				Places = _bigWagonPlaces;
+			else if (type == "Купе")
+				Places = _middleWagonPlaces;
+			else if (type == "Бизнес")
+				Places = _smallWagonPlaces;
+			else if (type == "Пустой")
+				Places = 0;
+		}
+
+		public int Places { get; private set; }
+
+		public int _bigWagonPlaces { get; private set; } = 10;
+
+		public int _middleWagonPlaces { get; private set; } = 8;
+
+		public int _smallWagonPlaces { get; private set; } = 6;
+	}
+}
