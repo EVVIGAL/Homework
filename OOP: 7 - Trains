@@ -18,8 +18,7 @@ namespace Homework_2
                 {
 					Console.WriteLine($"Маршрут {route.Departure} -- {route.Destination} сформирован.\nБилетов продано - {route.Passengers}");
 					route.ShowWagons();
-				}
-					
+				}				
                 else
                 {
 					Console.WriteLine("Маршрут не создан.\n");
@@ -57,6 +56,7 @@ namespace Homework_2
 		private Random _random = new Random();
 		private int _maxPassengers = 201;
 		private List<String> _cities = new List<String>();
+		private Train _train = new Train();
 
 		public Route()
 		{
@@ -71,8 +71,6 @@ namespace Homework_2
 			RouteIsCreated = false;
 			_trainIsCreated = false;
 		}
-
-		private Train _train = new Train();
 
 		public string Destination { get; private set; }
 
@@ -175,7 +173,7 @@ namespace Homework_2
 
 		public Train()
 		{
-
+			_wagon = new Wagon();
 		}
 
 		public Stack<Wagon> Wagons { get; private set; } = new Stack<Wagon>();
@@ -189,7 +187,6 @@ namespace Homework_2
 		public void AddWagons(int passengers)
 		{
 			int noPassengers = 0;
-			_wagon = new Wagon();
 
 			if (passengers == noPassengers)
 			{
