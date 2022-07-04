@@ -1,0 +1,397 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			bool isFighting = true;
+
+            Console.WriteLine("Выберте первого бойца:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
+			Warrior firstWarrior = ChooseWarrior();
+
+			Console.WriteLine("Первый боец выбран! Выберите второго:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
+			Warrior secondWarrior = ChooseWarrior();
+
+			Console.WriteLine("Отлично, можем начинать бой!");
+			Console.ReadKey();
+
+			while (isFighting)
+			{
+				while (firstWarrior.GetHealth() > 0 && secondWarrior.GetHealth() > 0)
+				{
+					Battle(firstWarrior, secondWarrior);
+				}
+
+				if (firstWarrior.GetHealth() < 0)
+					Console.WriteLine($"{secondWarrior.Name} победил!");
+				else if (secondWarrior.GetHealth() < 0)
+                    Console.WriteLine($"{firstWarrior.Name} победил!");
+
+				Console.ReadKey();
+				isFighting = false;
+			}
+		}
+
+		static void Battle(Warrior firstWarrior, Warrior secondWarrior)
+		{
+			float damage;
+			Console.Clear();
+			Console.WriteLine($"Сражаются {firstWarrior.Name} и {secondWarrior.Name}");
+			damage = firstWarrior.Attack();
+			secondWarrior.TakeDamage(damage);
+			Console.WriteLine($"У {secondWarrior.Name} осталось {secondWarrior.GetHealth()} единиц здоровья.");
+			Console.ReadKey();
+			damage = secondWarrior.Attack();
+			firstWarrior.TakeDamage(damage);
+			Console.WriteLine($"У {firstWarrior.Name} осталось {firstWarrior.GetHealth()} единиц здоровья.");
+			Console.ReadKey();
+		}
+
+		static Warrior ChooseWarrior()
+        {
+			Warrior warrior = null;
+			bool isSelected = false;
+
+			while(isSelected == false)
+            {
+				string userInput = Console.ReadLine();
+
+				switch (userInput)
+				{
+					case "1":
+						warrior = new Knight();
+						isSelected = true;
+						break;
+					case "2":
+						warrior = new Sorcerer();
+						isSelected = true;
+						break;
+					case "3":
+						warrior = new Spearman();
+						isSelected = true;
+						break;
+					case "4":
+						warrior = new Barbarian();
+						isSelected = true;
+						break;
+					case "5":
+						warrior = new Priest();
+						isSelected = true;
+						break;
+					default:
+						Console.WriteLine("Ошибка ввода. Повторите выбор.");
+						break;
+				}
+			}
+			
+			return warrior;
+		}
+	}
+
+	abstract class Warrior
+	{
+		protected float MaxHealth = 3000f;
+		protected float Health;
+		protected float AttackPower;
+		protected float Armor;
+		protected int CritChance = 15;
+		protected float CritDamage = 1.5f;
+
+		public Warrior()
+		{
+
+		}
+
+		public string Name { get; private set; }
+
+		private float GetRandomFloatNumber(int minimumDamageDecreaseInPercent, int maximumDamageIncreaseInPercent)
+		{
+			int OneHundredPercent = 100;
+			Random random = new Random();
+			float randomFloatNumber = (float)random.Next(minimumDamageDecreaseInPercent, maximumDamageIncreaseInPercent + 1) / OneHundredPercent;
+			return randomFloatNumber;
+		}
+
+		private int GetRandomNumber(int minimumNumber, int maximumNumber)
+		{
+			int randomNumber;
+			Random random = new Random();
+			randomNumber = random.Next(minimumNumber, maximumNumber + 1);
+			return randomNumber;
+		}
+
+		public float GetHealth()
+		{
+			return Health;
+		}
+
+		public void SetName(string name)
+		{
+			Name = name;
+		}
+
+		public float DealDamage()
+		{
+			float attackRange = GetRandomFloatNumber(75, 125);
+			float damage = AttackPower * attackRange;
+			int OneHundredPercent = 100;
+
+			if (GetRandomNumber(0, OneHundredPercent) < CritChance)
+			{
+				damage *= CritDamage;
+                Console.WriteLine("Критический урон!");
+			}
+
+			damage = (int)Math.Round(damage);
+			return damage;
+		}
+
+		public virtual float Attack()
+        {
+			return DealDamage();
+        }
+
+		public void TakeDamage(float damage)
+		{
+			damage *= (damage / Armor);
+			damage = (int)Math.Round(damage);
+			Health -= damage;
+		}	
+	}
+
+	class Knight : Warrior
+	{
+		private int _maxSpecialSkillCooldown;
+		private int _specialSkillCooldown;
+		private int _specialSkillIncreaseArmor;
+		private int _skillArmorCountdown;
+		private int _increasedArmorCountdown;
+		private bool _armorIsIncreased;
+		private int _zero;
+		private float _commonArmor;
+
+		public Knight()
+		{
+			Health = MaxHealth;
+			AttackPower = 180f;
+			Armor = 300f;
+			_maxSpecialSkillCooldown = 3;
+			_specialSkillCooldown = _maxSpecialSkillCooldown;
+			_specialSkillIncreaseArmor = 100;
+			_skillArmorCountdown = 2;
+			_increasedArmorCountdown = _skillArmorCountdown;
+			_armorIsIncreased = false;
+			_zero = 0;
+			_commonArmor = 300f;
+			SetName("Рыцарь");
+		}
+
+		public override float Attack()
+        {
+			float damage;
+
+			if(_specialSkillCooldown == 0)
+            {
+				damage = DealDamage();
+				Armor += _specialSkillIncreaseArmor;
+				_specialSkillCooldown = _maxSpecialSkillCooldown;
+				_armorIsIncreased = true;
+                Console.WriteLine($"Рыцарь наносит {damage} урона и увеличивает защиту на {_specialSkillIncreaseArmor} единиц. Защита {Armor}");
+			}
+            else
+            {
+				damage = DealDamage();
+				_specialSkillCooldown--;
+				Console.WriteLine($"Рыцарь наносит {damage} урона. Защита {Armor}");
+			}
+
+            if (_armorIsIncreased)
+            {
+				_increasedArmorCountdown--;
+
+				if(_increasedArmorCountdown <= _zero)
+                {
+					Armor = _commonArmor;
+					_armorIsIncreased = false;
+					_increasedArmorCountdown = _skillArmorCountdown;
+				}
+            }
+
+			return damage;
+        }
+	}
+
+	class Sorcerer : Warrior
+	{
+		private int _mana;
+		private int _skillCost;
+		private int _manaRegenaration;
+		private int _skillDamageMultiplier;
+
+		public Sorcerer()
+		{
+			Health = MaxHealth;
+			AttackPower = 200f;
+			Armor = 200f;
+			_mana = 125;
+			_manaRegenaration = 25;
+			_skillCost = 100;
+			_skillDamageMultiplier = 2;
+			CritChance = 0;
+			CritDamage = 0;
+			SetName("Маг");
+		}
+
+		public override float Attack()
+		{
+			float damage;
+
+			if (_mana >= _skillCost)
+			{
+				damage = DealDamage() * _skillDamageMultiplier;
+				_mana -= _skillCost;
+				Console.WriteLine($"Маг наносит {damage} урона огненным шаром!.");
+			}
+			else
+			{
+				damage = DealDamage();
+				_mana += _manaRegenaration;
+				Console.WriteLine($"Маг наносит {damage} урона.");
+			}
+
+			return damage;
+		}
+	}
+
+	class Spearman : Warrior
+	{
+		private int _maximumCritChance = 50;
+		private int _minimumCritChance = 30;
+		private int _critChanceIncrease = 5;
+		private float _minimumCritDamage = 1.8f;
+		private float _critDamageIncrease = 0.1f;
+		private float _minimumAttackPower = 120f;
+		private float _attackIncrease = 10f;
+
+		public Spearman()
+		{
+			Health = MaxHealth;
+			AttackPower = _minimumAttackPower;
+			Armor = 260f;
+			CritChance = _minimumCritChance;
+			CritDamage = _minimumCritDamage;
+			SetName("Копейщик");
+		}
+
+		public override float Attack()
+		{
+			float damage;
+
+			if (CritChance == _maximumCritChance)
+			{
+				damage = DealDamage();
+				CritChance = _minimumCritChance;
+				CritDamage = _minimumCritDamage;
+				AttackPower = _minimumAttackPower;
+				Console.WriteLine($"Копейщик наносит {damage} урона. Атака вернулась на изначальный уровень.");
+			}
+			else
+			{
+				damage = DealDamage();
+				CritChance += _critChanceIncrease;
+				CritDamage += _critDamageIncrease;
+				AttackPower += _attackIncrease;
+				Console.WriteLine($"Копейщик наносит {damage} урона.");
+			}
+
+			return damage;
+		}
+	}
+
+	class Barbarian : Warrior
+	{
+		private int _rageMultiplier;
+		private float _partOfHealthForRage;
+
+		public Barbarian()
+		{
+			Health = MaxHealth;
+			AttackPower = 180f;
+			Armor = 240f;
+			_rageMultiplier = 2;
+			_partOfHealthForRage = 0.5f; 
+			SetName("Варвар");
+		}
+
+		public override float Attack()
+		{
+			float damage;
+
+			if (Health <= MaxHealth * _partOfHealthForRage)
+			{
+				damage = DealDamage() * _rageMultiplier;
+				Console.WriteLine($"Варвар в ярости и наносит {damage} урона.");
+			}
+			else
+			{
+				damage = DealDamage();
+				Console.WriteLine($"Варвар и наносит {damage} урона.");
+			}
+
+			return damage;
+		}
+	}
+
+	class Priest : Warrior
+	{
+		private int _passiveSkillHeal;
+		private int _skillHeal;
+		private int _mana;
+		private int _skillCost;
+		private int _manaRegenaration;
+		private int _zeroDamage;
+
+		public Priest()
+		{
+			Health = MaxHealth;
+			AttackPower = 130f;
+			Armor = 180f;
+			_passiveSkillHeal = 100;
+			_mana = 0;
+			_manaRegenaration = 25;
+			_skillCost = 100;
+			_skillHeal = 500;
+			_zeroDamage = 0;
+			SetName("Жрец");
+		}
+
+		public override float Attack()
+		{
+			float damage;
+
+			if (_mana >= _skillCost && Health < MaxHealth - _skillHeal)
+			{
+				damage = _zeroDamage;
+				Health += _skillHeal;
+				_mana -= _skillCost;
+				Console.WriteLine($"Жрец восстанавливает {_skillHeal} единиц здоровья.");
+			}
+			else
+			{
+				damage = DealDamage();
+				Health += _passiveSkillHeal;
+
+				if (Health > MaxHealth)
+					Health = MaxHealth;
+
+				_mana += _manaRegenaration;
+				Console.WriteLine($"Жрец и наносит {damage} урона и лечится на {_passiveSkillHeal} единиц здоровья.");
+			}
+
+			return damage;
+		}
+	}
+}
