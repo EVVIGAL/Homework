@@ -38,15 +38,13 @@ namespace Homework_2
 		static void Battle(Warrior firstWarrior, Warrior secondWarrior)
 		{
 			float damage;
-			Console.Clear();
-			Console.WriteLine($"Сражаются {firstWarrior.Name} и {secondWarrior.Name}");
+			ShowBattleInfo(firstWarrior, secondWarrior);
 			damage = firstWarrior.Attack();
 			secondWarrior.TakeDamage(damage);
-			Console.WriteLine($"У {secondWarrior.Name} осталось {secondWarrior.GetHealth()} единиц здоровья.");
 			Console.ReadKey();
+			ShowBattleInfo(firstWarrior, secondWarrior);
 			damage = secondWarrior.Attack();
 			firstWarrior.TakeDamage(damage);
-			Console.WriteLine($"У {firstWarrior.Name} осталось {firstWarrior.GetHealth()} единиц здоровья.");
 			Console.ReadKey();
 		}
 
@@ -89,6 +87,14 @@ namespace Homework_2
 			
 			return warrior;
 		}
+
+		static void ShowBattleInfo(Warrior firstWarrior, Warrior secondWarrior)
+        {
+			Console.Clear();
+			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.ShowInformation()}\n\n{secondWarrior.Name} -- {secondWarrior.ShowInformation()}\n");
+			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.GetHealth()}\n     VS\n{secondWarrior.Name} -- {secondWarrior.GetHealth()}\n");
+			
+		}
 	}
 
 	abstract class Warrior
@@ -109,9 +115,9 @@ namespace Homework_2
 
 		private float GetRandomFloatNumber(int minimumDamageDecreaseInPercent, int maximumDamageIncreaseInPercent)
 		{
-			int OneHundredPercent = 100;
+			int oneHundredPercent = 100;
 			Random random = new Random();
-			float randomFloatNumber = (float)random.Next(minimumDamageDecreaseInPercent, maximumDamageIncreaseInPercent + 1) / OneHundredPercent;
+			float randomFloatNumber = (float)random.Next(minimumDamageDecreaseInPercent, maximumDamageIncreaseInPercent + 1) / oneHundredPercent;
 			return randomFloatNumber;
 		}
 
@@ -137,9 +143,9 @@ namespace Homework_2
 		{
 			float attackRange = GetRandomFloatNumber(75, 125);
 			float damage = AttackPower * attackRange;
-			int OneHundredPercent = 100;
+			int oneHundredPercent = 100;
 
-			if (GetRandomNumber(0, OneHundredPercent) < CritChance)
+			if (GetRandomNumber(0, oneHundredPercent) < CritChance)
 			{
 				damage *= CritDamage;
                 Console.WriteLine("Критический урон!");
@@ -160,6 +166,12 @@ namespace Homework_2
 			damage = (int)Math.Round(damage);
 			Health -= damage;
 		}	
+
+		public virtual string ShowInformation()
+        {
+			string info = "Информация о бойце";
+			return info;
+        }
 	}
 
 	class Knight : Warrior
@@ -191,37 +203,59 @@ namespace Homework_2
 
 		public override float Attack()
         {
-			float damage;
+			float damage = 0f;
 
 			if(_specialSkillCooldown == 0)
             {
-				damage = DealDamage();
-				Armor += _specialSkillIncreaseArmor;
-				_specialSkillCooldown = _maxSpecialSkillCooldown;
-				_armorIsIncreased = true;
-                Console.WriteLine($"Рыцарь наносит {damage} урона и увеличивает защиту на {_specialSkillIncreaseArmor} единиц. Защита {Armor}");
+				damage = UseSpecialSkill(damage);
 			}
             else
             {
-				damage = DealDamage();
-				_specialSkillCooldown--;
-				Console.WriteLine($"Рыцарь наносит {damage} урона. Защита {Armor}");
+				damage = UseCommonAttack(damage);
 			}
 
-            if (_armorIsIncreased)
-            {
+			CountdownArmorBuff();
+			return damage;
+        }
+
+		public override string ShowInformation()
+		{
+			string info = $"У рыцаря показатели атаки {AttackPower} единиц, а брони {Armor}.\nСобравшись с духом укрепляет свою защиту на пару ходов.";
+			return info;
+		}
+
+		private float UseCommonAttack(float damage)
+        {
+			damage = DealDamage();
+			_specialSkillCooldown--;
+			Console.WriteLine($"Рыцарь наносит {damage} урона.");
+			return damage;
+        }
+
+		private float UseSpecialSkill(float damage)
+        {
+			damage = DealDamage();
+			Armor += _specialSkillIncreaseArmor;
+			_specialSkillCooldown = _maxSpecialSkillCooldown;
+			_armorIsIncreased = true;
+			Console.WriteLine($"Рыцарь наносит {damage} урона и увеличивает защиту на {_specialSkillIncreaseArmor} единиц.");
+			return damage;
+        }
+
+		private void CountdownArmorBuff()
+        {
+			if (_armorIsIncreased)
+			{
 				_increasedArmorCountdown--;
 
-				if(_increasedArmorCountdown <= _zero)
-                {
+				if (_increasedArmorCountdown <= _zero)
+				{
 					Armor = _commonArmor;
 					_armorIsIncreased = false;
 					_increasedArmorCountdown = _skillArmorCountdown;
 				}
-            }
-
-			return damage;
-        }
+			}
+		}
 	}
 
 	class Sorcerer : Warrior
@@ -247,23 +281,41 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage;
+			float damage = 0f;
 
 			if (_mana >= _skillCost)
 			{
-				damage = DealDamage() * _skillDamageMultiplier;
-				_mana -= _skillCost;
-				Console.WriteLine($"Маг наносит {damage} урона огненным шаром!.");
+				damage = UseSpecialAttack(damage);
 			}
 			else
 			{
-				damage = DealDamage();
-				_mana += _manaRegenaration;
-				Console.WriteLine($"Маг наносит {damage} урона.");
+				damage = UseCommonAttack(damage);
 			}
 
 			return damage;
 		}
+
+		public override string ShowInformation()
+		{
+			string info = $"У мага показатели атаки {AttackPower} единиц, а брони {Armor}.\nНакопив достаточно маны, может нанести противнику большой урон огненным шаром!";
+			return info;
+		}
+
+		private float UseSpecialAttack(float damage)
+        {
+			damage = DealDamage() * _skillDamageMultiplier;
+			_mana -= _skillCost;
+			Console.WriteLine($"Маг наносит {damage} урона огненным шаром!.");
+			return damage;
+        }
+
+		private float UseCommonAttack(float damage)
+        {
+			damage = DealDamage();
+			_mana += _manaRegenaration;
+			Console.WriteLine($"Маг наносит {damage} урона.");
+			return damage;
+        }
 	}
 
 	class Spearman : Warrior
@@ -286,34 +338,52 @@ namespace Homework_2
 			SetName("Копейщик");
 		}
 
+		public override string ShowInformation()
+        {
+            string info = $"У копейщика показатели атаки {AttackPower} единиц, а брони {Armor}.\nС каждой атакой показатели крит шанса, критического урона и атаки немного возрастают.\nДостигнув определенного значения они обнуляются.";
+			return info;
+		}
+
 		public override float Attack()
 		{
-			float damage;
+			float damage = 0f;
 
 			if (CritChance == _maximumCritChance)
 			{
-				damage = DealDamage();
-				CritChance = _minimumCritChance;
-				CritDamage = _minimumCritDamage;
-				AttackPower = _minimumAttackPower;
-				Console.WriteLine($"Копейщик наносит {damage} урона. Атака вернулась на изначальный уровень.");
+				damage = UseResetStatsAttack(damage);
 			}
 			else
 			{
-				damage = DealDamage();
-				CritChance += _critChanceIncrease;
-				CritDamage += _critDamageIncrease;
-				AttackPower += _attackIncrease;
-				Console.WriteLine($"Копейщик наносит {damage} урона.");
+				damage = UseIncreasingStatsAttack(damage);
 			}
 
+			return damage;
+		}
+
+		private float UseIncreasingStatsAttack(float damage)
+        {
+			damage = DealDamage();
+			CritChance += _critChanceIncrease;
+			CritDamage += _critDamageIncrease;
+			AttackPower += _attackIncrease;
+			Console.WriteLine($"Копейщик наносит {damage} урона.");
+			return damage;
+		}
+
+		private float UseResetStatsAttack(float damage)
+        {
+			damage = DealDamage();
+			CritChance = _minimumCritChance;
+			CritDamage = _minimumCritDamage;
+			AttackPower = _minimumAttackPower;
+			Console.WriteLine($"Копейщик наносит {damage} урона. Атака вернулась на изначальный уровень.");
 			return damage;
 		}
 	}
 
 	class Barbarian : Warrior
 	{
-		private int _rageMultiplier;
+		private float _rageMultiplier;
 		private float _partOfHealthForRage;
 
 		public Barbarian()
@@ -321,26 +391,44 @@ namespace Homework_2
 			Health = MaxHealth;
 			AttackPower = 180f;
 			Armor = 240f;
-			_rageMultiplier = 2;
+			_rageMultiplier = 1.5f;
 			_partOfHealthForRage = 0.5f; 
 			SetName("Варвар");
 		}
 
 		public override float Attack()
 		{
-			float damage;
+			float damage = 0f;
 
 			if (Health <= MaxHealth * _partOfHealthForRage)
 			{
-				damage = DealDamage() * _rageMultiplier;
-				Console.WriteLine($"Варвар в ярости и наносит {damage} урона.");
+				damage = UseSpecialAttack(damage);
 			}
 			else
 			{
-				damage = DealDamage();
-				Console.WriteLine($"Варвар и наносит {damage} урона.");
+				damage = UseCommonAttack(damage);
 			}
 
+			return damage;
+		}
+
+		public override string ShowInformation()
+		{
+			string info = $"У варвара показатели атаки {AttackPower} единиц, а брони {Armor}.\nПотеряв половину ХП варвар впадает в ярость и увеличивает свою атаку в 1.5 раза!";
+			return info;
+		}
+
+		private float UseSpecialAttack(float damage)
+        {
+			damage = DealDamage() * _rageMultiplier;
+			Console.WriteLine($"Варвар в ярости и наносит {damage} урона.");
+			return damage;
+        }
+
+		private float UseCommonAttack(float damage)
+        {
+			damage = DealDamage();
+			Console.WriteLine($"Варвар и наносит {damage} урона.");
 			return damage;
 		}
 	}
@@ -370,27 +458,45 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage;
+			float damage = 0f;
 
 			if (_mana >= _skillCost && Health < MaxHealth - _skillHeal)
 			{
-				damage = _zeroDamage;
-				Health += _skillHeal;
-				_mana -= _skillCost;
-				Console.WriteLine($"Жрец восстанавливает {_skillHeal} единиц здоровья.");
+				damage = UseSpecialAttack(damage);
 			}
 			else
 			{
-				damage = DealDamage();
-				Health += _passiveSkillHeal;
-
-				if (Health > MaxHealth)
-					Health = MaxHealth;
-
-				_mana += _manaRegenaration;
-				Console.WriteLine($"Жрец и наносит {damage} урона и лечится на {_passiveSkillHeal} единиц здоровья.");
+				damage = UseCommonAttack(damage);
 			}
 
+			return damage;
+		}
+
+		public override string ShowInformation()
+		{
+			string info = $"У жреца показатели атаки {AttackPower} единиц, а брони {Armor}.\nОбычными атаками лечит себя. Так же, накопив достаточно маны, может восполнить разом 500 единиц здоровья!";
+			return info;
+		}
+
+		private float UseCommonAttack(float damage)
+        {
+			damage = DealDamage();
+			Health += _passiveSkillHeal;
+
+			if (Health > MaxHealth)
+				Health = MaxHealth;
+
+			_mana += _manaRegenaration;
+			Console.WriteLine($"Жрец наносит {damage} урона и лечится на {_passiveSkillHeal} единиц здоровья.");
+			return damage;
+		}
+
+		private float UseSpecialAttack(float damage)
+        {
+			damage = _zeroDamage;
+			Health += _skillHeal;
+			_mana -= _skillCost;
+			Console.WriteLine($"Жрец восстанавливает {_skillHeal} единиц здоровья.");
 			return damage;
 		}
 	}
