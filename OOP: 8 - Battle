@@ -9,7 +9,7 @@ namespace Homework_2
 		{
 			bool isFighting = true;
 
-            Console.WriteLine("Выберте первого бойца:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
+			Console.WriteLine("Выберте первого бойца:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
 			Warrior firstWarrior = ChooseWarrior();
 
 			Console.WriteLine("Первый боец выбран! Выберите второго:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
@@ -28,7 +28,7 @@ namespace Homework_2
 				if (firstWarrior.GetHealth() < 0)
 					Console.WriteLine($"{secondWarrior.Name} победил!");
 				else if (secondWarrior.GetHealth() < 0)
-                    Console.WriteLine($"{firstWarrior.Name} победил!");
+					Console.WriteLine($"{firstWarrior.Name} победил!");
 
 				Console.ReadKey();
 				isFighting = false;
@@ -49,12 +49,12 @@ namespace Homework_2
 		}
 
 		static Warrior ChooseWarrior()
-        {
+		{
 			Warrior warrior = null;
 			bool isSelected = false;
 
-			while(isSelected == false)
-            {
+			while (isSelected == false)
+			{
 				string userInput = Console.ReadLine();
 
 				switch (userInput)
@@ -84,16 +84,16 @@ namespace Homework_2
 						break;
 				}
 			}
-			
+
 			return warrior;
 		}
 
 		static void ShowBattleInfo(Warrior firstWarrior, Warrior secondWarrior)
-        {
+		{
 			Console.Clear();
 			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.ShowInformation()}\n\n{secondWarrior.Name} -- {secondWarrior.ShowInformation()}\n");
 			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.GetHealth()}\n     VS\n{secondWarrior.Name} -- {secondWarrior.GetHealth()}\n");
-			
+
 		}
 	}
 
@@ -148,7 +148,7 @@ namespace Homework_2
 			if (GetRandomNumber(0, oneHundredPercent) < CritChance)
 			{
 				damage *= CritDamage;
-                Console.WriteLine("Критический урон!");
+				Console.WriteLine("Критический урон!");
 			}
 
 			damage = (int)Math.Round(damage);
@@ -156,22 +156,22 @@ namespace Homework_2
 		}
 
 		public virtual float Attack()
-        {
+		{
 			return DealDamage();
-        }
+		}
 
 		public void TakeDamage(float damage)
 		{
 			damage *= (damage / Armor);
 			damage = (int)Math.Round(damage);
 			Health -= damage;
-		}	
+		}
 
 		public virtual string ShowInformation()
-        {
+		{
 			string info = "Информация о бойце";
 			return info;
-        }
+		}
 	}
 
 	class Knight : Warrior
@@ -202,21 +202,21 @@ namespace Homework_2
 		}
 
 		public override float Attack()
-        {
+		{
 			float damage = 0f;
 
-			if(_specialSkillCooldown == 0)
-            {
+			if (_specialSkillCooldown == 0)
+			{
 				damage = UseSpecialSkill(damage);
 			}
-            else
-            {
+			else
+			{
 				damage = UseCommonAttack(damage);
 			}
 
 			CountdownArmorBuff();
 			return damage;
-        }
+		}
 
 		public override string ShowInformation()
 		{
@@ -225,25 +225,25 @@ namespace Homework_2
 		}
 
 		private float UseCommonAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			_specialSkillCooldown--;
 			Console.WriteLine($"Рыцарь наносит {damage} урона.");
 			return damage;
-        }
+		}
 
 		private float UseSpecialSkill(float damage)
-        {
+		{
 			damage = DealDamage();
 			Armor += _specialSkillIncreaseArmor;
 			_specialSkillCooldown = _maxSpecialSkillCooldown;
 			_armorIsIncreased = true;
 			Console.WriteLine($"Рыцарь наносит {damage} урона и увеличивает защиту на {_specialSkillIncreaseArmor} единиц.");
 			return damage;
-        }
+		}
 
 		private void CountdownArmorBuff()
-        {
+		{
 			if (_armorIsIncreased)
 			{
 				_increasedArmorCountdown--;
@@ -302,20 +302,20 @@ namespace Homework_2
 		}
 
 		private float UseSpecialAttack(float damage)
-        {
+		{
 			damage = DealDamage() * _skillDamageMultiplier;
 			_mana -= _skillCost;
 			Console.WriteLine($"Маг наносит {damage} урона огненным шаром!.");
 			return damage;
-        }
+		}
 
 		private float UseCommonAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			_mana += _manaRegenaration;
 			Console.WriteLine($"Маг наносит {damage} урона.");
 			return damage;
-        }
+		}
 	}
 
 	class Spearman : Warrior
@@ -339,8 +339,8 @@ namespace Homework_2
 		}
 
 		public override string ShowInformation()
-        {
-            string info = $"У копейщика показатели атаки {AttackPower} единиц, а брони {Armor}.\nС каждой атакой показатели крит шанса, критического урона и атаки немного возрастают.\nДостигнув определенного значения они обнуляются.";
+		{
+			string info = $"У копейщика показатели атаки {AttackPower} единиц, а брони {Armor}.\nС каждой атакой показатели крит шанса, критического урона и атаки немного возрастают.\nДостигнув определенного значения они обнуляются.";
 			return info;
 		}
 
@@ -361,7 +361,7 @@ namespace Homework_2
 		}
 
 		private float UseIncreasingStatsAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			CritChance += _critChanceIncrease;
 			CritDamage += _critDamageIncrease;
@@ -371,7 +371,7 @@ namespace Homework_2
 		}
 
 		private float UseResetStatsAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			CritChance = _minimumCritChance;
 			CritDamage = _minimumCritDamage;
@@ -392,7 +392,7 @@ namespace Homework_2
 			AttackPower = 180f;
 			Armor = 240f;
 			_rageMultiplier = 1.5f;
-			_partOfHealthForRage = 0.5f; 
+			_partOfHealthForRage = 0.5f;
 			SetName("Варвар");
 		}
 
@@ -419,14 +419,14 @@ namespace Homework_2
 		}
 
 		private float UseSpecialAttack(float damage)
-        {
+		{
 			damage = DealDamage() * _rageMultiplier;
 			Console.WriteLine($"Варвар в ярости и наносит {damage} урона.");
 			return damage;
-        }
+		}
 
 		private float UseCommonAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			Console.WriteLine($"Варвар и наносит {damage} урона.");
 			return damage;
@@ -479,7 +479,7 @@ namespace Homework_2
 		}
 
 		private float UseCommonAttack(float damage)
-        {
+		{
 			damage = DealDamage();
 			Health += _passiveSkillHeal;
 
@@ -492,7 +492,7 @@ namespace Homework_2
 		}
 
 		private float UseSpecialAttack(float damage)
-        {
+		{
 			damage = _zeroDamage;
 			Health += _skillHeal;
 			_mana -= _skillCost;
