@@ -9,8 +9,7 @@ namespace Homework_2
 		{
 			Battleground battleground = new Battleground();
 			bool isFighting = true;
-			battleground.ChooseFirstWarrior();
-			battleground.ChooseSecondWarrior();
+			battleground.SetFighters();
 			Console.WriteLine("Отлично, можем начинать бой!");
 			Console.ReadKey();
 
@@ -18,27 +17,14 @@ namespace Homework_2
 			{
 				while (battleground.FirstWarrior.Health > 0 && battleground.SecondWarrior.Health > 0)
 				{
-					Battle(battleground);
+					battleground.Battle();
 				}
 
 				Console.ReadKey();
 				isFighting = false;
 			}
 
-			battleground.ShowWinner();
-		}
-
-		static void Battle(Battleground battleground)
-		{
-			float damage;
-			battleground.ShowBattleInfo();
-			damage = battleground.FirstWarrior.Attack();
-			battleground.SecondWarrior.TakeDamage(damage);
-			Console.ReadKey();
-			battleground.ShowBattleInfo();
-			damage = battleground.SecondWarrior.Attack();
-			battleground.FirstWarrior.TakeDamage(damage);
-			Console.ReadKey();
+			battleground.ShowResultOfBattle();
 		}
 	}
 
@@ -59,76 +45,103 @@ namespace Homework_2
 
 		public Warrior SecondWarrior { get; private set; }
 
-		public void ShowWinner()
+		public void Battle()
 		{
-			if (FirstWarrior.Health < 0)
+			ShowBattleInfo();
+			FirstWarrior.Attack(SecondWarrior);
+			Console.ReadKey();
+			ShowBattleInfo();
+			SecondWarrior.Attack(FirstWarrior);
+			Console.ReadKey();
+		}
+
+		public void ShowResultOfBattle()
+		{
+			if (FirstWarrior.Health <= 0 && SecondWarrior.Health > 0)
 				Console.WriteLine($"{SecondWarrior.Name} победил!");
-			else if (SecondWarrior.Health < 0)
+			else if (SecondWarrior.Health <= 0 && FirstWarrior.Health > 0)
 				Console.WriteLine($"{FirstWarrior.Name} победил!");
+			else if (SecondWarrior.Health == 0 && FirstWarrior.Health == 0)
+				Console.WriteLine("Ничья!");
 		}
 
-		public void ChooseFirstWarrior()
+		public void SetFighters()
 		{
-			Console.WriteLine("Выберите первого бойца!");
-			int userInput = GetUserChoice();
-
-			switch (_warriors[userInput - 1].Name)
-			{
-				case "Рыцарь":
-					FirstWarrior = new Knight();
-					break;
-				case "Маг":
-					FirstWarrior = new Sorcerer();
-					break;
-				case "Копейщик":
-					FirstWarrior = new Spearman();
-					break;
-				case "Варвар":
-					FirstWarrior = new Barbarian();
-					break;
-				case "Жрец":
-					FirstWarrior = new Priest();
-					break;
-				default:
-					Console.WriteLine("Ошибка ввода. Повторите выбор.");
-					break;
-			}
+			Console.WriteLine("Кто будет первым бойцом?");
+			FirstWarrior = ChooseWarrior();
+			Console.WriteLine("А ему противостоит?");
+			SecondWarrior = ChooseWarrior();
 		}
 
-		public void ChooseSecondWarrior()
+		public Warrior ChooseWarrior()
 		{
-			Console.WriteLine("Выберите второго бойца!");
-			int userInput = GetUserChoice();
+			Console.WriteLine("Выберите бойца!");
+			bool isChoosing = true;
+			Warrior warrior = null;
 
-			switch (_warriors[userInput - 1].Name)
+			while (isChoosing)
 			{
-				case "Рыцарь":
-					SecondWarrior = new Knight();
-					break;
-				case "Маг":
-					SecondWarrior = new Sorcerer();
-					break;
-				case "Копейщик":
-					SecondWarrior = new Spearman();
-					break;
-				case "Варвар":
-					SecondWarrior = new Barbarian();
-					break;
-				case "Жрец":
-					SecondWarrior = new Priest();
-					break;
-				default:
-					Console.WriteLine("Ошибка ввода. Повторите выбор.");
-					break;
+				int userInput = GetUserChoice();
+
+				if (userInput <= _warriors.Count)
+				{
+					switch (_warriors[userInput - 1].Name)
+					{
+						case "Рыцарь":
+							warrior = new Knight();
+							isChoosing = false;
+							break;
+						case "Маг":
+							warrior = new Sorcerer();
+							isChoosing = false;
+							break;
+						case "Копейщик":
+							warrior = new Spearman();
+							isChoosing = false;
+							break;
+						case "Варвар":
+							warrior = new Barbarian();
+							isChoosing = false;
+							break;
+						case "Жрец":
+							warrior = new Priest();
+							isChoosing = false;
+							break;
+					}
+				}
+				else
+				{
+					Console.Clear();
+					Console.WriteLine("Ошибка ввода. Повторите выбор!");
+				}
 			}
+
+			return warrior;
 		}
 
 		public void ShowBattleInfo()
 		{
 			Console.Clear();
-			Console.WriteLine($"{FirstWarrior.Name} -- {FirstWarrior.ShowInformation()}\n\n{SecondWarrior.Name} -- {SecondWarrior.ShowInformation()}\n");
+			FirstWarrior.ShowInformation();
+			SecondWarrior.ShowInformation();
 			Console.WriteLine($"{FirstWarrior.Name} -- {FirstWarrior.Health}\n     VS\n{SecondWarrior.Name} -- {SecondWarrior.Health}\n");
+		}
 
+		static private int GetIntegerNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
 		}
 
 		private int GetUserChoice()
@@ -136,21 +149,8 @@ namespace Homework_2
 			foreach (Warrior fighter in _warriors)
 				Console.WriteLine($"{_warriors.IndexOf(fighter) + 1} -- {fighter.Name}");
 
-			int userInput = GetIntegerNumber(Console.ReadLine());
+			int userInput = GetIntegerNumber();
 			return userInput;
-		}
-
-		static private int GetIntegerNumber(string userInput)
-		{
-			bool success = int.TryParse(userInput, out int number);
-
-			if (success == false)
-			{
-				Console.WriteLine("Ошибка ввода.");
-				Console.ReadKey();
-			}
-
-			return number;
 		}
 	}
 
@@ -159,38 +159,14 @@ namespace Homework_2
 		protected float MaxHealth = 3000f;
 		protected float AttackPower;
 		protected float Armor;
+		protected float MaxArmor = 800f;
 		protected int CritChance = 15;
 		protected float CritDamage = 1.5f;
-
-		public Warrior()
-		{
-
-		}
+		protected string Description;
 
 		public float Health { get; protected set; }
 
-		public string Name { get; private set; }
-
-		private float GetRandomFloatNumber(int minimumDamageDecreaseInPercent, int maximumDamageIncreaseInPercent)
-		{
-			int oneHundredPercent = 100;
-			Random random = new Random();
-			float randomFloatNumber = (float)random.Next(minimumDamageDecreaseInPercent, maximumDamageIncreaseInPercent + 1) / oneHundredPercent;
-			return randomFloatNumber;
-		}
-
-		private int GetRandomNumber(int minimumNumber, int maximumNumber)
-		{
-			int randomNumber;
-			Random random = new Random();
-			randomNumber = random.Next(minimumNumber, maximumNumber + 1);
-			return randomNumber;
-		}
-
-		public void SetName(string name)
-		{
-			Name = name;
-		}
+		public string Name { get; protected set; }
 
 		public float DealDamage()
 		{
@@ -210,22 +186,38 @@ namespace Homework_2
 			return damage;
 		}
 
-		public virtual float Attack()
+		public virtual void Attack(Warrior warrior)
 		{
-			return DealDamage();
+			float damage = DealDamage();
+			warrior.TakeDamage(damage);
 		}
 
 		public void TakeDamage(float damage)
 		{
-			damage *= (damage / Armor);
+			damage -= Armor / MaxArmor * damage;
 			damage = (int)Math.Round(damage);
 			Health -= damage;
 		}
 
-		public virtual string ShowInformation()
+		public void ShowInformation()
 		{
-			string info = "Информация о бойце";
-			return info;
+			Console.WriteLine($"{Name} -- {Description}\n");
+		}
+
+		private float GetRandomFloatNumber(int minimumDamageDecreaseInPercent, int maximumDamageIncreaseInPercent)
+		{
+			int oneHundredPercent = 100;
+			Random random = new Random();
+			float randomFloatNumber = (float)random.Next(minimumDamageDecreaseInPercent, maximumDamageIncreaseInPercent + 1) / oneHundredPercent;
+			return randomFloatNumber;
+		}
+
+		private int GetRandomNumber(int minimumNumber, int maximumNumber)
+		{
+			int randomNumber;
+			Random random = new Random();
+			randomNumber = random.Next(minimumNumber, maximumNumber + 1);
+			return randomNumber;
 		}
 	}
 
@@ -253,10 +245,11 @@ namespace Homework_2
 			_armorIsIncreased = false;
 			_zero = 0;
 			_commonArmor = 300f;
-			SetName("Рыцарь");
+			Name = "Рыцарь";
+			Description = $"У рыцаря стартовые показатели атаки {AttackPower} единиц, а брони {Armor}.\nСобравшись с духом укрепляет свою защиту на пару ходов.";
 		}
 
-		public override float Attack()
+		public override void Attack(Warrior warrior)
 		{
 			float damage;
 
@@ -270,13 +263,7 @@ namespace Homework_2
 			}
 
 			CountdownArmorBuff();
-			return damage;
-		}
-
-		public override string ShowInformation()
-		{
-			string info = $"У рыцаря показатели атаки {AttackPower} единиц, а брони {Armor}.\nСобравшись с духом укрепляет свою защиту на пару ходов.";
-			return info;
+			warrior.TakeDamage(damage);
 		}
 
 		private float UseCommonAttack()
@@ -331,10 +318,11 @@ namespace Homework_2
 			_skillDamageMultiplier = 2;
 			CritChance = 0;
 			CritDamage = 0;
-			SetName("Маг");
+			Name = "Маг";
+			Description = $"У мага стартовые показатели атаки {AttackPower} единиц, а брони {Armor}.\nНакопив достаточно маны, может нанести противнику большой урон огненным шаром!";
 		}
 
-		public override float Attack()
+		public override void Attack(Warrior warrior)
 		{
 			float damage;
 
@@ -347,13 +335,7 @@ namespace Homework_2
 				damage = UseCommonAttack();
 			}
 
-			return damage;
-		}
-
-		public override string ShowInformation()
-		{
-			string info = $"У мага показатели атаки {AttackPower} единиц, а брони {Armor}.\nНакопив достаточно маны, может нанести противнику большой урон огненным шаром!";
-			return info;
+			warrior.TakeDamage(damage);
 		}
 
 		private float UseSpecialAttack()
@@ -390,16 +372,11 @@ namespace Homework_2
 			Armor = 260f;
 			CritChance = _minimumCritChance;
 			CritDamage = _minimumCritDamage;
-			SetName("Копейщик");
+			Name = "Копейщик";
+			Description = $"У копейщика стартовые показатели атаки {AttackPower} единиц, а брони {Armor}.\nС каждой атакой показатели крит шанса, критического урона и атаки немного возрастают.\nДостигнув определенного значения они обнуляются.";
 		}
 
-		public override string ShowInformation()
-		{
-			string info = $"У копейщика показатели атаки {AttackPower} единиц, а брони {Armor}.\nС каждой атакой показатели крит шанса, критического урона и атаки немного возрастают.\nДостигнув определенного значения они обнуляются.";
-			return info;
-		}
-
-		public override float Attack()
+		public override void Attack(Warrior warrior)
 		{
 			float damage;
 
@@ -412,7 +389,7 @@ namespace Homework_2
 				damage = UseIncreasingStatsAttack();
 			}
 
-			return damage;
+			warrior.TakeDamage(damage);
 		}
 
 		private float UseIncreasingStatsAttack()
@@ -448,10 +425,11 @@ namespace Homework_2
 			Armor = 240f;
 			_rageMultiplier = 1.5f;
 			_partOfHealthForRage = 0.5f;
-			SetName("Варвар");
+			Name = "Варвар";
+			Description = $"У варвара стартовые показатели атаки {AttackPower} единиц, а брони {Armor}.\nПотеряв половину ХП варвар впадает в ярость и увеличивает свою атаку в 1.5 раза!";
 		}
 
-		public override float Attack()
+		public override void Attack(Warrior warrior)
 		{
 			float damage;
 
@@ -464,13 +442,7 @@ namespace Homework_2
 				damage = UseCommonAttack();
 			}
 
-			return damage;
-		}
-
-		public override string ShowInformation()
-		{
-			string info = $"У варвара показатели атаки {AttackPower} единиц, а брони {Armor}.\nПотеряв половину ХП варвар впадает в ярость и увеличивает свою атаку в 1.5 раза!";
-			return info;
+			warrior.TakeDamage(damage);
 		}
 
 		private float UseSpecialAttack()
@@ -508,10 +480,11 @@ namespace Homework_2
 			_skillCost = 100;
 			_skillHeal = 500;
 			_zeroDamage = 0;
-			SetName("Жрец");
+			Name = "Жрец";
+			Description = $"У жреца стартовые показатели атаки {AttackPower} единиц, а брони {Armor}.\nОбычными атаками лечит себя. Так же, накопив достаточно маны, может восполнить разом 500 единиц здоровья!";
 		}
 
-		public override float Attack()
+		public override void Attack(Warrior warrior)
 		{
 			float damage;
 
@@ -524,13 +497,7 @@ namespace Homework_2
 				damage = UseCommonAttack();
 			}
 
-			return damage;
-		}
-
-		public override string ShowInformation()
-		{
-			string info = $"У жреца показатели атаки {AttackPower} единиц, а брони {Armor}.\nОбычными атаками лечит себя. Так же, накопив достаточно маны, может восполнить разом 500 единиц здоровья!";
-			return info;
+			warrior.TakeDamage(damage);
 		}
 
 		private float UseCommonAttack()
