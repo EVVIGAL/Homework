@@ -7,100 +7,157 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
+			Battleground battleground = new Battleground();
 			bool isFighting = true;
-
-			Console.WriteLine("Выберте первого бойца:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
-			Warrior firstWarrior = ChooseWarrior();
-
-			Console.WriteLine("Первый боец выбран! Выберите второго:\n1 - Рыцарь\n2 - Маг\n3 - Копейщик\n4 - Варвар\n5 - Жрец");
-			Warrior secondWarrior = ChooseWarrior();
-
+			battleground.ChooseFirstWarrior();
+			battleground.ChooseSecondWarrior();
 			Console.WriteLine("Отлично, можем начинать бой!");
 			Console.ReadKey();
 
 			while (isFighting)
 			{
-				while (firstWarrior.GetHealth() > 0 && secondWarrior.GetHealth() > 0)
+				while (battleground.FirstWarrior.Health > 0 && battleground.SecondWarrior.Health > 0)
 				{
-					Battle(firstWarrior, secondWarrior);
+					Battle(battleground);
 				}
-
-				if (firstWarrior.GetHealth() < 0)
-					Console.WriteLine($"{secondWarrior.Name} победил!");
-				else if (secondWarrior.GetHealth() < 0)
-					Console.WriteLine($"{firstWarrior.Name} победил!");
 
 				Console.ReadKey();
 				isFighting = false;
 			}
+
+			battleground.ShowWinner();
 		}
 
-		static void Battle(Warrior firstWarrior, Warrior secondWarrior)
+		static void Battle(Battleground battleground)
 		{
 			float damage;
-			ShowBattleInfo(firstWarrior, secondWarrior);
-			damage = firstWarrior.Attack();
-			secondWarrior.TakeDamage(damage);
+			battleground.ShowBattleInfo();
+			damage = battleground.FirstWarrior.Attack();
+			battleground.SecondWarrior.TakeDamage(damage);
 			Console.ReadKey();
-			ShowBattleInfo(firstWarrior, secondWarrior);
-			damage = secondWarrior.Attack();
-			firstWarrior.TakeDamage(damage);
+			battleground.ShowBattleInfo();
+			damage = battleground.SecondWarrior.Attack();
+			battleground.FirstWarrior.TakeDamage(damage);
 			Console.ReadKey();
 		}
+	}
 
-		static Warrior ChooseWarrior()
+	class Battleground
+	{
+		private List<Warrior> _warriors = new List<Warrior>();
+		private List<Warrior> _fighters = new List<Warrior>();
+
+		public Warrior FirstWarrior { get; private set; }
+
+		public Warrior SecondWarrior { get; private set; }
+
+		public Battleground()
 		{
-			Warrior warrior = null;
-			bool isSelected = false;
-
-			while (isSelected == false)
-			{
-				string userInput = Console.ReadLine();
-
-				switch (userInput)
-				{
-					case "1":
-						warrior = new Knight();
-						isSelected = true;
-						break;
-					case "2":
-						warrior = new Sorcerer();
-						isSelected = true;
-						break;
-					case "3":
-						warrior = new Spearman();
-						isSelected = true;
-						break;
-					case "4":
-						warrior = new Barbarian();
-						isSelected = true;
-						break;
-					case "5":
-						warrior = new Priest();
-						isSelected = true;
-						break;
-					default:
-						Console.WriteLine("Ошибка ввода. Повторите выбор.");
-						break;
-				}
-			}
-
-			return warrior;
+			_warriors.Add(new Knight());
+			_warriors.Add(new Sorcerer());
+			_warriors.Add(new Spearman());
+			_warriors.Add(new Barbarian());
+			_warriors.Add(new Priest());
 		}
 
-		static void ShowBattleInfo(Warrior firstWarrior, Warrior secondWarrior)
+		public void ShowWinner()
+		{
+			if (FirstWarrior.Health < 0)
+				Console.WriteLine($"{SecondWarrior.Name} победил!");
+			else if (SecondWarrior.Health < 0)
+				Console.WriteLine($"{FirstWarrior.Name} победил!");
+		}
+
+		public void ChooseFirstWarrior()
+		{
+			Console.WriteLine("Выберите первого бойца!");
+			int userInput = GetUserChoice();
+
+			switch (_warriors[userInput - 1].Name)
+			{
+				case "Рыцарь":
+					FirstWarrior = new Knight();
+					break;
+				case "Маг":
+					FirstWarrior = new Sorcerer();
+					break;
+				case "Копейщик":
+					FirstWarrior = new Spearman();
+					break;
+				case "Варвар":
+					FirstWarrior = new Barbarian();
+					break;
+				case "Жрец":
+					FirstWarrior = new Priest();
+					break;
+				default:
+					Console.WriteLine("Ошибка ввода. Повторите выбор.");
+					break;
+			}
+		}
+
+		public void ChooseSecondWarrior()
+		{
+			Console.WriteLine("Выберите второго бойца!");
+			int userInput = GetUserChoice();
+
+			switch (_warriors[userInput - 1].Name)
+			{
+				case "Рыцарь":
+					SecondWarrior = new Knight();
+					break;
+				case "Маг":
+					SecondWarrior = new Sorcerer();
+					break;
+				case "Копейщик":
+					SecondWarrior = new Spearman();
+					break;
+				case "Варвар":
+					SecondWarrior = new Barbarian();
+					break;
+				case "Жрец":
+					SecondWarrior = new Priest();
+					break;
+				default:
+					Console.WriteLine("Ошибка ввода. Повторите выбор.");
+					break;
+			}
+		}
+
+		public void ShowBattleInfo()
 		{
 			Console.Clear();
-			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.ShowInformation()}\n\n{secondWarrior.Name} -- {secondWarrior.ShowInformation()}\n");
-			Console.WriteLine($"{firstWarrior.Name} -- {firstWarrior.GetHealth()}\n     VS\n{secondWarrior.Name} -- {secondWarrior.GetHealth()}\n");
+			Console.WriteLine($"{FirstWarrior.Name} -- {FirstWarrior.ShowInformation()}\n\n{SecondWarrior.Name} -- {SecondWarrior.ShowInformation()}\n");
+			Console.WriteLine($"{FirstWarrior.Name} -- {FirstWarrior.Health}\n     VS\n{SecondWarrior.Name} -- {SecondWarrior.Health}\n");
 
+		}
+
+		private int GetUserChoice()
+		{
+			foreach (Warrior fighter in _warriors)
+				Console.WriteLine($"{_warriors.IndexOf(fighter) + 1} -- {fighter.Name}");
+
+			int userInput = GetIntegerNumber(Console.ReadLine());
+			return userInput;
+		}
+
+		static private int GetIntegerNumber(string userInput)
+		{
+			bool success = int.TryParse(userInput, out int number);
+
+			if (success == false)
+			{
+				Console.WriteLine("Ошибка ввода.");
+				Console.ReadKey();
+			}
+
+			return number;
 		}
 	}
 
 	abstract class Warrior
 	{
 		protected float MaxHealth = 3000f;
-		protected float Health;
 		protected float AttackPower;
 		protected float Armor;
 		protected int CritChance = 15;
@@ -110,6 +167,8 @@ namespace Homework_2
 		{
 
 		}
+
+		public float Health { get; protected set; }
 
 		public string Name { get; private set; }
 
@@ -129,11 +188,6 @@ namespace Homework_2
 			return randomNumber;
 		}
 
-		public float GetHealth()
-		{
-			return Health;
-		}
-
 		public void SetName(string name)
 		{
 			Name = name;
@@ -141,7 +195,9 @@ namespace Homework_2
 
 		public float DealDamage()
 		{
-			float attackRange = GetRandomFloatNumber(75, 125);
+			int minimumRangeOfAttackInPercent = 75;
+			int maximumRangeOfAttackInPercent = 125;
+			float attackRange = GetRandomFloatNumber(minimumRangeOfAttackInPercent, maximumRangeOfAttackInPercent);
 			float damage = AttackPower * attackRange;
 			int oneHundredPercent = 100;
 
@@ -203,15 +259,15 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage = 0f;
+			float damage;
 
 			if (_specialSkillCooldown == 0)
 			{
-				damage = UseSpecialSkill(damage);
+				damage = UseSpecialSkill();
 			}
 			else
 			{
-				damage = UseCommonAttack(damage);
+				damage = UseCommonAttack();
 			}
 
 			CountdownArmorBuff();
@@ -224,17 +280,17 @@ namespace Homework_2
 			return info;
 		}
 
-		private float UseCommonAttack(float damage)
+		private float UseCommonAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			_specialSkillCooldown--;
 			Console.WriteLine($"Рыцарь наносит {damage} урона.");
 			return damage;
 		}
 
-		private float UseSpecialSkill(float damage)
+		private float UseSpecialSkill()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			Armor += _specialSkillIncreaseArmor;
 			_specialSkillCooldown = _maxSpecialSkillCooldown;
 			_armorIsIncreased = true;
@@ -281,15 +337,15 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage = 0f;
+			float damage;
 
 			if (_mana >= _skillCost)
 			{
-				damage = UseSpecialAttack(damage);
+				damage = UseSpecialAttack();
 			}
 			else
 			{
-				damage = UseCommonAttack(damage);
+				damage = UseCommonAttack();
 			}
 
 			return damage;
@@ -301,17 +357,17 @@ namespace Homework_2
 			return info;
 		}
 
-		private float UseSpecialAttack(float damage)
+		private float UseSpecialAttack()
 		{
-			damage = DealDamage() * _skillDamageMultiplier;
+			float damage = DealDamage() * _skillDamageMultiplier;
 			_mana -= _skillCost;
 			Console.WriteLine($"Маг наносит {damage} урона огненным шаром!.");
 			return damage;
 		}
 
-		private float UseCommonAttack(float damage)
+		private float UseCommonAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			_mana += _manaRegenaration;
 			Console.WriteLine($"Маг наносит {damage} урона.");
 			return damage;
@@ -346,23 +402,23 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage = 0f;
+			float damage;
 
 			if (CritChance == _maximumCritChance)
 			{
-				damage = UseResetStatsAttack(damage);
+				damage = UseResetStatsAttack();
 			}
 			else
 			{
-				damage = UseIncreasingStatsAttack(damage);
+				damage = UseIncreasingStatsAttack();
 			}
 
 			return damage;
 		}
 
-		private float UseIncreasingStatsAttack(float damage)
+		private float UseIncreasingStatsAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			CritChance += _critChanceIncrease;
 			CritDamage += _critDamageIncrease;
 			AttackPower += _attackIncrease;
@@ -370,9 +426,9 @@ namespace Homework_2
 			return damage;
 		}
 
-		private float UseResetStatsAttack(float damage)
+		private float UseResetStatsAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			CritChance = _minimumCritChance;
 			CritDamage = _minimumCritDamage;
 			AttackPower = _minimumAttackPower;
@@ -398,15 +454,15 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage = 0f;
+			float damage;
 
 			if (Health <= MaxHealth * _partOfHealthForRage)
 			{
-				damage = UseSpecialAttack(damage);
+				damage = UseSpecialAttack();
 			}
 			else
 			{
-				damage = UseCommonAttack(damage);
+				damage = UseCommonAttack();
 			}
 
 			return damage;
@@ -418,16 +474,16 @@ namespace Homework_2
 			return info;
 		}
 
-		private float UseSpecialAttack(float damage)
+		private float UseSpecialAttack()
 		{
-			damage = DealDamage() * _rageMultiplier;
+			float damage = DealDamage() * _rageMultiplier;
 			Console.WriteLine($"Варвар в ярости и наносит {damage} урона.");
 			return damage;
 		}
 
-		private float UseCommonAttack(float damage)
+		private float UseCommonAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			Console.WriteLine($"Варвар и наносит {damage} урона.");
 			return damage;
 		}
@@ -458,15 +514,15 @@ namespace Homework_2
 
 		public override float Attack()
 		{
-			float damage = 0f;
+			float damage;
 
 			if (_mana >= _skillCost && Health < MaxHealth - _skillHeal)
 			{
-				damage = UseSpecialAttack(damage);
+				damage = UseSpecialAttack();
 			}
 			else
 			{
-				damage = UseCommonAttack(damage);
+				damage = UseCommonAttack();
 			}
 
 			return damage;
@@ -478,9 +534,9 @@ namespace Homework_2
 			return info;
 		}
 
-		private float UseCommonAttack(float damage)
+		private float UseCommonAttack()
 		{
-			damage = DealDamage();
+			float damage = DealDamage();
 			Health += _passiveSkillHeal;
 
 			if (Health > MaxHealth)
@@ -491,9 +547,9 @@ namespace Homework_2
 			return damage;
 		}
 
-		private float UseSpecialAttack(float damage)
+		private float UseSpecialAttack()
 		{
-			damage = _zeroDamage;
+			float damage = _zeroDamage;
 			Health += _skillHeal;
 			_mana -= _skillCost;
 			Console.WriteLine($"Жрец восстанавливает {_skillHeal} единиц здоровья.");
