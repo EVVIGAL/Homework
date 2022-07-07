@@ -45,11 +45,6 @@ namespace Homework_2
 	class Battleground
 	{
 		private List<Warrior> _warriors = new List<Warrior>();
-		private List<Warrior> _fighters = new List<Warrior>();
-
-		public Warrior FirstWarrior { get; private set; }
-
-		public Warrior SecondWarrior { get; private set; }
 
 		public Battleground()
 		{
@@ -59,6 +54,10 @@ namespace Homework_2
 			_warriors.Add(new Barbarian());
 			_warriors.Add(new Priest());
 		}
+
+		public Warrior FirstWarrior { get; private set; }
+
+		public Warrior SecondWarrior { get; private set; }
 
 		public void ShowWinner()
 		{
