@@ -1,0 +1,173 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			int minAmountOfProducts = 1;
+			int maxAmountOfProducts = 8;
+			Random random = new();
+			Shop shop = new();
+			bool queueIsBusy = shop.CheckQueue(out Customer customer);
+
+			while (queueIsBusy)
+			{
+				Console.Clear();
+				shop.ShowMoney();
+				customer.ShowInfo();
+				int productsForOneCustomer = random.Next(minAmountOfProducts, maxAmountOfProducts);
+
+				for (int i = 0; i <= productsForOneCustomer; i++)
+					customer.TakeProduct(shop.GiveRandomProduct());
+
+				bool isEnoughMoney = customer.CheckThatMoneyIsEnough();
+
+				while (isEnoughMoney == false)
+				{
+					customer.DropRandomProduct();
+					isEnoughMoney = customer.CheckThatMoneyIsEnough();
+				}
+
+				shop.Sell(customer);
+				queueIsBusy = shop.CheckQueue(out customer);
+			}
+
+			Console.WriteLine("There are no people in the queue.");
+			Console.ReadKey();
+		}
+	}
+
+	class Shop
+	{
+		private int _initialMoney = 1000;
+		private int _money;
+		private Queue<Customer> _customers = new();
+		private List<Product> _products = new();
+
+		public Shop()
+		{
+			_money = _initialMoney;
+			_products.Add(new Product(10, "Bread"));
+			_products.Add(new Product(20, "Milk"));
+			_products.Add(new Product(30, "Cheese"));
+			_products.Add(new Product(40, "Chocolate"));
+			_products.Add(new Product(50, "Wine"));
+			_customers.Enqueue(new Customer(70, "Jack"));
+			_customers.Enqueue(new Customer(110, "Bill"));
+			_customers.Enqueue(new Customer(30, "Rick"));
+		}
+
+		public void Sell(Customer customer)
+		{
+			int money = customer.CalculatePriceOfAllCart();
+			_money += money;
+			Console.WriteLine($"Selling is complete!");
+			Console.ReadKey();
+		}
+
+		public Product GiveRandomProduct()
+		{
+			Random random = new();
+			int randomProductIndex = random.Next(0, _products.Count);
+			Product product = new(_products[randomProductIndex].Price, _products[randomProductIndex].Name);
+			return product;
+		}
+
+		public bool CheckQueue(out Customer customer)
+		{
+			bool isCustomerInQueue;
+			isCustomerInQueue = _customers.TryDequeue(out customer);
+			return isCustomerInQueue;
+		}
+
+		public void ShowMoney()
+		{
+			Console.WriteLine($"Shop's money - {_money}");
+		}
+	}
+
+	class Customer
+	{
+		public int _money;
+		private string _name;
+		private List<Product> _products = new List<Product>();
+
+		public Customer(int money, string name)
+		{
+			_money = money;
+			_name = name;
+		}
+
+		public void TakeProduct(Product product)
+		{
+			_products.Add(product);
+			Console.WriteLine($"The customer took {product.Name}");
+			Console.ReadKey();
+		}
+
+		public void DropRandomProduct()
+		{
+			Random random = new();
+			int randomProductIndex = random.Next(0, _products.Count);
+			Console.WriteLine($"{_products[randomProductIndex].Name} was dropped");
+			_products.RemoveAt(randomProductIndex);
+			Console.ReadKey();
+		}
+
+		public void ShowInfo()
+		{
+			Console.WriteLine($"Customer {_name} has {_money} money\n");
+		}
+
+		public int CalculatePriceOfAllCart()
+		{
+			int priceOfCart = 0;
+
+			for (int i = 0; i < _products.Count; i++)
+				priceOfCart += _products[i].Price;
+
+			return priceOfCart;
+		}
+
+		public bool CheckThatMoneyIsEnough()
+		{
+			bool isEnoughMoney;
+			int priceOfCart = CalculatePriceOfAllCart();
+
+			if (priceOfCart > _money)
+			{
+				isEnoughMoney = false;
+				Console.WriteLine("Not enough money");
+			}
+			else if (priceOfCart > 0 && priceOfCart <= _money)
+			{
+				isEnoughMoney = true;
+				Console.WriteLine("Money is enough");
+			}
+			else
+			{
+				isEnoughMoney = true;
+				Console.WriteLine("Customer dropped all products. He doesn't have enough money for products.");
+			}
+
+			Console.ReadKey();
+			return isEnoughMoney;
+		}
+	}
+
+	class Product
+	{
+		public Product(int price, string name)
+		{
+			Price = price;
+			Name = name;
+		}
+
+		public int Price { get; private set; }
+
+		public string Name { get; private set; }
+	}
+}
