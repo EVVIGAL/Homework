@@ -7,33 +7,59 @@ namespace Homework_2
 	{
 		static void Main(string[] args)
 		{
-			Platoon firstPlatoon = new("Korea");
-			Platoon secondPlatoon = new("Japan");
+			Battleground battleground = new Battleground(new Platoon("Korea"), new Platoon("Japan"));
 
-			while (firstPlatoon.CheckForSoldiers() == true && secondPlatoon.CheckForSoldiers() == true)
+			while (battleground.HasBothPlatoons())
 			{
 				Console.Clear();
-				firstPlatoon.ShowInfo(0, 0);
-				secondPlatoon.ShowInfo(30, 0);
-				Console.SetCursorPosition(0, 7);
-				secondPlatoon.TakeDamageByRandomUnit(firstPlatoon.GetRandomUnitForShoot().DealDamage());
-
-				if (secondPlatoon.CheckForSoldiers() == true)
-					firstPlatoon.TakeDamageByRandomUnit(secondPlatoon.GetRandomUnitForShoot().DealDamage());
+				battleground.Battle();
 			}
 
-			if (firstPlatoon.CheckForSoldiers() == true)
-				Console.WriteLine($"Победил первый взвод!");
-			else if (secondPlatoon.CheckForSoldiers() == true)
-				Console.WriteLine($"Победил второй взвод!");
+			battleground.ShowBattleResult();
 
 			Console.ReadKey();
 		}
 	}
 
+	class Battleground
+	{
+		private Platoon _firstPlatoon;
+		private Platoon _secondPlatoon;
+
+		public Battleground(Platoon platoon1, Platoon platoon2)
+		{
+			_firstPlatoon = platoon1;
+			_secondPlatoon = platoon2;
+		}
+
+		public void Battle()
+		{
+			_firstPlatoon.ShowInfo(0, 0);
+			_secondPlatoon.ShowInfo(30, 0);
+			Console.SetCursorPosition(0, 7);
+			_secondPlatoon.TakeDamageByRandomUnit(_firstPlatoon.GetRandomUnitForShoot().DealDamage());
+
+			if (_secondPlatoon.HasSoldiers() == true)
+				_firstPlatoon.TakeDamageByRandomUnit(_secondPlatoon.GetRandomUnitForShoot().DealDamage());
+		}
+
+		public void ShowBattleResult()
+		{
+			if (_firstPlatoon.HasSoldiers() == true)
+				Console.WriteLine($"Победил первый взвод!");
+			else if (_secondPlatoon.HasSoldiers() == true)
+				Console.WriteLine($"Победил второй взвод!");
+		}
+
+		public bool HasBothPlatoons()
+		{
+			return _firstPlatoon.HasSoldiers() == true && _secondPlatoon.HasSoldiers() == true;
+		}
+	}
+
 	class Platoon
 	{
-		Random random = new();
+		private Random _random = new();
 		private List<Unit> _units = new();
 
 		public Platoon(string country)
@@ -51,18 +77,13 @@ namespace Homework_2
 		public Unit GetRandomUnitForShoot()
 		{
 			Unit unit = GetRandomUnit();
-			Console.WriteLine($"Стреляет {unit.GetName()} из {Country}");
+			Console.WriteLine($"Стреляет {unit.Name} из {Country}");
 			return unit;
 		}
 
-		public bool CheckForSoldiers()
+		public bool HasSoldiers()
 		{
-			bool isExist = true;
-
-			if (_units.Count == 0)
-				isExist = false;
-
-			return isExist;
+			return _units.Count != 0;
 		}
 
 		public void ShowInfo(int xPosition, int yPosition)
@@ -75,7 +96,7 @@ namespace Homework_2
 			{
 				Console.SetCursorPosition(xPosition, yPosition);
 				yPosition++;
-				Console.WriteLine(unit.GetName() + " - " + unit.GetHealth());
+				Console.WriteLine(unit.Name + " - " + unit.Health);
 			}
 		}
 
@@ -84,22 +105,22 @@ namespace Homework_2
 			Unit unit = GetRandomUnit();
 			unit.TakeDamage(damage);
 
-			if (unit.GetHealth() <= 0)
+			if (unit.Health <= 0)
 			{
 				_units.Remove(unit);
-				Console.WriteLine($"{unit.GetName()} из {Country} уничтожен");
+				Console.WriteLine($"{unit.Name} из {Country} уничтожен");
 				Console.ReadKey();
 			}
 			else
 			{
-				Console.WriteLine($"{unit.GetName()} из {Country} получил {damage} урона");
+				Console.WriteLine($"{unit.Name} из {Country} получил {damage} урона");
 				Console.ReadKey();
 			}
 		}
 
 		private Unit GetRandomUnit()
 		{
-			int selectedUnit = random.Next(0, _units.Count);
+			int selectedUnit = _random.Next(0, _units.Count);
 			Unit unit = _units[selectedUnit];
 			return unit;
 		}
@@ -107,9 +128,7 @@ namespace Homework_2
 
 	abstract class Unit
 	{
-		protected string Name;
 		protected int Damage;
-		protected int Health;
 
 		public virtual int DealDamage()
 		{
@@ -118,15 +137,9 @@ namespace Homework_2
 			return Damage;
 		}
 
-		public int GetHealth()
-		{
-			return Health;
-		}
+		public string Name { get; protected set; }
 
-		public string GetName()
-		{
-			return Name;
-		}
+		public int Health { get; protected set; }
 
 		public void TakeDamage(int damage)
 		{
