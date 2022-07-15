@@ -1,0 +1,235 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Aquarium aquarium = new();
+			bool isPlaying = true;
+
+            while (isPlaying)
+            {
+				Console.Clear();
+				aquarium.ShowInfo();
+                Console.WriteLine("Выберите команду и нажмите Enter:\n1 - Добавить рыбку в аквариум\n2 - Убрать рыбку из аквариума\n3 - Подождать один день\n4 - Подождать один месяц\n5 - Уйти");
+				string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+					case "1":
+						aquarium.AddFish();
+						break;
+					case "2":
+						aquarium.RemoveFish();
+						break;
+					case "3":
+						aquarium.WaitOneDay();
+						break;
+					case "4":
+						aquarium.WaitOneMonth();
+						break;
+					case "5":
+						isPlaying = false;
+						break;
+					default:
+                        Console.WriteLine("Ошибка ввода");
+						break;
+				}
+            }
+        }
+	}
+
+	class Aquarium
+    {
+		private List<Fish> _fishes = new();
+		private int _aquariumCapacity = 5;
+
+		public Aquarium()
+        {
+			_fishes.Add(new Angelfish());
+			_fishes.Add(new ClownFish());
+			_fishes.Add(new Guppy());
+		}
+
+		public void ShowInfo()
+        {
+			if (_fishes.Count == 0)
+			{
+				Console.WriteLine("Аквариум пустой\n");
+			}
+			else
+			{
+				Console.WriteLine("В аквариуме плавают:\n");
+
+				foreach (var fish in _fishes)
+					if (fish.Age <= fish.LifeTime)
+						Console.WriteLine($"{_fishes.IndexOf(fish) + 1} - {fish.Name} возрастом {fish.Age} дней\n");
+					else
+						Console.WriteLine($"{_fishes.IndexOf(fish) + 1} - {fish.Name} померла\n");
+			}       
+		}
+
+		public void AddFish()
+        {
+			Fish fish = ChooseFish();
+
+			if (fish != null)
+            {
+				if (_fishes.Count < _aquariumCapacity)
+				{
+					_fishes.Add(fish);
+					Console.WriteLine($"{fish.Name} добавлена в аквариум");
+					Console.ReadKey();
+				}
+				else
+				{
+					Console.WriteLine("В аквариуме нет места");
+					Console.ReadKey();
+				}
+			}		
+        }
+
+		public void RemoveFish()
+        {
+            Console.WriteLine("Введите номер рыбки которую необходимо убрать из аквариума:");
+			int userInput = GetIntegerNumber();
+
+			if (userInput <= _fishes.Count)
+			{
+				_fishes.RemoveAt(userInput - 1);
+			}
+			else
+			{
+				Console.WriteLine("Ошибка ввода.");
+				Console.ReadKey();
+			}
+        }
+
+		public void WaitOneDay()
+        {
+			foreach (var fish in _fishes)
+				fish.GrowUp();
+        }
+
+		public void WaitOneMonth()
+		{
+			foreach (var fish in _fishes)
+				fish.GrowUp(30);
+		}
+
+		private Fish ChooseFish()
+        {
+            Console.WriteLine("Выберите рыбу, которую хотите добавить в аквариум:\n1 - Скалярия\n2 - Данио\n3 - Гуппи\n4 - Пецилия\n5 - Рыба-клоун");
+			string userInput = Console.ReadLine();
+			Fish fish = null;
+
+            switch (userInput)
+            {
+				case "1":
+					fish = new Angelfish();
+					break;
+				case "2":
+					fish = new Zebrafish();
+					break;
+				case "3":
+					fish = new Guppy();
+					break;
+				case "4":
+					fish = new Pecilia();
+					break;
+				case "5":
+					fish = new ClownFish();
+					break;
+				default:
+                    Console.WriteLine("Ошибка ввода.");
+					break;
+			}
+
+			return fish;
+        }
+
+		private int GetIntegerNumber()
+        {
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
+		}
+	}
+
+	abstract class Fish
+    {
+		public Fish()
+        {
+			Age = 0;
+        }
+
+		public string Name { get; protected set; }
+
+		public int Age { get; protected set; }
+
+		public int LifeTime { get; protected set; }
+
+		public void GrowUp(int days = 1)
+        {
+			Age += days;
+        }
+    }
+
+	class Angelfish : Fish
+    {
+		public Angelfish()
+        {
+			Name = "Скалярия";
+			LifeTime = 53;
+        }
+    }
+
+	class Zebrafish : Fish
+	{
+		public Zebrafish()
+		{
+			Name = "Данио";
+			LifeTime = 44;
+		}
+	}
+
+	class Guppy : Fish
+	{
+		public Guppy()
+		{
+			Name = "Гуппи";
+			LifeTime = 81;
+		}
+	}
+
+	class Pecilia : Fish
+	{
+		public Pecilia()
+		{
+			Name = "Пецилия";
+			LifeTime = 35;
+		}
+	}
+
+	class ClownFish : Fish
+	{
+		public ClownFish()
+		{
+			Name = "Рыба-клоун";
+			LifeTime = 99;
+		}
+	}
+}
