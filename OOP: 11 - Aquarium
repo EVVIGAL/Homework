@@ -45,7 +45,7 @@ namespace Homework_2
 	class Aquarium
 	{
 		private List<Fish> _fishes = new();
-		private int _aquariumCapacity = 5;
+		private int _capacity = 5;
 
 		public Aquarium()
 		{
@@ -74,36 +74,44 @@ namespace Homework_2
 
 		public void AddFish()
 		{
-			Fish fish = ChooseFish();
-
-			if (fish != null)
+			if (_fishes.Count < _capacity)
 			{
-				if (_fishes.Count < _aquariumCapacity)
+				Fish fish = ChooseFish();
+
+				if (fish != null)
 				{
 					_fishes.Add(fish);
 					Console.WriteLine($"{fish.Name} добавлена в аквариум");
 					Console.ReadKey();
 				}
-				else
-				{
-					Console.WriteLine("В аквариуме нет места");
-					Console.ReadKey();
-				}
+			}
+			else
+			{
+				Console.WriteLine("В аквариуме нет места");
+				Console.ReadKey();
 			}
 		}
 
 		public void RemoveFish()
 		{
-			Console.WriteLine("Введите номер рыбки которую необходимо убрать из аквариума:");
-			int userInput = GetIntegerNumber();
-
-			if (userInput <= _fishes.Count)
+			if (_fishes.Count > 0)
 			{
-				_fishes.RemoveAt(userInput - 1);
+				Console.WriteLine("Введите номер рыбки которую необходимо убрать из аквариума:");
+				int userInput = GetNumber();
+
+				if (userInput <= _fishes.Count && userInput > 0)
+				{
+					_fishes.RemoveAt(userInput - 1);
+				}
+				else
+				{
+					Console.WriteLine("Ошибка ввода.");
+					Console.ReadKey();
+				}
 			}
 			else
 			{
-				Console.WriteLine("Ошибка ввода.");
+				Console.WriteLine("Аквариум и так пуст, некого вытаскивать");
 				Console.ReadKey();
 			}
 		}
@@ -151,7 +159,7 @@ namespace Homework_2
 			return fish;
 		}
 
-		private int GetIntegerNumber()
+		private int GetNumber()
 		{
 			bool success = false;
 			int number = 0;
