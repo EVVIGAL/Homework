@@ -1,0 +1,192 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Zoo zoo = new();
+			bool isPlaying = true;
+
+			while (isPlaying)
+			{
+				Console.Clear();
+				Console.WriteLine($"Вы в зоопарке. Введите 'Выход', чтобы выйти из зоопарка или введите название места куда хотите подойти:");
+				zoo.ShowCagesName();
+				string userInput = Console.ReadLine();
+
+				if (userInput == "Выход")
+					isPlaying = false;
+				else
+					zoo.GoToCage(userInput);
+
+				Console.ReadKey();
+			}
+		}
+	}
+
+	class Zoo
+	{
+		private List<Cage> _cages = new();
+
+		public Zoo()
+		{
+			_cages.Add(new Cage("Маленький вольер", "Кот", 3));
+			_cages.Add(new Cage("Маленькая клетка", "Попугай", 1));
+			_cages.Add(new Cage("Гигантский загон", "Лось", 2));
+			_cages.Add(new Cage("Пруд", "Утка", 5));
+		}
+
+		public void GoToCage(string name)
+		{
+			foreach (Cage cage in _cages)
+			{
+				if (name == cage.CageName)
+					cage.ShowInfo();
+			}
+		}
+
+		public void ShowCagesName()
+		{
+			foreach (Cage cage in _cages)
+			{
+				Console.WriteLine($"{_cages.IndexOf(cage) + 1} - {cage.CageName}");
+			}
+		}
+	}
+
+	class Cage
+	{
+		private List<Animal> _animals = new();
+
+		public Cage(string cageName, string animalName, int amount)
+		{
+			AddAnimal(animalName, amount);
+			CageName = cageName;
+		}
+
+		public string CageName { get; private set; }
+
+		public void ShowInfo()
+		{
+			Console.WriteLine($"В вольере находятся {_animals.Count} {_animals[_animals.Count - 1].GenitiveName}. Издают звук - {_animals[_animals.Count - 1].Sound}");
+
+			foreach (var animal in _animals)
+				Console.WriteLine($"{animal.Name} - пол {animal.Gender}");
+		}
+
+		private void AddAnimal(string name, int amount)
+		{
+			switch (name)
+			{
+				case "Кот":
+					AddCats(amount);
+					break;
+				case "Попугай":
+					AddParrots(amount);
+					break;
+				case "Лось":
+					AddMoose(amount);
+					break;
+				case "Утка":
+					AddDucks(amount);
+					break;
+			}
+		}
+
+		private void AddCats(int amount)
+		{
+			for (int i = 0; i < amount; i++)
+				_animals.Add(new Cat());
+		}
+
+		private void AddParrots(int amount)
+		{
+			for (int i = 0; i < amount; i++)
+				_animals.Add(new Parrot());
+		}
+
+		private void AddMoose(int amount)
+		{
+			for (int i = 0; i < amount; i++)
+				_animals.Add(new Moose());
+		}
+
+		private void AddDucks(int amount)
+		{
+			for (int i = 0; i < amount; i++)
+				_animals.Add(new Duck());
+		}
+	}
+
+	abstract class Animal
+	{
+		protected Random Random = new();
+
+		public Animal()
+		{
+			SetGender();
+		}
+
+		public string Name { get; protected set; }
+
+		public string GenitiveName { get; protected set; }
+
+		public string Sound { get; protected set; }
+
+		public string Gender { get; protected set; }
+
+		protected void SetGender()
+		{
+			byte maleNumber = 1;
+			byte femaleNumber = 0;
+
+			if (Random.Next(femaleNumber, maleNumber + 1) == 1)
+				Gender = "Мужской";
+			else
+				Gender = "Женский";
+		}
+	}
+
+	class Cat : Animal
+	{
+		public Cat()
+		{
+			Name = "Кот";
+			GenitiveName = "Котов";
+			Sound = "Мяу!";
+		}
+	}
+
+	class Parrot : Animal
+	{
+		public Parrot()
+		{
+			Name = "Попугай";
+			GenitiveName = "Попугаев";
+			Sound = "Чего надо!?";
+		}
+	}
+
+	class Moose : Animal
+	{
+		public Moose()
+		{
+			Name = "Лось";
+			GenitiveName = "Лосей";
+			Sound = "Ууу-ааа!";
+		}
+	}
+
+	class Duck : Animal
+	{
+		public Duck()
+		{
+			Name = "Утка";
+			GenitiveName = "Уток";
+			Sound = "Кря!";
+		}
+	}
+}
