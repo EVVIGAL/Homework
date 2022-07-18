@@ -5,10 +5,10 @@ namespace Homework_2
 {
 	enum Animals
 	{
-		Кот,
-		Попугай,
-		Лось,
-		Утка
+		Cat,
+		Parrot,
+		Moose,
+		Duck
 	}
 
 	internal class Program
@@ -22,7 +22,7 @@ namespace Homework_2
 			while (isPlaying)
 			{
 				Console.Clear();
-				Console.WriteLine($"Вы в зоопарке. Введите '5', чтобы выйти из зоопарка или введите номер вольера к которому хотите подойти:");
+				Console.WriteLine($"Вы в зоопарке. Введите {inputToExit}, чтобы выйти из зоопарка или введите номер вольера к которому хотите подойти:");
 				zoo.ShowCagesName();
 				int userInput = GetNumber();
 
@@ -59,10 +59,10 @@ namespace Homework_2
 
 		public Zoo()
 		{
-			_cages.Add(new Cage("Маленький вольер", Animals.Кот, 3));
-			_cages.Add(new Cage("Маленькая клетка", Animals.Попугай, 1));
-			_cages.Add(new Cage("Гигантский загон", Animals.Лось, 2));
-			_cages.Add(new Cage("Пруд", Animals.Утка, 5));
+			_cages.Add(new Cage("Маленький вольер", Animals.Cat, 3));
+			_cages.Add(new Cage("Маленькая клетка", Animals.Parrot, 1));
+			_cages.Add(new Cage("Гигантский загон", Animals.Moose, 2));
+			_cages.Add(new Cage("Пруд", Animals.Duck, 5));
 		}
 
 		public void ShowCageInfo(int index)
@@ -107,16 +107,16 @@ namespace Homework_2
 		{
 			switch (animals)
 			{
-				case Animals.Кот:
+				case Animals.Cat:
 					AddCats(amount);
 					break;
-				case Animals.Попугай:
+				case Animals.Parrot:
 					AddParrots(amount);
 					break;
-				case Animals.Лось:
+				case Animals.Moose:
 					AddMoose(amount);
 					break;
-				case Animals.Утка:
+				case Animals.Duck:
 					AddDucks(amount);
 					break;
 			}
