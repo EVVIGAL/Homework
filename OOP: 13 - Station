@@ -1,0 +1,338 @@
+using System;
+using System.Collections.Generic;
+
+namespace Homework_2
+{
+	enum MalfunctionAndPrice
+    {
+		BreakPads = 150,
+		Radiator = 500,
+		Generator = 400,
+		AirFilter = 20,
+		Headlight = 350
+	}
+
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Station station = new Station();
+			bool isOpen = true;
+			int userInput;
+
+            while (isOpen)
+            {
+				Car car = null;
+                Console.WriteLine("Выберите действие:\n1 - Запустить очередного клиента\n2 - Проверить склад\n3 - Закрыться");
+				userInput = station.GetNumber();
+
+                switch (userInput)
+                {
+					case 1:
+						car = new Car();
+						break;
+					case 2:
+						station.ShowWarehouseInfo();
+						break;
+					case 3:
+						isOpen = false;
+						break;
+                }
+
+				if(car != null)
+                {
+                    Console.WriteLine("Машина заехала. Список поломок:");
+					car.ShowInfo();
+					Console.WriteLine("Выберите действие:\n1 - Начать ремонт\n2 - Отказать в ремонте(будет выплачен штраф)\n3 - Проверить склад");
+					userInput = station.GetNumber();
+
+					switch (userInput)
+					{
+						case 1:
+							station.FixCar(car);
+							break;
+						case 2:
+							station.DenyCar();
+							break;
+						case 3:
+							station.ShowWarehouseInfo();
+							break;
+					}
+				}
+            }
+		}
+	}
+
+	class Station
+    {
+		private Warehouse _warehouse = new();
+		private int _penalty = 200;
+
+		public Station(int money = 1000)
+        {
+			Money = money;
+        }
+
+		public int Money { get; private set; }
+
+		public Car FixCar(Car car)
+        {
+			Console.WriteLine("Введите номер детали, которую необходимо заменить:");
+			car.ShowInfo();
+			int userInput = GetNumber();
+			_warehouse.SellPart(car.GivePartName(userInput));
+
+
+			return car;
+        }
+
+		public void DenyCar()
+        {
+			Money -= _penalty;
+            Console.WriteLine($"Вы заплатили штраф {_penalty}. Машина уехала.");
+			Console.ReadKey();
+        }
+
+		public void ShowWarehouseInfo()
+        {
+			_warehouse.ShowInfo();
+        }
+
+		public void ShowPrice()
+		{
+			for (int i = 0; i < Enum.GetNames(typeof(MalfunctionAndPrice)).Length; i++)
+            {
+                Console.WriteLine($"Замена {Enum.GetNames(typeof(MalfunctionAndPrice))[i]} - {((int[])Enum.GetValues(typeof(MalfunctionAndPrice)))[i]} денег.");
+            }
+		}
+
+		public int GetNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
+		}
+	}
+
+	class Warehouse
+    {
+		private List<Stack> _parts = new();
+
+		public Warehouse()
+        {
+			_parts.Add(new Stack(new Radiator(), 3));
+			_parts.Add(new Stack(new BreakPads(), 4));
+			_parts.Add(new Stack(new Generator(), 5));
+			_parts.Add(new Stack(new AirFilter(), 12));
+			_parts.Add(new Stack(new Headlight(), 8));
+		}
+
+		public void SellPart(string partName)
+        {
+			foreach (Stack part in _parts)
+            {
+				if (part.AutoPart.Name == partName)
+				{
+					RemovePart(partName);
+				}
+            }
+        }
+
+		public void ShowInfo()
+		{
+            Console.WriteLine("На складе:");
+
+			foreach (Stack stack in _parts)
+				Console.WriteLine($"{stack.AutoPart.Name} - {stack.Quantity}");
+        }
+
+		public void GetParts(AutoPart part, int quantity)
+		{
+			foreach (Stack stack in _parts)
+			{
+				if (stack.AutoPart.Name == part.Name)
+					stack.AddParts(quantity);
+			}
+		}
+
+		private void RemovePart(string part)
+        {
+			int onePart = 1;
+
+			foreach (Stack parts in _parts)
+			{
+				if (parts.AutoPart.Name == part && parts.Quantity > 0)
+                {
+					parts.RemoveParts(onePart);
+					Console.WriteLine("Запчасть продана");
+					Console.ReadKey();
+				}
+				else if (parts.AutoPart.Name == part && parts.Quantity <= 0)
+                {
+					Console.WriteLine("Нет таких запчастей");
+					Console.ReadKey();
+				}                
+			}
+		}
+	}
+
+	class Stack
+    {
+		public Stack(AutoPart part, int quantity)
+        {
+			AutoPart = part;
+			Quantity = quantity;
+        }
+
+		public AutoPart AutoPart { get; private set; }
+
+		public int Quantity { get; private set; }
+
+		public void RemoveParts(int quantity)
+		{
+			Quantity -= quantity;
+		}
+
+		public void AddParts(int quantity)
+		{
+			Quantity += quantity;
+		}
+
+	}
+
+	abstract class AutoPart
+    {
+		public string Name { get; protected set; }
+
+		public int PriceToSell { get; protected set; }
+
+		public int PriceToBuy { get; protected set; }
+	}
+
+	class BreakPads : AutoPart
+	{
+		public BreakPads()
+		{
+			Name = "Тормозные колодки";
+			PriceToSell = 200;
+			PriceToBuy = 140;
+		}
+	}
+
+	class Radiator : AutoPart
+	{
+		public Radiator()
+		{
+			Name = "Радиатор";
+			PriceToSell = 700;
+			PriceToBuy = 560;
+		}
+	}
+
+	class Generator : AutoPart
+	{
+		public Generator()
+		{
+			Name = "Генератор";
+			PriceToSell = 400;
+			PriceToBuy = 280;
+		}
+	}
+
+	class AirFilter : AutoPart
+	{
+		public AirFilter()
+		{
+			Name = "Воздушный фильтр";
+			PriceToSell = 50;
+			PriceToBuy = 30;
+		}
+	}
+
+	class Headlight : AutoPart
+	{
+		public Headlight()
+        {
+			Name = "Фара";
+			PriceToSell = 500;
+			PriceToBuy = 350;
+        }		
+	}
+
+	class Car
+    {
+		private Random _random = new();
+		private List<string> _malfunctions = new();
+		private List<string> _allMalfunctions = new();
+		private int _maxAmountOfMalfunctions = 3;
+
+		public Car()
+        {
+			_allMalfunctions.AddRange(Enum.GetNames(typeof(MalfunctionAndPrice)));
+			GetMalfunctions();
+        }
+
+		public void ShowInfo()
+        {
+			foreach (string malfunction in _malfunctions)
+                Console.WriteLine(_malfunctions.IndexOf(malfunction) + 1 + " - " + malfunction);
+        }
+
+		public string GivePartName(int userInput)
+        {
+			string partName = null;
+
+			foreach (string malfunction in _malfunctions)
+            {
+				if (userInput == _malfunctions.IndexOf(malfunction))
+                {
+					partName = malfunction;
+                }
+            }
+
+			return partName;
+		}
+
+		public void RemoveMalfunction(int malfunctionIndex)
+        {
+			for(int i = 0; i < _malfunctions.Count; i++)
+            {
+				if (malfunctionIndex == i)
+					_malfunctions.RemoveAt(i);
+            }
+        }
+
+		public void GetMalfunctions()
+        {
+			for (int i = 0; i < GetNumberOfMalfunctions(); i++)
+            {
+				_malfunctions.Add(GetRandomMalfunction());
+            }
+        }
+
+		private int GetNumberOfMalfunctions()
+        {
+			int minNumber = 1;
+			int number = _random.Next(minNumber, _maxAmountOfMalfunctions + 1);
+			return number;
+		}
+
+		private string GetRandomMalfunction()
+        {
+			int malfunctionNumber = _random.Next(0, _allMalfunctions.Count);
+			string malfunction = _allMalfunctions[malfunctionNumber];
+			_allMalfunctions.RemoveAt(malfunctionNumber);
+			return malfunction;
+		}
+    }
+}
