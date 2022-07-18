@@ -3,27 +3,53 @@ using System.Collections.Generic;
 
 namespace Homework_2
 {
+	enum Animals
+	{
+		Кот,
+		Попугай,
+		Лось,
+		Утка
+	}
+
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
 			Zoo zoo = new();
 			bool isPlaying = true;
+			int inputToExit = 5;
 
 			while (isPlaying)
 			{
 				Console.Clear();
-				Console.WriteLine($"Вы в зоопарке. Введите 'Выход', чтобы выйти из зоопарка или введите название места куда хотите подойти:");
+				Console.WriteLine($"Вы в зоопарке. Введите '5', чтобы выйти из зоопарка или введите номер вольера к которому хотите подойти:");
 				zoo.ShowCagesName();
-				string userInput = Console.ReadLine();
+				int userInput = GetNumber();
 
-				if (userInput == "Выход")
+				if (userInput == inputToExit)
 					isPlaying = false;
 				else
-					zoo.GoToCage(userInput);
+					zoo.ShowCageInfo(userInput);
 
 				Console.ReadKey();
 			}
+		}
+
+		static private int GetNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
 		}
 	}
 
@@ -33,17 +59,17 @@ namespace Homework_2
 
 		public Zoo()
 		{
-			_cages.Add(new Cage("Маленький вольер", "Кот", 3));
-			_cages.Add(new Cage("Маленькая клетка", "Попугай", 1));
-			_cages.Add(new Cage("Гигантский загон", "Лось", 2));
-			_cages.Add(new Cage("Пруд", "Утка", 5));
+			_cages.Add(new Cage("Маленький вольер", Animals.Кот, 3));
+			_cages.Add(new Cage("Маленькая клетка", Animals.Попугай, 1));
+			_cages.Add(new Cage("Гигантский загон", Animals.Лось, 2));
+			_cages.Add(new Cage("Пруд", Animals.Утка, 5));
 		}
 
-		public void GoToCage(string name)
+		public void ShowCageInfo(int index)
 		{
 			foreach (Cage cage in _cages)
 			{
-				if (name == cage.CageName)
+				if (index == _cages.IndexOf(cage) + 1)
 					cage.ShowInfo();
 			}
 		}
@@ -52,7 +78,7 @@ namespace Homework_2
 		{
 			foreach (Cage cage in _cages)
 			{
-				Console.WriteLine($"{_cages.IndexOf(cage) + 1} - {cage.CageName}");
+				Console.WriteLine($"{_cages.IndexOf(cage) + 1} - {cage.Name}");
 			}
 		}
 	}
@@ -61,13 +87,13 @@ namespace Homework_2
 	{
 		private List<Animal> _animals = new();
 
-		public Cage(string cageName, string animalName, int amount)
+		public Cage(string name, Animals animal, int amount)
 		{
-			AddAnimal(animalName, amount);
-			CageName = cageName;
+			AddAnimal(animal, amount);
+			Name = name;
 		}
 
-		public string CageName { get; private set; }
+		public string Name { get; private set; }
 
 		public void ShowInfo()
 		{
@@ -77,20 +103,20 @@ namespace Homework_2
 				Console.WriteLine($"{animal.Name} - пол {animal.Gender}");
 		}
 
-		private void AddAnimal(string name, int amount)
+		private void AddAnimal(Animals animals, int amount)
 		{
-			switch (name)
+			switch (animals)
 			{
-				case "Кот":
+				case Animals.Кот:
 					AddCats(amount);
 					break;
-				case "Попугай":
+				case Animals.Попугай:
 					AddParrots(amount);
 					break;
-				case "Лось":
+				case Animals.Лось:
 					AddMoose(amount);
 					break;
-				case "Утка":
+				case Animals.Утка:
 					AddDucks(amount);
 					break;
 			}
