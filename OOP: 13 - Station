@@ -3,31 +3,23 @@ using System.Collections.Generic;
 
 namespace Homework_2
 {
-	enum MalfunctionAndPrice
-    {
-		BreakPads = 150,
-		Radiator = 500,
-		Generator = 400,
-		AirFilter = 20,
-		Headlight = 350
-	}
-
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
 			Station station = new Station();
 			bool isOpen = true;
-			int userInput;
 
-            while (isOpen)
-            {
+			while (isOpen)
+			{
+				Console.Clear();
+				Console.WriteLine($"Баланс: {station.Money}уе");
 				Car car = null;
-                Console.WriteLine("Выберите действие:\n1 - Запустить очередного клиента\n2 - Проверить склад\n3 - Закрыться");
-				userInput = station.GetNumber();
+				Console.WriteLine("Выберите действие:\n1 - Запустить очередного клиента\n2 - Проверить склад\n3 - Закрыться");
+				int userInput = GetNumber();
 
-                switch (userInput)
-                {
+				switch (userInput)
+				{
 					case 1:
 						car = new Car();
 						break;
@@ -37,76 +29,39 @@ namespace Homework_2
 					case 3:
 						isOpen = false;
 						break;
-                }
-
-				if(car != null)
-                {
-                    Console.WriteLine("Машина заехала. Список поломок:");
-					car.ShowInfo();
-					Console.WriteLine("Выберите действие:\n1 - Начать ремонт\n2 - Отказать в ремонте(будет выплачен штраф)\n3 - Проверить склад");
-					userInput = station.GetNumber();
-
-					switch (userInput)
-					{
-						case 1:
-							station.FixCar(car);
-							break;
-						case 2:
-							station.DenyCar();
-							break;
-						case 3:
-							station.ShowWarehouseInfo();
-							break;
-					}
 				}
-            }
+
+				if (car != null)
+				{
+					ServeTheCar(station, car);
+				}
+			}
 		}
-	}
 
-	class Station
-    {
-		private Warehouse _warehouse = new();
-		private int _penalty = 200;
-
-		public Station(int money = 1000)
-        {
-			Money = money;
-        }
-
-		public int Money { get; private set; }
-
-		public Car FixCar(Car car)
-        {
-			Console.WriteLine("Введите номер детали, которую необходимо заменить:");
-			car.ShowInfo();
-			int userInput = GetNumber();
-			_warehouse.SellPart(car.GivePartName(userInput));
-
-
-			return car;
-        }
-
-		public void DenyCar()
-        {
-			Money -= _penalty;
-            Console.WriteLine($"Вы заплатили штраф {_penalty}. Машина уехала.");
-			Console.ReadKey();
-        }
-
-		public void ShowWarehouseInfo()
-        {
-			_warehouse.ShowInfo();
-        }
-
-		public void ShowPrice()
+		static void ServeTheCar(Station station, Car car)
 		{
-			for (int i = 0; i < Enum.GetNames(typeof(MalfunctionAndPrice)).Length; i++)
-            {
-                Console.WriteLine($"Замена {Enum.GetNames(typeof(MalfunctionAndPrice))[i]} - {((int[])Enum.GetValues(typeof(MalfunctionAndPrice)))[i]} денег.");
-            }
+
+			Console.WriteLine("\nМашина заехала.\n");
+			car.ShowInfo();
+			Console.WriteLine("\nВыберите действие:\n1 - Заменить запчасть\n2 - Отказать в ремонте(будет выплачен штраф)");
+			int userInput = GetNumber();
+
+			switch (userInput)
+			{
+				case 1:
+					station.FixCar(car);
+					break;
+				case 2:
+					station.DenyCar();
+					break;
+				default:
+					Console.Write("Вы даже по цифрам попасть не можете.");
+					station.DenyCar();
+					break;
+			}
 		}
 
-		public int GetNumber()
+		static int GetNumber()
 		{
 			bool success = false;
 			int number = 0;
@@ -124,99 +79,125 @@ namespace Homework_2
 		}
 	}
 
+	class Station
+	{
+		private Warehouse _warehouse = new();
+		private int _penalty = 200;
+
+		public Station(int money = 1000)
+		{
+			Money = money;
+		}
+
+		public int Money { get; private set; }
+
+		public Car FixCar(Car car)
+		{
+			if (_warehouse.HasPart(car.BrokenPart))
+			{
+				_warehouse.RemovePart(car.BrokenPart);
+				Console.WriteLine($"{car.BrokenPart.Name} успешно заменён.");
+				Money += (car.BrokenPart.PriceToFix + car.BrokenPart.PriceToSell);
+				Console.ReadKey();
+			}
+			else
+			{
+				Console.WriteLine($"Такой запчасти нет. Отпустите машину с богом и выплатите штраф {_penalty}уе.");
+				Money -= _penalty;
+				Console.ReadKey();
+			}
+
+			return car;
+		}
+
+		public void DenyCar()
+		{
+			Money -= _penalty;
+			Console.WriteLine($"Вы заплатили штраф {_penalty}уе. Машина уехала.");
+			Console.ReadKey();
+		}
+
+		public void ShowWarehouseInfo()
+		{
+			_warehouse.ShowInfo();
+		}
+	}
+
 	class Warehouse
-    {
+	{
 		private List<Stack> _parts = new();
 
 		public Warehouse()
-        {
-			_parts.Add(new Stack(new Radiator(), 3));
-			_parts.Add(new Stack(new BreakPads(), 4));
-			_parts.Add(new Stack(new Generator(), 5));
-			_parts.Add(new Stack(new AirFilter(), 12));
-			_parts.Add(new Stack(new Headlight(), 8));
+		{
+			_parts.Add(new Stack(new Radiator(), 2));
+			_parts.Add(new Stack(new BreakPads(), 0));
+			_parts.Add(new Stack(new Generator(), 3));
+			_parts.Add(new Stack(new AirFilter(), 5));
+			_parts.Add(new Stack(new Headlight(), 0));
 		}
-
-		public void SellPart(string partName)
-        {
-			foreach (Stack part in _parts)
-            {
-				if (part.AutoPart.Name == partName)
-				{
-					RemovePart(partName);
-				}
-            }
-        }
 
 		public void ShowInfo()
 		{
-            Console.WriteLine("На складе:");
+			Console.WriteLine("На складе:");
 
 			foreach (Stack stack in _parts)
 				Console.WriteLine($"{stack.AutoPart.Name} - {stack.Quantity}");
-        }
 
-		public void GetParts(AutoPart part, int quantity)
+			Console.ReadKey();
+		}
+
+		public bool HasPart(AutoPart part)
+		{
+			bool hasPart = false;
+
+			foreach (Stack stack in _parts)
+			{
+				if (stack.AutoPart.Name == part.Name && stack.Quantity > 0)
+					hasPart = true;
+			}
+
+			return hasPart;
+		}
+
+		public void RemovePart(AutoPart part)
 		{
 			foreach (Stack stack in _parts)
 			{
 				if (stack.AutoPart.Name == part.Name)
-					stack.AddParts(quantity);
-			}
-		}
-
-		private void RemovePart(string part)
-        {
-			int onePart = 1;
-
-			foreach (Stack parts in _parts)
-			{
-				if (parts.AutoPart.Name == part && parts.Quantity > 0)
-                {
-					parts.RemoveParts(onePart);
-					Console.WriteLine("Запчасть продана");
+				{
+					stack.RemovePart();
+					Console.WriteLine("Запчасть выделили со склада");
 					Console.ReadKey();
 				}
-				else if (parts.AutoPart.Name == part && parts.Quantity <= 0)
-                {
-					Console.WriteLine("Нет таких запчастей");
-					Console.ReadKey();
-				}                
 			}
 		}
 	}
 
 	class Stack
-    {
+	{
 		public Stack(AutoPart part, int quantity)
-        {
+		{
 			AutoPart = part;
 			Quantity = quantity;
-        }
+		}
 
 		public AutoPart AutoPart { get; private set; }
 
 		public int Quantity { get; private set; }
 
-		public void RemoveParts(int quantity)
+		public void RemovePart()
 		{
-			Quantity -= quantity;
+			Quantity--;
 		}
-
-		public void AddParts(int quantity)
-		{
-			Quantity += quantity;
-		}
-
 	}
 
 	abstract class AutoPart
-    {
+	{
 		public string Name { get; protected set; }
 
 		public int PriceToSell { get; protected set; }
 
-		public int PriceToBuy { get; protected set; }
+		public int PriceToFix { get; protected set; }
 	}
 
 	class BreakPads : AutoPart
@@ -225,7 +206,7 @@ namespace Homework_2
 		{
 			Name = "Тормозные колодки";
 			PriceToSell = 200;
-			PriceToBuy = 140;
+			PriceToFix = 140;
 		}
 	}
 
@@ -235,7 +216,7 @@ namespace Homework_2
 		{
 			Name = "Радиатор";
 			PriceToSell = 700;
-			PriceToBuy = 560;
+			PriceToFix = 560;
 		}
 	}
 
@@ -245,7 +226,7 @@ namespace Homework_2
 		{
 			Name = "Генератор";
 			PriceToSell = 400;
-			PriceToBuy = 280;
+			PriceToFix = 280;
 		}
 	}
 
@@ -255,84 +236,46 @@ namespace Homework_2
 		{
 			Name = "Воздушный фильтр";
 			PriceToSell = 50;
-			PriceToBuy = 30;
+			PriceToFix = 30;
 		}
 	}
 
 	class Headlight : AutoPart
 	{
 		public Headlight()
-        {
+		{
 			Name = "Фара";
 			PriceToSell = 500;
-			PriceToBuy = 350;
-        }		
+			PriceToFix = 350;
+		}
 	}
 
 	class Car
-    {
+	{
 		private Random _random = new();
-		private List<string> _malfunctions = new();
-		private List<string> _allMalfunctions = new();
-		private int _maxAmountOfMalfunctions = 3;
+		private List<AutoPart> _allParts = new();
 
 		public Car()
-        {
-			_allMalfunctions.AddRange(Enum.GetNames(typeof(MalfunctionAndPrice)));
-			GetMalfunctions();
-        }
+		{
+			_allParts.Add(new BreakPads());
+			_allParts.Add(new Radiator());
+			_allParts.Add(new Generator());
+			_allParts.Add(new AirFilter());
+			_allParts.Add(new Headlight());
+			GetRandomMalfunction();
+		}
+
+		public AutoPart BrokenPart { get; private set; }
 
 		public void ShowInfo()
-        {
-			foreach (string malfunction in _malfunctions)
-                Console.WriteLine(_malfunctions.IndexOf(malfunction) + 1 + " - " + malfunction);
-        }
-
-		public string GivePartName(int userInput)
-        {
-			string partName = null;
-
-			foreach (string malfunction in _malfunctions)
-            {
-				if (userInput == _malfunctions.IndexOf(malfunction))
-                {
-					partName = malfunction;
-                }
-            }
-
-			return partName;
+		{
+			Console.WriteLine($"У автомобиля необходимо заменить {BrokenPart.Name}. За запчасть стрясём {BrokenPart.PriceToSell}уе плюс {BrokenPart.PriceToFix}уе за работу.");
 		}
 
-		public void RemoveMalfunction(int malfunctionIndex)
-        {
-			for(int i = 0; i < _malfunctions.Count; i++)
-            {
-				if (malfunctionIndex == i)
-					_malfunctions.RemoveAt(i);
-            }
-        }
-
-		public void GetMalfunctions()
-        {
-			for (int i = 0; i < GetNumberOfMalfunctions(); i++)
-            {
-				_malfunctions.Add(GetRandomMalfunction());
-            }
-        }
-
-		private int GetNumberOfMalfunctions()
-        {
-			int minNumber = 1;
-			int number = _random.Next(minNumber, _maxAmountOfMalfunctions + 1);
-			return number;
+		private void GetRandomMalfunction()
+		{
+			int randomIndex = _random.Next(0, _allParts.Count);
+			BrokenPart = _allParts[randomIndex];
 		}
-
-		private string GetRandomMalfunction()
-        {
-			int malfunctionNumber = _random.Next(0, _allMalfunctions.Count);
-			string malfunction = _allMalfunctions[malfunctionNumber];
-			_allMalfunctions.RemoveAt(malfunctionNumber);
-			return malfunction;
-		}
-    }
+	}
 }
