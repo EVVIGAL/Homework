@@ -1,0 +1,53 @@
+using UnityEngine;
+using Agava.YandexGames;
+using System.Collections;
+using TMPro;
+
+public class Language : MonoBehaviour
+{
+    public static Language Instance;
+    private string _currentLanguage;
+    private const float _waitTime = 0.25f;
+
+    public string CurrentLanguage => _currentLanguage;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        YandexGamesSdk.CallbackLogging = true;
+    }
+
+    private IEnumerator Start()
+    {
+        yield return YandexGamesSdk.Initialize();
+
+        if (YandexGamesSdk.IsInitialized)
+        {
+            ChangeLanguage();
+        }
+
+        while (!YandexGamesSdk.IsInitialized)
+        {
+            yield return new WaitForSeconds(_waitTime);
+
+            if (YandexGamesSdk.IsInitialized)
+            {
+                ChangeLanguage();
+            }
+        }
+    }
+
+    private void ChangeLanguage()
+    {
+        string _currentLanguage = YandexGamesSdk.Environment.i18n.lang;
+    }
+}
